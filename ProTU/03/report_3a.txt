@@ -1,0 +1,109 @@
+レポート3A
+
+@@@ 1810678  山田 朔也(個人作業)
+
+選択した課題: 演習1_a
+括弧の種類として「()」の他に「[]」と「{}」を追加した
+
+方針: ifの条件分岐に[]{}を追加する
+
+コード:
+-------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include "istack.h"
+//#define BALANCE1
+//#define BALANCE2
+#define BALANCE3
+
+char *bool2str(bool b) { return b ? "true" : "false"; }
+
+void expect_bool(bool b1, bool b2, char *msg) {
+  printf("%s %s:%s %s\n", (b1==b2)?"OK":"NG", bool2str(b1), bool2str(b2), msg);
+}
+
+bool balance1(char *t) {
+  istackp s = istack_new(200);
+  for(int i = 0; t[i] != '\0'; ++i) {
+    char c = t[i];
+    if(c == '(') {
+      istack_push(s, c);
+    } else if(c == ')') {
+      if(istack_isempty(s)) { return false; }
+      istack_pop(s);
+    }
+  }
+  return istack_isempty(s);
+}
+
+bool balance2(char *t) {
+  istackp s = istack_new(200);
+  for(int i = 0; t[i] != '\0'; ++i) {
+    char c = t[i];
+    if((c == '(') || (c == '[') || (c == '{')) {
+      istack_push(s, c);
+    } else if((c == ')') || (c == ']') || (c == '}')) {
+      if(istack_isempty(s)) { return false; }
+      istack_pop(s);
+    }
+  }
+  return istack_isempty(s);
+}
+
+int main(void) {
+#ifdef BALANCE1  
+  expect_bool(balance1("((a)())"), true, "((a)())");
+  expect_bool(balance1(")(a)()("), false, ")(a)()(");
+  expect_bool(balance1("((a)()"), false, "((a)()");
+  expect_bool(balance1("(a)())"), false, "(a)())");
+  expect_bool(balance1("(((())))"), true, "(((())))");
+#endif
+#ifdef BALANCE2
+  expect_bool(balance2("((a)}"), true, "((a)}");
+  expect_bool(balance2("((a)]"), true, "((a)]");
+  expect_bool(balance2("{(a))"), true, "{(a))");
+  expect_bool(balance2("[(a))"), true, "[(a))");
+  expect_bool(balance2("([a)}"), true, "([a)}");
+  expect_bool(balance2("({(a)}"), false, "({(a)}");
+  expect_bool(balance2("((a)}()}]"), false, "((a)}()}]");
+#endif
+#ifdef BALANCE3
+  expect_bool(balance3("((a)}"), false, "((a)}");
+  expect_bool(balance3("((a)]"), false, "((a)]");
+  expect_bool(balance3("{(a))"), false, "{(a))");
+  expect_bool(balance3("[(a)]"), true, "[(a)]");
+  expect_bool(balance3("([a)}"), false, "([a)}");
+  expect_bool(balance3("({(a)}"), false, "({(a)}");
+  expect_bool(balance3("((a)}()}]"), false, "((a)}()}]");
+#endif
+  return 0;
+} 
+---------------------------------------------
+
+実行例:
+OK true:true ((a)}
+OK true:true ((a)]
+OK true:true {(a))
+OK true:true [(a))
+OK true:true ([a)}
+OK false:false ({(a)}
+OK false:false ((a)}()}]
+
+
+解説:
+課題に関しては方針に記述した通りである
+また、テストケースに関しては大体の種類を書き、おおよその範囲を網羅するようにした
+
+レビュー課題:
+aを抜かして記述しているのは問題だと感じた
+
+考察: 
+スタックというか、配列の利用方法によっては簡単に記述できることが多くあると感じた
+
+アンケート:
+Q1.スタックとその働きについて理解しましたか
+ A1.理解した、ただし、想定している挙動をしてくれない場合があり、非常に難しい
+Q2.「かっこの対応探査」や「後置記法への変換」について納得しましたか
+ A2.納得したが、自分でできるかというとまた別問題
+Q3.リフレクション（今回の課題で分かったこと）・感想・要望をどうぞ。
+ A3.少し身勝手かもしれませんが、各関数の引数と戻り値の使用を関数の直前にコメントで記述してくれるとありがたいです

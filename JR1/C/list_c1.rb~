@@ -1,0 +1,8 @@
+$c = 0
+def harmonic(n)
+  if (n < 1)
+    return $c
+  end
+  $c = $c + 1/n
+  harmonic(n-1)
+end

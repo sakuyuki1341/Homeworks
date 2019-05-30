@@ -1,0 +1,253 @@
+レポート3B
+
+@@@ 1810678 山田朔也 (個人作業)
+
+
+選択した課題1: 演習1_c
+  数式などの括弧が対応しているかどうかを判別するプログラムを作成する
+  ただし、三種類の括弧「()」「[]」「{}」をそれぞれ独立に対応しているかを判別する
+
+方針1:
+  方針としては、スタックを三本使い、それぞれの開き括弧を積んでいく。
+  そして、それぞれの綴じ括弧が見つかった場合、それに対応した開き括弧が
+　存在するかどうかをそれぞれのスタックを参照して判別する。
+　ここで存在しなければ、対応していないという事になる。
+　最後に、三本ともスタック内に開き括弧が残留していないかを確かめ、
+　コレが残っている場合も対応していないということになる。
+
+コード1:
+------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "istack.h"
+
+#define BALANCE4
+
+char *bool2str(bool b) { return b ? "true" : "false"; }
+
+void expect_bool(bool b1, bool b2, char *msg) {
+  printf("%s %s:%s %s\n", (b1==b2)?"OK":"NG", bool2str(b1), bool2str(b2), msg);
+}
+
+bool balance4(char *t) {
+  istackp s = istack_new(200);
+  istackp u = istack_new(200);
+  istackp v = istack_new(200);
+  for(int i = 0; t[i] != '\0'; ++i) {
+    char c = t[i];
+    if(c == '(') {
+      istack_push(s, c);
+    } else if(c == '[') {
+      istack_push(u, c);
+    } else if(c == '{') {
+      istack_push(v, c);
+    } else if(c == ')') {
+      if(istack_isempty(s)) { return false; }
+      istack_pop(s);
+    } else if(c == ']') {
+      if(istack_isempty(u)) { return false; }
+      istack_pop(u);
+    } else if(c == '}') {
+      if(istack_isempty(v)) { return false; }
+      istack_pop(v);
+    }
+  }
+  return (istack_isempty(s) || istack_isempty(u) || istack_isempty(v));
+}
+
+int main(void) {
+#ifdef BALANCE1
+  expect_bool(balance1("((a)())"), true, "((a)())");
+  expect_bool(balance1(")(a)()("), false, ")(a)()(");
+  expect_bool(balance1("((a)()"), false, "((a)()");
+  expect_bool(balance1("(a)())"), false, "(a)())");
+  expect_bool(balance1("(((())))"), true, "(((())))");
+#endif
+#ifdef BALANCE2
+  expect_bool(balance2("((a)}"), true, "((a)}");
+  expect_bool(balance2("((a)]"), true, "((a)]");
+  expect_bool(balance2("{(a))"), true, "{(a))");
+  expect_bool(balance2("[(a))"), true, "[(a))");
+  expect_bool(balance2("([a)}"), true, "([a)}");
+  expect_bool(balance2("({(a)}"), false, "({(a)}");
+  expect_bool(balance2("((a)}()}]"), false, "((a)}()}]");
+#endif
+#ifdef BALANCE3
+  expect_bool(balance3("{[]}"), true, "{[]}");
+  expect_bool(balance3("{{}}[]"), true, "{{}}[]");
+  expect_bool(balance3("[(a)]"), true, "[(a)]");
+  expect_bool(balance3("([a)}"), false, "([a)}");
+  expect_bool(balance3("({(a)}"), false, "({(a)}");
+  expect_bool(balance3("((a)}()}]"), false, "((a)}()}]");
+#endif
+#ifdef BALANCE4
+  expect_bool(balance4("[(])"), true, "[(])");
+  expect_bool(balance4("[{)]"), false, "[{)]");
+  expect_bool(balance4("{[a}]"), true, "{[a}]");
+  expect_bool(balance4("([{a)}(}]"), false, "([{a)}(}]");
+  expect_bool(balance4("([{)]}"), true, "([{)]}");
+#endif
+#ifdef BALANCE5
+  expect_bool(balance5("((a)}"), true, "((a)}");
+  expect_bool(balance5("({[a()"), false, "({[a()");
+  expect_bool(balance5("([a)}"), true, "([a)}");
+  expect_bool(balance5("({(a)}"), false, "({(a)}");
+  expect_bool(balance5("((a)}()}]"), false, "((a)}()}]");
+#endif
+  return 0;
+}
+------------------------------------------------------------------
+
+実行例1:
+------------------------------------------------------------------
+OK true:true [(])
+OK false:false [{)]
+OK true:true {[a}]
+OK false:false ([{a)}(}]
+OK true:true ([{)]}
+------------------------------------------------------------------
+
+解説1:
+  今回課題に沿って作成した関数は「balance4」である。
+　この関数は、引数として文字配列の先頭アドレスを受け取る、そしてこのアドレス
+　はcharポインタ型の変数tに代入される。
+　戻り値はbool型で、対応していればtrueを、していなければfalseを返す。
+　内部では、まず最初にスタックを三本（s,u,v）作成する。
+　スタックsには「()」を、スタックuには「[]」を、スタック「{}」を格納するように
+　している。
+　受け取った文字列を前方から順に判定していき、開き括弧がある場合はそれぞれ
+　対応したスタックに積み、綴じ括弧がある場合は対応したスタックを参照して
+　方針に記述したように判定をしていっている。
+
+考察1:
+　このスタックを利用することで、ただの配列をポインタを考えながら使用するよりも
+　簡単に複雑なアルゴリズムを作成することができるということがわかった。
+　しかしそのためには、安定したアルゴリズムを持ったスタック管理のための
+　関数群（今回ではistack_pushなど）を作成することが一番大事なのではないかと
+　思われた。　
+
+
+
+選択した課題2: 演習2_b
+  中置後置変換を行うプログラムを作成し、そのプログラムに
+　括弧を使用しても可能なように修正する
+
+方針2:
+　スタックを利用してこれも解決していく。
+　まず、「(」だけは別系統でスタックに積み、その際に同時に出力へも
+　入れていく。
+　そして、「)」が検知された際はその場で開き括弧があるところまで
+　スタック内の記号などを出力し、開き括弧は出力せず、スタックから降ろす
+
+コード2: プログラム一式(動くものを貼ること)
+------------------------------------------------------------------
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include "istack.h"
+
+#define POSTFIX3
+
+int operprec(int c) {
+  switch(c) {
+    case '+': case '-': return 1;
+    case '*': case '/': case '%': return 2;
+    case '^': return 3;
+    case '(': case ')': return 4;
+    default: return 0;
+  }
+}
+
+void postfix3(char *t, char *u) {
+  istackp s = istack_new(200);
+  for(int i = 0; t[i] != '\0'; ++i) {
+    char c = t[i];
+    if(isdigit(c)) { *u++ = c; continue; }
+    if(c == '(') {
+      *u++ = c;
+      istack_push(s, c);
+      continue;
+    }
+    while(!istack_isempty(s) &&
+          operprec(istack_top(s)) > operprec(c) && istack_top(s) != '(') {
+      *u++ = istack_pop(s);
+    }
+    if(c == ')') {
+      while(istack_top(s) != '(') {
+        *u++ = istack_pop(s);
+      }
+      istack_pop(s);
+      *u++ = c;
+      continue;
+    }
+    istack_push(s, c);
+  }
+  while(!istack_isempty(s)) { *u++ = istack_pop(s); }
+  *u++ = '\0';
+}
+
+void expect_str(char *s1, char *s2, char *msg) {
+  printf("%s '%s':'%s' %s\n", strcmp(s1, s2)?"NG":"OK", s1, s2, msg);
+}
+
+int main(void) {
+  char buf[200];
+#ifdef POSTFIX1
+  postfix1("1+2*3", buf); expect_str(buf, "123*+", "1+2*3 => 123*+");
+  postfix1("2*3+1", buf); expect_str(buf, "23*1+", "2*3+1 => 23*1+");
+  postfix1("2^3^4", buf); expect_str(buf, "23^4^", "2^3^4 => 23^4^");
+#endif
+#ifdef POSTFIX2
+  postfix2("1+2*3", buf); expect_str(buf, "123*+", "1+2*3 => 123*+");
+  postfix2("2^3^4", buf); expect_str(buf, "234^^", "2^3^4 => 234^^");
+#endif
+#ifdef POSTFIX3
+  postfix3("1+2*3+4", buf); expect_str(buf, "123*4++", "1+2*3+4 => 123*4++");
+  postfix3("1+2*(3+4)", buf); expect_str(buf, "12(34+)*+", "1+2*(3+4) => 12(34+)*+");
+#endif
+#ifdef POSTFIX4
+  postfix4("2^3^2", buf); expect_str(buf, "512", "2^3^2 => 512");
+  postfix4("1+2*(3+4)", buf); expect_str(buf, "15", "1+2*(3+4) => 15");
+#endif
+  return 0;
+}
+------------------------------------------------------------------
+
+実行例2: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
+------------------------------------------------------------------
+OK '123*4++':'123*4++' 1+2*3+4 => 123*4++
+OK '12(34+)*+':'12(34+)*+' 1+2*(3+4) => 12(34+)*+
+------------------------------------------------------------------
+
+解説2:
+　今回の課題に沿って作成した関数は「postfix3」である。
+　この関数は、引数として数式の先頭アドレスと出力先として文字列の先頭アドレスを受け取る。
+　数式の先頭アドレスはcharポインタ型の変数tに、出力先の文字列の先頭アドレスは
+　charポインタ型の変数uにそれぞれ代入されている。
+　戻り値は存在しない。
+　まずは、スタックsを作成する。
+　次に数字ならそのまま出力配列に代入していき、開き括弧ならばスタックに
+　積むと同時に出力配列にも代入する。
+　ここで、通常の演算子の優先度による、スタックに積むもしくは出力配列に
+　代入するという作業が発生する。
+　最後に検出したものが閉じ括弧かどうかを確かめ、閉じ括弧ならば
+　方針に沿った処理を行い、スタックから開き括弧を降ろし、閉じ括弧
+　を出力配列に代入。その後、ループの最初に戻る。
+　
+
+考察2:
+　このスタックを利用した計算であるが、スタックを利用することで四則演算の順番が
+　正常に保たれるのが感ぜられた。
+　しかしながら、長大な数式になった際にスタックの最大で入れられる幅が決まっている
+　という仕様がボトルネックになるのではないかとも考えられる。
+　そのため、自由にスタックの最大幅を変更できるような関数の必要性があるかと考えてる。
+
+アンケート:
+Q1.スタックがさまざまなことに役立つことを納得しましたか。
+ A1.納得した。ただし、考察でも書いたが、汎用性を上げるためには少し工夫が必要に感じる。
+Q2.文字列の取り扱いはどれくらいできるようになりましたか。
+ A2.おおよそ感覚的に操れるようになったが、ひとつ分ずれたりして想定通りの挙動をしないことが多々ある。
+Q3.リフレクション（今回の課題で分かったこと）・感想・要望をどうぞ。
+ A3.スタックの概念はわかっても残念ながらその他の場所で突っかかって空回りしたりしたのが悲しかった。
+

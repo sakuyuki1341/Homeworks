@@ -1,0 +1,15 @@
+$k = [0,0,0,0,0,0,0,0]
+def sep2dec_a(n)
+  ans = 0
+  8.times do |i|
+    sum = 0
+    8.times do |j|
+      sum += $k[j]
+    end
+    $k[i] = n/10**(8-i) - sum
+  end
+  8.times do |h|
+    ans += $k[h]*7**h
+  end
+  return ans
+end

@@ -1,0 +1,29 @@
+def coban(x, a1, a2, b1, b2, c1, c2)
+  pe = 0
+  a = 0
+  b = 0
+  c = 0
+  if (a1 <= x) && (a2 >= x)
+    pe = pe + 1
+    a = 1
+  end
+  if (b1 <= x) && (b2 >= x)
+    pe = pe + 1
+    b = 1
+  end
+  if (c1 <= x) && (c2 >= x)
+    pe = pe + 1
+    c = 1
+  end
+  if (x == 0) || (x > 1)
+    puts 'D'
+  else
+    if a == 1
+      puts 'A'
+    elsif b == 1
+      puts 'B'
+    else
+      puts 'C'
+    end
+  end
+end

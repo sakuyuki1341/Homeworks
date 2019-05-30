@@ -1,0 +1,8 @@
+push a
+push b
+push c
+pop
+push d
+push e
+pop
+push f

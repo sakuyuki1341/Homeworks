@@ -1,0 +1,424 @@
+レポート4B
+
+@@@ 1810678 山田朔也 (個人作業)
+
+
+
+選択した課題1: 演習1-d
+キューが満杯のとき入れようとしたら、
+配列を大きいものに取り替えてそちらにコピーして続けるようなキューを実装する。
+
+方針1: 
+まず、値をキューに入れる関数にて、キューが満杯かどうかで条件分岐する。
+ここで満杯だった場合、まず新たな配列を(元々のキューの大きさ+1)の大きさで宣言する。
+そこに元々の配列の持っていた値を代入していき、この新しく作成した配列のポインタを
+受け取ったキューの配列として再代入する。
+
+
+コード1: 
+----------------------------------------------
+// iqueue.h
+
+#include <stdbool.h>
+
+struct iqueue;
+typedef struct iqueue *iqueuep;
+iqueuep iqueue_new(int size);
+bool iqueue_isempty(iqueuep p);
+bool iqueue_isfull(iqueuep p);
+void iqueue_enq(iqueuep p, int v);
+int iqueue_deq(iqueuep p);
+int iqueue_count(iqueuep p);
+int iqueue_op(iqueuep p);
+----------------------------------------------
+// iqueue_1_d.c
+
+#include <stdlib.h>
+#include <string.h>
+#include "iqueue.h"
+
+struct iqueue { int ip, op, size, count; int *arr; };
+iqueuep iqueue_new(int size) {
+  iqueuep p = (iqueuep)malloc(sizeof(struct iqueue));
+  p->ip = p->op = p->count = 0; p->size = size;
+  p->arr = (int*)malloc(size * sizeof(int)); return p;
+}
+
+bool iqueue_isempty(iqueuep p) { return p->count == 0; }
+
+bool iqueue_isfull(iqueuep p) { return p->count == p->size; }
+
+void iqueue_enq(iqueuep p, int v) {
+  if(iqueue_isfull(p)) {
+    int *arr_new = (int*)malloc((p->size + 1) * sizeof(int));
+    for(int i = 0; i < p->size; i++) {
+      arr_new[i] = p->arr[p->op++];
+      if(p->op >= p->size) { p->op = 0; }
+    }
+    p->arr = arr_new;
+    p->size += 1;
+    p->op = 0;
+    p->ip = p->size - 1;
+  }
+  p->arr[p->ip++] = v;
+  if(p->ip >= p->size) { p->ip = 0; }
+  p->count += 1;
+}
+
+int iqueue_deq(iqueuep p) {
+  if(iqueue_isempty(p)) { return 0; }
+  int v = p->arr[p->op++];
+  if(p->op >= p->size) { p->op = 0; }
+  p->count -= 1;
+  return v;
+}
+
+int iqueue_count(iqueuep p) {
+  return p->count;
+}
+
+int iqueue_op(iqueuep p) {
+  if(iqueue_isempty(p)) {
+    return 0;
+  }
+  return p->arr[p->op];
+}
+----------------------------------------------
+// test_iqueue.c
+
+#include <stdbool.h>
+#include <stdio.h>
+#include "iqueue.h"
+
+// #define ENSHU_A
+// #define ENSHU_B
+// #define ENSHU_C
+#define ENSHU_D
+
+char *bool2str(bool b) { return b ? "true" : "false"; }
+
+void expect_bool(bool b1, bool b2, char *msg) {
+  printf("%s %s:%s %s\n", (b1==b2)?"OK":"NG",
+         bool2str(b1), bool2str(b2), msg);
+}
+
+void expect_int(int i1, int i2, char *msg) {
+  printf("%s %d:%d %s\n", (i1==i2)?"OK":"NG", i1, i2, msg);
+}
+
+int main(void) {
+#ifdef ENSHU_A
+  iqueuep q = iqueue_new(4);
+  iqueue_enq(q, 1); iqueue_enq(q, 2); iqueue_enq(q, 3);
+  expect_bool(iqueue_isfull(q), false, "queue not full");
+  expect_int(iqueue_count(q), 3, "count=3");
+  iqueue_enq(q, 4);
+  expect_bool(iqueue_isfull(q), true, "queue full");
+  expect_int(iqueue_count(q), 4, "count=4");
+  expect_int(iqueue_deq(q), 1, "1st => 1");
+  expect_int(iqueue_deq(q), 2, "2nd => 2");
+  expect_int(iqueue_deq(q), 3, "3rd => 3");
+  expect_int(iqueue_deq(q), 4, "4th => 4");
+  expect_bool(iqueue_isempty(q), true, "queue emptied");
+#endif
+#ifdef ENSHU_B
+  iqueuep q = iqueue_new(4);
+  iqueue_enq(q, 1); iqueue_enq(q, 2); iqueue_enq(q, 3);
+  expect_int(iqueue_op(q), 1, "op => 1");
+  expect_bool(iqueue_isfull(q), false, "queue not full");
+  expect_int(iqueue_count(q), 3, "count=3");
+  iqueue_enq(q, 4);
+  expect_bool(iqueue_isfull(q), true, "queue full");
+  expect_int(iqueue_count(q), 4, "count=4");
+  expect_int(iqueue_deq(q), 1, "1st => 1");
+  expect_int(iqueue_deq(q), 2, "2nd => 2");
+  expect_int(iqueue_deq(q), 3, "3rd => 3");
+  expect_int(iqueue_deq(q), 4, "4th => 4");
+  expect_bool(iqueue_isempty(q), true, "queue emptied");
+  expect_int(iqueue_op(q), 0, "op => NULL(0)");
+#endif
+#ifdef ENSHU_C
+  iqueuep q = iqueue_new(4);
+  iqueue_enq(q, 1); iqueue_enq(q, 2); iqueue_enq(q, 3);
+  expect_int(iqueue_op(q), 1, "op => 1");
+  expect_bool(iqueue_isfull(q), false, "queue not full");
+  expect_int(iqueue_count(q), 3, "count=3");
+  iqueue_enq(q, 4);
+  expect_bool(iqueue_isfull(q), true, "queue full");
+  iqueue_enq(q, 5); iqueue_enq(q, 6);
+  expect_int(iqueue_count(q), 4, "count=4");
+  expect_int(iqueue_deq(q), 3, "1st => 3");
+  expect_int(iqueue_deq(q), 4, "2nd => 4");
+  expect_int(iqueue_deq(q), 5, "3rd => 5");
+  expect_int(iqueue_deq(q), 6, "4th => 6");
+  expect_bool(iqueue_isempty(q), true, "queue emptied");
+  expect_int(iqueue_op(q), 0, "op => NULL(0)");
+#endif
+#ifdef ENSHU_D
+  iqueuep q = iqueue_new(4);
+  iqueue_enq(q, 1); iqueue_enq(q, 2); iqueue_enq(q, 3);
+  expect_int(iqueue_op(q), 1, "op => 1");
+  expect_bool(iqueue_isfull(q), false, "queue not full");
+  expect_int(iqueue_count(q), 3, "count=3");
+  iqueue_enq(q, 4);
+  expect_bool(iqueue_isfull(q), true, "queue full");
+  iqueue_enq(q, 5); iqueue_enq(q, 6);
+  expect_int(iqueue_count(q), 6, "count=6");
+  expect_int(iqueue_deq(q), 1, "1st => 1");
+  expect_int(iqueue_deq(q), 2, "2nd => 2");
+  expect_int(iqueue_deq(q), 3, "3rd => 3");
+  expect_int(iqueue_deq(q), 4, "4th => 4");
+  expect_int(iqueue_deq(q), 5, "5th => 5");
+  expect_int(iqueue_deq(q), 6, "6hh => 6");
+  expect_bool(iqueue_isempty(q), true, "queue emptied");
+  expect_int(iqueue_op(q), 0, "op => NULL(0)");i
+#endif
+  return 0;
+}
+----------------------------------------------
+
+実行例1:
+----------------------------------------------
+OK 1:1 op => 1
+OK false:false queue not full
+OK 3:3 count=3
+OK true:true queue full
+OK 6:6 count=6
+OK 1:1 1st => 1
+OK 2:2 2nd => 2
+OK 3:3 3rd => 3
+OK 4:4 4th => 4
+OK 5:5 5th => 5
+OK 6:6 6hh => 6
+OK true:true queue emptied
+OK 0:0 op => NULL(0)
+----------------------------------------------
+
+解説1: プログラムの説明ひととおり(きちんとここで説明すること)
+　まず、ここに掲載したファイルのうち、test_iqueue.cは単体テスト実行用のファイルであり、
+マクロの宣言を利用して実行する単体テスト群を選択している。
+今回は演習1-dをテストするため、ENSHU_Dのみ宣言して他のマクロはコメントアウトしている。
+　次にiqueue.hについてだが、これはiqueue_1_d.cの関数群の宣言をしているのみである。
+　最後にiqueue_1_d.cについてである。
+ここで件のキューに値を代入する関数を定義している。関数名はiqueue_enqである。
+基本的には方針に記述した通りのことを実行しているのみである。
+ただ、新しく作成した配列に元の配列の情報をそのまま保存するとipとopの位置によっては
+不可解な動きをする可能性がある。
+そのため、新しく配列(ここではarr_newという名前)の0番目から順に詰めいていく。
+詰めていく値は、位置opから順番である。
+そうして、受け取ったキューの配列のポインタに、arr_newのポインタを再代入する。
+最後にそれに合せて、size,op,ipの値を再度代入し直し、通常のipの位置が空になっている
+場合の処理と合流する。
+
+考察1: 
+　上記のプログラムを作成する前に、別のアルゴリズムを使用して実装しようとしていた。
+それは新たな配列に古い配列の内容をコピーするために、iqueue_deqを使用するというものである。
+しかしながら、これは失敗に終わってしまった。そのため、opの値を変化させつつ順番に代入する方針を採用した。
+残念ながら、原因特定までは至らなかった。
+しかしながら、関数内で別関数を利用することは可能なはずでかつ、アルゴリズムは間違っていないので、これは一考の余地があると考えられる。
+
+
+
+選択した課題2: 演習2
+キューのコードを応用してデックの実装を作成する。
+
+方針2: 
+上記のファイルのiqueue_1_d.cを応用してデック用の関数群を作成することとする。
+ただし関数名、などは変えることとする。
+基本的な方針としては、「push」「pop」「shift」「unshift」の関数をそれぞれ作成することとする。
+
+コード2:
+----------------------------------------------
+// test_ideq.c
+
+#include <stdbool.h>
+#include <stdio.h>
+#include "ideq.h"
+
+char *bool2str(bool b) { return b ? "true" : "false"; }
+
+void expect_bool(bool b1, bool b2, char *msg) {
+  printf("%s %s:%s %s\n", (b1==b2)?"OK":"NG",
+         bool2str(b1), bool2str(b2), msg);
+}
+
+void expect_int(int i1, int i2, char *msg) {
+  printf("%s %d:%d %s\n", (i1==i2)?"OK":"NG", i1, i2, msg);
+}
+
+int main(void) {
+  // デックの宣言
+  ideqp q = ideq_new(4);
+
+  // ここからスタックの確かめ
+  ideq_push(q, 1); ideq_push(q, 2); ideq_push(q, 3);
+  expect_bool(ideq_isfull(q), false, "deq not full");
+  expect_int(ideq_count(q), 3, "count=3");
+  ideq_push(q, 4);
+  expect_bool(ideq_isfull(q), true, "deq full");
+  ideq_push(q, 5);
+  expect_int(ideq_pop(q), 5, "last in => 5");
+  expect_int(ideq_pop(q), 4, "last in => 4");
+  expect_int(ideq_pop(q), 3, "last in => 3");
+  expect_int(ideq_pop(q), 2, "last in => 2");
+  expect_int(ideq_pop(q), 1, "last in => 1");
+  expect_bool(ideq_isempty(q), true, "dec emptied");
+
+  // ここからキューの確かめ
+  ideq_push(q, 1); ideq_push(q, 2); ideq_push(q, 3);
+  expect_bool(ideq_isfull(q), false, "deq not full");
+  expect_int(ideq_count(q), 3, "count=3");
+  ideq_push(q, 4); ideq_push(q, 5);
+  expect_int(ideq_shift(q), 1, "1st => 1");
+  expect_int(ideq_shift(q), 2, "2nd => 2");
+  expect_int(ideq_shift(q), 3, "3rd => 3");
+  expect_int(ideq_shift(q), 4, "4th => 4");
+  expect_int(ideq_shift(q), 5, "5th => 5");
+  expect_bool(ideq_isempty(q), true, "dec emptied");
+  return 0;
+}
+----------------------------------------------
+// ideq.c
+
+#include <stdlib.h>
+#include <string.h>
+#include "ideq.h"
+
+struct ideq { int ip, op, size, count; int *arr; };
+
+ideqp ideq_new(int size) {
+  ideqp p = (ideqp)malloc(sizeof(struct ideq));
+  p->ip = p->op = p->count = 0; p->size = size;
+  p->arr = (int*)malloc(size * sizeof(int)); return p;
+}
+
+bool ideq_isempty(ideqp p) { return p->count == 0; }
+
+bool ideq_isfull(ideqp p) { return p->count == p->size; }
+
+void ideq_push(ideqp p, int v) {
+  if(ideq_isfull(p)) {
+    int *arr_new = (int*)malloc((p->size + 1) * sizeof(int));
+    for(int i = 0; i < p->size; i++) {
+      arr_new[i] = p->arr[p->op++];
+      if(p->op >= p->size) { p->op = 0; }
+    }
+    p->arr = arr_new;
+    p->size += 1;
+    p->op = 0;
+    p->ip = p->size - 1;
+  }
+  p->arr[p->ip++] = v;
+  if(p->ip >= p->size) { p->ip = 0; }
+  p->count += 1;
+}
+
+int ideq_shift(ideqp p) {
+  if(ideq_isempty(p)) { return 0; }
+  int v = p->arr[p->op++];
+  if(p->op >= p->size) { p->op = 0; }
+  p->count -= 1;
+  return v;
+}
+
+void ideq_unshift(ideqp p, int v){
+  if(ideq_isfull(p)) {
+    int *arr_new = (int*)malloc((p->size + 1) * sizeof(int));
+    for(int i = 0; i < p->size; i++) {
+      arr_new[i] = p->arr[p->op++];
+      if(p->op >= p->size) { p->op = 0; }
+    }
+    p->arr = arr_new;
+    p->size += 1;
+    p->op = 0;
+    p->ip = p->size - 1;
+  }
+  if(p->op - 1 < 0) {
+    p->op = p->size;
+  }
+  p->op -= 1; p->arr[p->op] = v;
+  p->count += 1;
+}
+
+int ideq_pop(ideqp p){
+  if(ideq_isempty(p)) { return 0; }
+  if(p->ip - 1 < 0) {
+    p->ip = p->size;
+  }
+  p->ip -= 1; int v = p->arr[p->ip];
+  p->count -= 1;
+  return v;
+}
+
+int ideq_count(ideqp p) {
+  return p->count;
+}
+
+int ideq_op(ideqp p) {
+  if(ideq_isempty(p)) {
+    return 0;
+  }
+  return p->arr[p->op];
+}
+----------------------------------------------
+// ideq.h
+
+#include <stdbool.h>
+
+struct ideq;
+typedef struct ideq *ideqp;
+ideqp ideq_new(int size);
+bool ideq_isempty(ideqp p);
+bool ideq_isfull(ideqp p);
+void ideq_unshift(ideqp p, int v);
+int ideq_shift(ideqp p);
+void ideq_push(ideqp p, int v);
+int ideq_pop(ideqp p);
+int ideq_count(ideqp p);
+int ideq_op(ideqp p);
+----------------------------------------------
+
+実行例2: 
+----------------------------------------------
+OK false:false deq not full
+OK 3:3 count=3
+OK true:true deq full
+OK 5:5 last in => 5
+OK 4:4 last in => 4
+OK 3:3 last in => 3
+OK 2:2 last in => 2
+OK 1:1 last in => 1
+OK true:true dec emptied
+OK false:false deq not full
+OK 3:3 count=3
+OK 1:1 1st => 1
+OK 2:2 2nd => 2
+OK 3:3 3rd => 3
+OK 4:4 4th => 4
+OK 5:5 5th => 5
+OK true:true dec emptied
+----------------------------------------------
+
+解説2:
+　基本的には方針の通りに関数名を配置している。
+　また、各ファイルの役割は課題1と同様である。
+　では、各関数について解説をしていく。関数ideq_pushとideq_shiftはそれぞれ課題1の
+関数iqueue_enq, iqueue_deqと同一である。
+関数ideq_unshiftとideq_popもそれぞれiqueue_enq, iqueue_deqとおおよそ同一の構造をしている。
+ではどのような違いがあるかというと、それぞれの対応している関数の組の違いがどちらから入れる(もしくは出す)かという違いである。
+そのため、変数ipとopを交換し、入れる方向をそれぞれ反転させる。
+反転させただけだと、ip,opがの値が負の数になってしまう可能性があるため、変更がかかる手前で負の数になるか確かめ、負の数になるならばこれをリングバッファとなるように配列の配列の最大位置になるように値を代入している。
+
+考察2: 
+　今回の課題で一番重要なことといえば、キューの概念というよりも、変数ip,opを用いて実装されるリングバッファの概念の習得のように感じた。
+　これを感覚的に取り入れることによってキュー、スタックの両者において感覚的に実装をすることができ、違和感を感じることがなかった。
+また、この感覚は配列全般に応用することもできるだろう。
+
+
+アンケート:
+Q1.スタックやキューを使ってグラフ上の経路を探索するやり方を理解しましたか。
+  A1.おおよそ理解したが、自分で一から実装できるかというと少しばかり不安を感じる。
+Q2.深さ優先と幅優先の違いについて納得しましたか。
+  A2.納得しました。ただし、ちゃんと目的をはっきりさせなければ使い分けが少し難しいとも感じました。
+Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+  A3.徐々に難易度が上がってきており、今後ついていけるかどうか不安を感じています。

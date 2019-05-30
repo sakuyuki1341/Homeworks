@@ -1,0 +1,11 @@
+def bike_class(d)
+  if b <= 50
+    puts "GENDOUKITSUKI-JITENSHA"
+  elsif b <= 125
+    puts "KOGATA-JIDOU-NIRINSHA"
+  elsif b <= 400
+    puts "FUTSU-JIDOU-NIRINSHA"
+  else
+    puts "OHGATA-JIDOU-NIRINSHA"
+  end
+end

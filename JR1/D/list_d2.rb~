@@ -1,0 +1,9 @@
+def prefix_sum(a)
+  b = []
+  a.length.times do |i|
+    (i + 1).times do |j|
+      b[i] += a[j]
+    end
+  end
+  return b
+end

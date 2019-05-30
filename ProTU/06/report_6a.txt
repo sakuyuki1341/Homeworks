@@ -1,0 +1,104 @@
+レポート6A
+
+@@@ 1810678 山田朔也 (個人作業)
+
+選択した課題: 演習1_b
+DLETAの値を変化させることで、どれくらい精度が変わるか、試して検討する。
+また、これを複数の図形の面積で試してみる。
+
+方針:
+演習1_aにて製作した、全体の2×2の範囲の半分の三角形の面積と
+用意されていた1/4円の面積をDLETAの値を変えてそれぞれ実行する。
+
+コード:
+----------------------------------------------------
+#include <stdio.h>
+//#define DELTA 0.001
+#define DELTA 0.00001
+
+#define CIRCLE
+#define TRIANGLE 
+//#define BALL
+
+int inside_circle(double x, double y) {
+  return x*x+y*y <= 4.0;
+}
+
+int inside_triangle(double x, double y) {
+	return x+y <= 2.0;
+}
+
+int inside_ball(double x, double y, double z) {
+	return x*x+y*y+z*z <= 4.0;
+}
+
+double area(double x1, double x2, double y1, double y2,
+            int (*f)(double,double)) {
+ int b1 = (*f)(x1,y1), b2 = (*f)(x1,y2);
+ int b3 = (*f)(x2,y1), b4 = (*f)(x2,y2), bn = b1+b2+b3+b4;
+ if(x2-x1 < DELTA || bn == 0 || bn == 4) {
+   return bn*0.25*(x2-x1)*(y2-y1);
+ } else {
+   double x3 = 0.5*(x1+x2), y3 = 0.5*(y1+y2);
+   return area(x1, x3, y1, y3, f) + area(x1, x3, y3, y2, f) +
+          area(x3, x2, y1, y3, f) + area(x3, x2, y3, y2, f);
+  }
+}
+
+/* 書き途中です
+double area_3d(double x1, double x2, double y1, double y2, double z1, double z2,
+               int (*f)(double,double,double)) {
+	int b1 = (*f)(x1,y1,z1), b2 = (*f)(x1,y1,z2); b3 = (*f)(x1,y2,z1);
+	int b4 = (*f)(x1,y2,z2), b5 = (*f)(x2,y1,z1); b6 = (*f)(x2,y1,z2);
+	int b7 = (*f)(x2,y2,z1), b8 = (*f)(x2,y2,z2); bn = b1+b2+b3+b4+b5+b6+b7+b8;
+	if(x2-x1 < DELTA || bn == 0 || bn == 4) {
+		return bn*0.25*(x2-x1)*(y2-y1)*(z2-z1);
+	} else {
+		double x3 = 0.5*(x1+x2), y3 = 0.5*(y1+y2), z3 = 0.5*(z1+z2);
+		return area_3d(x1, x3, y1, y3, z1, z3, f) + area_3d(x1, x3, y1, y3, z3, z2, f) +
+*/				 
+
+int main(void) {
+#ifdef CIRCLE
+  printf("%8.6f\n", area(0, 2, 0, 2, inside_circle));
+#endif
+#ifdef TRIANGLE
+	printf("%8.6f\n", area(0, 2, 0, 2, inside_triangle));
+#endif
+  return 0;
+}
+---------------------------------------------------------
+
+実行例: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
+DLETAの値を0.001にして実行
+-------------------
+3.141577
+2.000976
+-------------------
+
+DLETAの値を0.00001にして実行
+-------------------
+3.141593
+2.000008
+-------------------
+
+解説:
+上部のdefineの位置にてDLETAの値を変化させて（コメントアウトの除去）、DLETAの値を変化させることができる。
+それを実行して試している。
+DLETAの値を小さくした場合、分割される四角形の大きさがより小さくなり精度が上昇している。
+
+レビュー課題:
+#defineをコメントアウトすることで使用する値や関数を入れ替えるのは賢い
+
+考察:
+DLETAの値が分割される最小の四角形の一辺の長さの最大値に相当するため、
+これを小さくすることで精度が上昇する。
+これを利用すれば、小数点6桁程度の精度は確保できるだろう。
+
+アンケート: アンケート再掲+回答
+Q1.末尾再帰に対する再帰除去ができるようになりましたか。
+	A1.できるようになった。
+Q2.スタックを用いた再帰除去ができるようになりましたか。
+	A2.できるようになった。
+Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+	A3.今後さらに練習したいと思った。

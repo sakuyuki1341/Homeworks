@@ -1,0 +1,8 @@
+putq a
+putq b
+putq c
+getq
+putq d
+putq e
+getq
+putq f

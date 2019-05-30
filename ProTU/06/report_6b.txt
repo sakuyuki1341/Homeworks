@@ -1,0 +1,211 @@
+レポート6B
+
+@@@ 1810678 山田朔也 (個人作業)
+
+
+
+
+選択した課題1: 演習3_b
+    末尾再帰でない1次元の再帰関数である関数powxを
+    累積引数を使って使って末尾再帰に変形し、さらに再帰を除去する。
+    また、元の関数と変換した関数を実行し、確認する。
+
+方針1:
+    指示にあるように、与えられた関数powxを作業的に変換する。
+    その際気をつけることとして、returnの箇所で掛けられる値を累積引数に掛けて
+    末尾再帰に直す。また、累積引数を使用するため変数が増えることとなる。
+    そのため、事前に引数を増やすための関数を末尾再帰でもループでも用意しておく。
+
+コード1:
+-------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+//#define FACT
+//#define MUL
+#define POWX
+//#define EXPOWX
+
+int fact(int n) {
+    if(n < 1) {
+        return 1;
+    } else {
+        return n * fact(n-1);
+    }
+}
+
+int fact1(int n, int r) {
+    if(n < 1) {
+        return r;
+    } else {
+        return fact1(n-1, r*n);
+    }
+}
+
+int fact_1(int n) { return fact1(n, 1); }
+
+int mul(int a, int b) {
+    if(b == 0) {
+        return 0;
+    } else {
+        return a + mul(a, b-1);
+    }
+}
+
+int mul1(int a, int b, int r) {
+    if(b == 0) {
+        return r;
+    } else {
+        return mul1(a, b-1, r+a);
+    }
+}
+
+int mul_1(int a, int b) { return mul1(a, b, 0); }
+
+int mul2(int a, int b, int r) {
+    while(true) {
+        if(b == 0) {
+            return r;
+        } else {
+            b -= 1;
+            r += a;
+        }
+    }
+}
+
+int mul_2(int a, int b) { return mul2(a, b, 0); }
+
+int powx(double x, int n) {
+    if(n < 1) {
+        return 1.0;
+    } else {
+        return x * powx(x, n-1);
+    }
+}
+
+int powx1(double x, int n, double r) {
+    if(n < 1) {
+        return r;
+    } else {
+        return powx1(x, n-1, r*x);
+    }
+}
+
+int powx_1(double x, int n) { return powx1(x, n, 1.0); }
+
+int powx2(double x, int n, double r) {
+    while(true) {
+        if(n < 1) {
+            return r;
+        } else {
+            n--;
+            r *= x;
+        }
+    }
+}
+
+int powx_2(double x, int n) { return powx2(x, n, 1.0); }
+
+double expowx(double x, int n) {
+    if(n < 1) {
+        return 1.0;
+    } else if(n % 2 == 1) {
+        return x * expowx(x, n-1);
+    } else {
+        double y = expowx(x, n/2);
+        return y*y;
+    }
+}
+
+double expowx1(double x, int n, double r) {
+    if(n < 1) {
+        return r;
+    } else if(n % 2 == 1) {
+        return expowx1(x, n-1, r*x);
+    } else {
+        return expowx1(x*x, n/2, r);
+    }
+}
+
+double expowx_1(double x, int n) { return expowx1(x, n, 1.0); }
+
+double expowx2(double x, int n, double r) {
+    while(true) {
+        if(n < 1) {
+            return r;
+        } else if(n % 2 == 1) {
+            n--;
+            r *= x;
+        } else {
+            n /= 2;
+            x *= x;
+        }
+    }
+}
+
+double expowx_2(double x, int n) { return expowx2(x, n, 1.0); }
+
+//========================================================================
+int main(int argv, char *args[]) {
+#ifdef FACT
+    int n = atoi(args[1]);
+    printf("再帰で記述: %d\n末尾再帰で記述: %d\n", fact(n), fact_1(n));
+#endif
+#ifdef MUL
+    int a = atoi(args[1]), b = atoi(args[2]);
+    printf("再帰で記述: %d\n末尾再帰で記述: %d\nループで記述: %d\n", mul(a, b), mul_1(a, b), mul_2(a, b));
+#endif
+#ifdef POWX
+    double x = atof(args[1]);
+    int n = atoi(args[2]);
+    printf("再帰で記述: %d\n末尾再帰で記述: %d\nループで記述: %d\n", powx(x, n), powx_1(x, n), powx_2(x, n));
+#endif
+#ifdef EXPOWX
+    double x = atof(args[1]);
+    int n = atoi(args[2]);
+    printf("再帰で記述: %f\n末尾再帰で記述: %f\nループで記述: %f\n", expowx(x, n), expowx_1(x, n), expowx_2(x, n));
+#endif
+//    printf("%", expowx())
+    return 0;
+}
+-------------------------------------------------------------------------------
+
+実行例1:
+-------------------------------------------------------------------------------
+    [y1810678@red99 06]$ ./a.out 2 10
+    再帰で記述: 1024
+    末尾再帰で記述: 1024
+    ループで記述: 1024
+-------------------------------------------------------------------------------
+
+解説1:
+    まず、この関数powxは実数xと非負整数nを受け取り、x^nを返す関数である。
+    今回掲載したファイルの中には使わない関数も多数ある。それで実行する際に必要なものを
+    この解説で明記する。実行に必要な関数はpowx, powx1, powx_1, powx2, powx_2, mainの
+    ５つである。
+    次にそれぞれの関数の動きを説明する。
+    powx: これは問題として与えられた関数。仕様は上記のものである。
+    powx1: これは関数powxを累積引数rを用いて末尾再帰の関数に変換したものである。
+    powx_1: これは関数powx1の変数
+
+考察1: 課題をやって分かったこと---数行以上
+
+
+
+選択した課題2: 課題番号 + 課題の要約
+
+方針2: 課題をどのようにして解くかの方針説明---数行以上
+
+コード2: プログラム一式(動くものを貼ること)
+
+実行例2: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
+
+解説2: プログラムの説明ひととおり(きちんとここで説明すること)
+
+考察2: 課題をやって分かったこと---数行以上
+
+
+
+
+アンケート: アンケート再掲+回答

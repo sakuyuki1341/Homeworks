@@ -1,0 +1,143 @@
+レポート4a
+
+@@@ 1810678 山田 朔也 (個人作業)
+
+選択した課題: 演習1_a
+キューに「今入っている個数」を調べる機能を追加する。
+また、それを利用して、配列のサイズ一杯まで格納できるようにする。
+
+方針:
+キューの構造体のフィールドとして現在入っている個数を保存しておくことで
+それを関数を用いて返すようにする
+
+コード:
+-----------------------------------------
+//test_iqueue_1_a.c --- unit test for iqueue
+#include <stdbool.h>
+#include <stdio.h>
+#include "iqueue_1_a.h"
+
+#define ENSHU_A
+//#define ENSHU_B
+
+char *bool2str(bool b) { return b ? "true" : "false"; }
+
+void expect_bool(bool b1, bool b2, char *msg) {
+  printf("%s %s:%s %s\n", (b1==b2)?"OK":"NG",
+         bool2str(b1), bool2str(b2), msg);
+}
+
+void expect_int(int i1, int i2, char *msg) {
+  printf("%s %d:%d %s\n", (i1==i2)?"OK":"NG", i1, i2, msg);
+}
+
+int main(void) {
+#ifdef ENSHU_A
+  iqueuep q = iqueue_new(4);
+  iqueue_enq(q, 1); iqueue_enq(q, 2); iqueue_enq(q, 3);
+  expect_bool(iqueue_isfull(q), false, "queue not full");
+  expect_int(iqueue_count(q), 3, "count=3");
+  iqueue_enq(q, 4);
+  expect_bool(iqueue_isfull(q), true, "queue full");
+  expect_int(iqueue_count(q), 4, "count=4");
+  expect_int(iqueue_deq(q), 1, "1st => 1");
+  expect_int(iqueue_deq(q), 2, "2nd => 2");
+  expect_int(iqueue_deq(q), 3, "3rd => 3");
+  expect_int(iqueue_deq(q), 4, "4th => 4");
+  expect_bool(iqueue_isempty(q), true, "queue emptied");
+#endif
+#ifdef ENSHU_B
+  iqueuep q = iqueue_new(4);
+  iqueue_enq(q, 1); iqueue_enq(q, 2); iqueue_enq(q, 3);
+  expect_int(iqueue_op(q), 1, "op => 1");
+  expect_bool(iqueue_isfull(q), false, "queue not full");
+  expect_int(iqueue_count(q), 3, "count=3");
+  iqueue_enq(q, 4);
+  expect_bool(iqueue_isfull(q), true, "queue full");
+  expect_int(iqueue_count(q), 4, "count=4");
+  expect_int(iqueue_deq(q), 1, "1st => 1");
+  expect_int(iqueue_deq(q), 2, "2nd => 2");
+  expect_int(iqueue_deq(q), 3, "3rd => 3");
+  expect_int(iqueue_deq(q), 4, "4th => 4");
+  expect_bool(iqueue_isempty(q), true, "queue emptied");
+  expect_int(iqueue_op(q), 0, "op => NULL(0)");
+#endif
+  return 0;
+}
+-----------------------------------------
+// iqueue_1_a.c
+#include <stdlib.h>
+#include "iqueue_1_a.h"
+struct iqueue { int ip, op, size, count; int *arr; };
+
+iqueuep iqueue_new(int size) {
+  iqueuep p = (iqueuep)malloc(sizeof(struct iqueue));
+  p->ip = p->op = p->count = 0; p->size = size;
+  p->arr = (int*)malloc(size * sizeof(int)); return p;
+}
+
+bool iqueue_isempty(iqueuep p) { return p->count == 0; }
+
+bool iqueue_isfull(iqueuep p) { return p->count == p->size; }
+
+void iqueue_enq(iqueuep p, int v) {
+  if(iqueue_isfull(p)) { return; }
+  p->arr[p->ip++] = v;
+  if(p->ip >= p->size) { p->ip = 0; }
+  p->count += 1;
+}
+
+int iqueue_deq(iqueuep p) {
+  if(iqueue_isempty(p)) { return 0; }
+  int v = p->arr[p->op++];
+  if(p->op >= p->size) { p->op = 0; }
+  p->count -= 1;
+  return v;
+}
+
+int iqueue_count(iqueuep p) {
+  return p->count;
+}
+
+int iqueue_op(iqueuep p) {
+  if(iqueue_isempty(p)) {
+    return 0;
+  }
+  return p->arr[p->op];
+}
+-----------------------------------------
+
+実行例: 
+-----------------------------------------
+OK false:false queue not full
+OK 3:3 count=3
+OK true:true queue full
+OK 4:4 count=4
+OK 1:1 1st => 1
+OK 2:2 2nd => 2
+OK 3:3 3rd => 3
+OK 4:4 4th => 4
+OK true:true queue emptied
+-----------------------------------------
+
+解説:
+キューの実装をする際に、変数「count」を構造体に組み込み、
+宣言されたキューに要素が追加されたり、取られたりした際に
+この変数を変更することで、現在の配列の要素数を記述しておく。
+また関数iqueue_countを作成し、これが呼び出されることによって
+よびだし元に変数countの値が買えされられる。
+
+レビュー課題:
+単体テストをdefineを利用して簡単に切り替えられるのは、良い案だと思われた。
+
+考察:
+キューとスタックを持ちたデックの概念は非常に汎用的なものだと思われた。
+これを用いれば本来であれば煩雑になるはずの実装が簡単に作成できるものである。
+
+アンケート:
+Q1.スタックやキューを使ってグラフ上の経路を探索するやり方を理解しましたか。
+　A1.概念は理解しましたが、若干無限ループに陥らないのかなどの疑問点が残ります
+Q2.深さ優先と幅優先の違いについて納得しましたか。
+　A2.納得しました。個人的には幅優先で最適解を求める方が重要なのではと思いました。
+Q3.リフレクション（今回の課題で分かったこと）・感想・要望をどうぞ。
+　A3.名前だけ知っていた深さ優先探索の概念を知れてよかったと感じた。

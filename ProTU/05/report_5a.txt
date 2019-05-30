@@ -1,0 +1,83 @@
+レポート5A
+
+@@@ 1810678 山田朔也  (個人作業)
+
+選択した課題: 演習1_a
+３つの実数変数のアドレスを受け取り、
+1番目の値を2番目に、2番目の値を3番目に、3番目の値を1番目にと順繰りに転送する。
+
+方針: 
+1番目の値を一時的に保存した後、それぞれの値を再代入する
+
+コード:
+#include <math.h>
+#include <stdio.h>
+
+#define ENSHU_A
+
+void dswap(double *x, double *y) {
+  double z = *x; *x = *y; *y = z;
+}
+
+void rotate3(double *a, double *b, double *c) {
+  double x = *a;
+  *a = *c; *c = *b; *b = x;
+}
+
+void divide(int a, int b, int *q, int *r) {
+  *q = a / b;
+  *r = a - b * (*q);
+}
+
+void expect_double(double a, double b, double d, char *msg) {
+  printf("%s %.10g:%.10g %s\n", (fabs(a-b)<d)?"OK":"NG" , a, b, msg);
+}
+
+void expect_int(int a, int b, char *msg) {
+  printf("%s %d:%d %s\n", (a-b)?"NG":"OK" , a, b, msg);
+}
+
+int main(void) {
+#ifdef TEST
+  double a = 3.14, b = 2.71; dswap(&a, &b);
+  expect_double(a, 2.71, 1e-10, "a should be 2.71");
+  expect_double(b, 3.14, 1e-10, "b should be 3.14");
+#endif
+#ifdef ENSHU_A
+  double a = 3.14, b = 2.71, c = 1.41; rotate3(&a, &b, &c);
+  expect_double(a, 1.41, 1e-10, "a should be 1.41");
+  expect_double(b, 3.14, 1e-10, "b should be 3.14");
+  expect_double(c, 2.71, 1e-10, "c should be 2.71");
+#endif
+#ifdef ENSHU_D
+  int a = 13, b = 3;
+  int q, r; divide(a, b, &q, &r);
+  expect_int(q, 4, "q should be 4");
+  expect_int(r, 1, "r should be 1");
+#endif
+
+}
+
+実行例:
+OK 1.41:1.41 a should be 1.41
+OK 3.14:3.14 b should be 3.14
+OK 2.71:2.71 c should be 2.71
+
+解説:
+基本的には方針通りにプログラムを作成している。
+今回、一時的に保存する変数は1番目のものにした。
+
+レビュー課題:
+保存する実数変数をaではなく、bの方が見栄えがいいのではないか
+
+考察:
+ポインタを用いることで、返り値で値を送らなくても変数の編集をスコープを気にせずに
+できる点はよい点だと考えられる。
+
+アンケート: 
+Q1.引数の渡し方と手続き呼び出しの実現方法について理解しましたか。
+　A1.理解しました。これを用いることでサブルーチンの使用に幅ができると感じた。
+Q2.再帰呼び出しのプログラムがどのように動いているか理解しましたか。
+　A2.理解しました。ただ、考える段階で脳内のコンパイラが上手く働かないのが悩みどころです。
+Q3.リフレクション（今回の課題で分かったこと）・感想・要望をどうぞ。
+　A3.再帰の挙動が未だに感覚的に分からないので、時間があれば再帰の問題を解きたいと考えている。
