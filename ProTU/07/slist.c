@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 #ifdef ENSHU1_A
     nodep a = p;    // aはリストの先頭
     // aをリストの最後から一つ前に
-    while(a->next->next == NULL) {
+    while(a->next->next != NULL) {
         a = a->next;
     }
 
