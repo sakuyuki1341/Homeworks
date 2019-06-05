@@ -66,6 +66,38 @@ nodep timeslist(nodep x, nodep y) {
 }
 
 /*==================================================================*
+ * 関数swap_list: リストxのs番目とt番目を入れ替える
+ *==================================================================*/
+void swaplist(nodep x, int s, int t) {
+    nodep node_s = x, node_t = x;
+    for(int i = 1; i < s; i++) {
+        node_s = node_s->next;
+    }
+    for(int i = 1; i < t; i++) {
+        node_t = node_t->next;
+    }
+    int temp = node_s->data;
+    node_s->data = node_t->data;
+    node_t->data = temp;
+}
+
+/*==================================================================*
+ * 関数reverselist: リストxの並びを逆向きにする
+ *==================================================================*/
+nodep reverselist(nodep x) {
+    nodep y = x;
+    int count = 0;
+    while(y != NULL) {
+        count++;
+        y = y->next;
+    }
+    for(int i = 0; i < count/2; i++) {
+        swaplist(x, i+1, count-i);
+    }
+    return x;
+}
+
+/*==================================================================*
  * 関数getl: 文字配列sに1行分の文字列を入れ込んでいく
  *==================================================================*/
 bool getl(char s[], int lim) {
@@ -101,14 +133,22 @@ int main(int argc, char *argv[]) {
             break;
         } else if(k > 0 && strcmp(cmd[0], "e") == 0) { // enter list
             list = mklist(k-1, cmd+1);
+
         } else if(k > 0 && strcmp(cmd[0], "a") == 0) { // append list
             nconc(list, mklist(k-1, cmd+1));
+
         } else if(k > 1 && strcmp(cmd[0], "add") == 0) { // add list
             list = addlist(list, mklist(k-1, cmd+1));
+
         } else if(k > 1 && strcmp(cmd[0], "times") == 0) { // times list
             list = timeslist(list, mklist(k-1, cmd+1));
+
+        } else if(k > 0 && strcmp(cmd[0], "reverse") == 0) { // reverse list
+            list = reverselist(list);
+
         } else if(k > 1 && strcmp(cmd[0], "d") == 0) { // delete item
             delnode(list, atoi(cmd[1]));
+
         } else {
             plist(list);
         }
