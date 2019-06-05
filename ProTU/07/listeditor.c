@@ -108,15 +108,49 @@ nodep reverselist(nodep x) {
  *==================================================================*/
 nodep rightlist(nodep x) {
     nodep y = x;    // 先頭の保存
+    // xを最後から二番目のnodeに変更
     while(x->next->next != NULL) {
         x = x->next;
     }
 
-    x->next->next = y;
-    y = x->next;
-    x->next = NULL;
+    x->next->next = y;  // ループするように代入
+    y = x->next;    // 先頭を元の最後のnodeに変更
+    x->next = NULL; //ループの解除
 
     return y;
+}
+
+/*==================================================================*
+ * 関数leftlist: リストxの並びを左巡回させる
+ *==================================================================*/
+nodep leftlist(nodep x) {
+    nodep y = x;    // 先頭の保存
+    // xを最後のnodeに変更
+    while(x->next != NULL) {
+        x = x->next;
+    }
+
+    x->next = y;    // ループするように代入
+    y = y->next;    // 先頭を一個後ろに進める
+    x->next->next = NULL;   // ループを解除
+
+    return y;
+}
+
+/*==================================================================*
+ * 関数insert: リストxの指定された番号nに値kを割り込ませる
+ *==================================================================*/
+nodep insert(nodep x, int k, int n) {
+    nodep node_before = x;
+    // node_beforeをリストのn-1番目のノードにする
+    for(int i = 1; i < n-1; i++) {
+        node_before = node_before->next;
+    }
+    // 値kを持ったnodeを作成
+    nodep temp = node_new(k, node_before->next);
+    node_before->next = temp; // リストの繋がりを修正
+
+    return x;
 }
 
 /*==================================================================*
@@ -168,8 +202,14 @@ int main(int argc, char *argv[]) {
         } else if(k > 0 && strcmp(cmd[0], "reverse") == 0) { // reverse list
             list = reverselist(list);
 
-        } else if(k > 0 && strcmp(cmd[0], "right") == 0) {
+        } else if(k > 0 && strcmp(cmd[0], "right") == 0) { // right list
             list = rightlist(list);
+
+        } else if(k > 0 && strcmp(cmd[0], "left") == 0) { // left list
+            list = leftlist(list);
+
+        } else if(k > 2 && strcmp(cmd[0], "insert") == 0) { // insert item
+            list = insert(list, atoi(cmd[1]), atoi(cmd[2]));
 
         } else if(k > 1 && strcmp(cmd[0], "d") == 0) { // delete item
             delnode(list, atoi(cmd[1]));
