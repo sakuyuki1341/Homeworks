@@ -66,16 +66,18 @@ nodep timeslist(nodep x, nodep y) {
 }
 
 /*==================================================================*
- * 関数swap_list: リストxのs番目とt番目を入れ替える
+ * 関数swaplist: リストxのs番目とt番目のdataを入れ替える
  *==================================================================*/
 void swaplist(nodep x, int s, int t) {
-    nodep node_s = x, node_t = x;
+    nodep node_s = x, node_t = x;   // 各番目のnode
     for(int i = 1; i < s; i++) {
         node_s = node_s->next;
     }
     for(int i = 1; i < t; i++) {
         node_t = node_t->next;
     }
+
+    // 入れ替え作業
     int temp = node_s->data;
     node_s->data = node_t->data;
     node_t->data = temp;
@@ -85,16 +87,36 @@ void swaplist(nodep x, int s, int t) {
  * 関数reverselist: リストxの並びを逆向きにする
  *==================================================================*/
 nodep reverselist(nodep x) {
-    nodep y = x;
-    int count = 0;
+    nodep y = x;    // 先頭を保存
+    int count = 0;  // リストのnodeの数
+
+    // nodeの数え上げ
     while(y != NULL) {
         count++;
         y = y->next;
     }
+
+    // 前と後ろを中央まで入れ替え
     for(int i = 0; i < count/2; i++) {
         swaplist(x, i+1, count-i);
     }
     return x;
+}
+
+/*==================================================================*
+ * 関数rightlist: リストxの並びを右巡回させる
+ *==================================================================*/
+nodep rightlist(nodep x) {
+    nodep y = x;    // 先頭の保存
+    while(x->next->next != NULL) {
+        x = x->next;
+    }
+
+    x->next->next = y;
+    y = x->next;
+    x->next = NULL;
+
+    return y;
 }
 
 /*==================================================================*
@@ -145,6 +167,9 @@ int main(int argc, char *argv[]) {
 
         } else if(k > 0 && strcmp(cmd[0], "reverse") == 0) { // reverse list
             list = reverselist(list);
+
+        } else if(k > 0 && strcmp(cmd[0], "right") == 0) {
+            list = rightlist(list);
 
         } else if(k > 1 && strcmp(cmd[0], "d") == 0) { // delete item
             delnode(list, atoi(cmd[1]));
