@@ -9,6 +9,6 @@ void show_byte(unsigned char x) {
 }
 
 int main(void) {
-    show_byte(((0x6a)>>4)<<4);
+    show_byte((0x6a)&(0xF0));
     return 0;
 }
