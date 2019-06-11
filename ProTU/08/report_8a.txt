@@ -1,0 +1,211 @@
+レポート8A
+
+@@@ 1810678 山田朔也 (個人的作業)
+
+選択した課題: 演習1_b
+    削除命令ebuf_deleteを追加する.また、EOF行は消さないようにする.
+
+方針:
+    まず現在行を削除する。
+    削除した後の現在行は一つ先を指すようにする。
+    もし、現在行がEOFの場合、削除できない旨を出力する。
+
+コード:
+---------------------------------------------------------------------
+// ebuf.h
+
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAXSTR 100
+
+struct ebuf;
+typedef struct ebuf *ebufp;
+
+ebufp ebuf_new();            // create ebuf
+bool ebuf_iseof(ebufp e);    // see if current line is EOF
+bool ebuf_forward(ebufp e);  // forward 1 line
+bool ebuf_backward(ebufp e); // backward 1 line
+void ebuf_top(ebufp e);      // go to top
+char *ebuf_str(ebufp e);    // obtain current line string
+void ebuf_insert(ebufp e, char *s); // insert a line
+void ebuf_replace(ebufp e, char *s);    // replace str
+void ebuf_delete(ebufp e); // delete line
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+// ebuf.c
+
+#include <stdlib.h>
+#include <string.h>
+#include "ebuf.h"
+
+
+struct line {
+    struct line *prev, *next; char str[MAXSTR];
+};
+
+struct ebuf { struct line *head, *cur; };
+
+/*========================================================*
+ * 関数ebuf_new: 新規バッファの作成
+ *========================================================*/
+ebufp ebuf_new() {
+    ebufp r = (ebufp)malloc(sizeof(struct ebuf));
+    r->head = (struct line*)malloc(sizeof(struct line));
+    r->cur = r->head->next = r->head->prev = r->head;
+    strcpy(r->head->str, "EOF"); return r;
+}
+
+/*========================================================*
+ * 関数ebuf_iseof: 現在行がEOF行かどうか調べる。
+ * 戻り値はEOFならtrue, EOFでないならfalse
+ *========================================================*/
+bool ebuf_iseof(ebufp e) { return e->cur == e->head; }
+
+/*========================================================*
+ * 関数ebuf_forward: 現在行を一行先に移動
+ *========================================================*/
+bool ebuf_forward(ebufp e) {
+    if(e->cur == e->head) { return false; }
+    e->cur = e->cur->next; return true;
+}
+
+/*========================================================*
+ * 関数ebuf_backward: 現在行を一行前に移動
+ *========================================================*/
+bool ebuf_backward(ebufp e) {
+    if(e->cur->prev == e->head) { return false; }
+    e->cur = e->cur->prev; return true;
+}
+
+/*========================================================*
+ * 関数ebuf_top: 現在行を先頭に移動
+ *========================================================*/
+void ebuf_top(ebufp e) { e->cur = e->head->next; }
+
+/*========================================================*
+ * 関数ebuf_str: 現在行の文字列を返す
+ *========================================================*/
+char *ebuf_str(ebufp e) { return e->cur->str; }
+
+/*========================================================*
+ * 関数ebuf_insert: 現在行の上に指定した文字列を持つ行を插入
+ *========================================================*/
+void ebuf_insert(ebufp e, char *s) {
+    struct line *p = (struct line*)malloc(sizeof(struct line));
+    strncpy(p->str, s, MAXSTR); p->str[MAXSTR-1] = '\0';
+    p->prev = e->cur->prev; p->next = e->cur;
+    e->cur->prev->next = p; e->cur->prev = p;
+}
+
+/*========================================================*
+ * 関数ebuf_replace: 現在行の内容を指定した文字列に
+ * 取り換える。
+ *========================================================*/
+void ebuf_replace(ebufp e, char *s) {
+    strcpy(e->cur->str, s);
+}
+
+/*========================================================*
+ * 関数ebuf_delete: 現在行を削除する。削除した後の
+ * 現在行は一つ先を指す。
+ *========================================================*/
+void ebuf_delete(ebufp e) {
+    if(!ebuf_forward(e)) {
+        printf("EOF行は削除できない\n");
+    } else {
+        e->cur->prev->prev->next = e->cur;
+        e->cur->prev = e->cur->prev->prev;
+    }
+}
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+// test_ebuf.c
+
+#include <stdio.h>
+#include <string.h>
+#include "ebuf.h"
+
+//#define ENSHU1_EX
+//#define ENSHU1_A
+#define ENSHU1_B
+//#define ENSHU1_C
+
+void expect_str(char *s1, char *s2, char *msg) {
+    printf("%s '%s':'%s' %s\n", strcmp(s1, s2)?"NG":"OK", s1, s2, msg);
+}
+
+int main(void) {
+#ifdef ENSHU1_EX
+    ebufp e = ebuf_new();
+    ebuf_insert(e, "abc"); ebuf_insert(e, "def");
+    ebuf_top(e); expect_str(ebuf_str(e), "abc", "line 1: abc");
+    ebuf_forward(e); expect_str(ebuf_str(e), "def", "line 2: def");
+    ebuf_insert(e, "ghi"); ebuf_top(e);
+    ebuf_forward(e); expect_str(ebuf_str(e), "ghi", "new line 2: ghi");
+    ebuf_forward(e); expect_str(ebuf_str(e), "def", "new line 3: def");
+#endif
+
+#ifdef ENSHU1_A
+    ebufp e = ebuf_new();
+    ebuf_insert(e, "abc");
+    ebuf_insert(e, "def");
+    ebuf_top(e);
+
+    ebuf_replace(e, "jkl");   // ここでabcをjklに変更
+    expect_str(ebuf_str(e), "jkl", "line 1: jkl");
+
+    ebuf_forward(e);
+    expect_str(ebuf_str(e), "def", "line 2: def");
+#endif
+
+#ifdef ENSHU1_B
+    ebufp e = ebuf_new();
+    ebuf_insert(e, "abc");
+    ebuf_insert(e, "def");
+    ebuf_top(e);
+
+    ebuf_delete(e);   // ここでabcを削除
+    expect_str(ebuf_str(e), "def", "line 1: def");
+
+    ebuf_forward(e);  // ここでcurがEOFを指すように
+    ebuf_delete(e);   // ここでEOFを削除するように試みる
+#endif
+    return 0;
+---------------------------------------------------------------------
+
+実行例:
+---------------------------------------------------------------------
+[y1810678@red99 08]$ ./a.out
+OK 'def':'def' line 1: def
+EOF行は削除できない
+---------------------------------------------------------------------
+
+解説:
+    まず、curを先に移すのと、curがEOFを指しているかを確かめるのの
+    両者を実行するために、まずはebuf_forwardを実効する。
+    この際に、先に移動できない場合、それはcurがEOFということなので
+    EOF行は削除できないと出力し関数は終了する。
+    そうでない場合、移動した後、curとcur->prev->prevを繋げて
+    削除を完了させる。
+
+レビュー課題:
+    コメントアウトを書くのは丁寧だと感じた。
+    また、e->cur->prev->prev->nextと長くしても内容を把握できているのは
+    良いと思った。
+
+考察:
+    双連結リスト利用すると、手続きは煩雑になるが、理解の難易度は
+    下がるように思われる。
+
+アンケート:
+    Q1. 双連結リストの概念を理解しましたか。
+    A1. 理解しました。非常に利便性が高いと感じました。
+
+    Q2. 行エディタのプログラムを理解し直せるようになりましたか。
+    A2. 理解はできましたが、直せるかどうかは怪しいです。
+
+    Q3. リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ
+    A3. 先週ずっと双連結にすれば楽なのに、と考えていたので、ストレスがなくなりました。

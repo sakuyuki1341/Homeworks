@@ -32,7 +32,7 @@ int main(int ac, char *av[]) {
             d += temp;
         }
     }
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < 4; i++) {
         d /= 2;
     }
     printf("%.10lf\n", d);
