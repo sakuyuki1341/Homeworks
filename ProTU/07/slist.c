@@ -5,8 +5,8 @@
 //#define ENSHU1_EX
 //#define ENSHU1_A
 //#define ENSHU1_B
-#define ENSHU1_C
-//#define ENSHU1_D
+//#define ENSHU1_C
+#define ENSHU1_D
 
 struct node {
     double data;
