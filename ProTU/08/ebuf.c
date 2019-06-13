@@ -85,12 +85,39 @@ void ebuf_delete(ebufp e) {
 /*========================================================*
  * 関数ebuf_delete_y: 現在行を削除し、削除されたセルが
  * ヤンク用のリストに追加される。
- * 削除した後の現在行は一つ後を指す。
+ * 削除した後の現在行は一つ先を指す。
  *========================================================*/
+void ebuf_delete_y(ebufp e, ebufp y) {
+    if(ebuf_iseof(e)) {
+        printf("EOF行は削除できない\n");
+    } else {
+        // 接続の順番変更(第一段階)
+        e->cur->prev->next = e->cur->next;
+        e->cur->next = y->cur;
+        y->cur->prev->next = e->cur;
 
+        // eの現在行を一つ先に移す
+        e->cur = e->cur->prev->next;
+
+        // 接続の順番変更(第二段階)
+        e->cur->prev = e->cur->prev->prev;
+        y->cur->prev->next->prev = y->cur->prev;
+        y->cur->prev = y->cur->prev->next;
+    }
+}
 
 /*========================================================*
  * 関数ebuf_yank: 削除された行を、現在行の上に插入する。
  *========================================================*/
-//void ebuf_yank(ebufp e, ebufp y) {
+void ebuf_yank(ebufp e, ebufp y) {
+    // 接続の順番変更(第一段階)
+    y->cur->prev->prev->next = y->cur;
+    y->cur->prev->next = e->cur;
+    e->cur->prev->next = y->cur->prev;
+    y->cur->prev = y->cur->prev->prev;
+    e->cur->prev->next->prev = e->cur->prev;
+    e->cur->prev = e->cur->prev->next;
 
+    // eの現在行を前に移す
+    ebuf_backward(e);
+}
