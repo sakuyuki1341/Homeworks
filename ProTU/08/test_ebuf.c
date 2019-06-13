@@ -4,7 +4,7 @@
 
 //#define ENSHU1_EX
 //#define ENSHU1_A
-#define ENSHU1_B
+//#define ENSHU1_B
 //#define ENSHU1_C
 
 void expect_str(char *s1, char *s2, char *msg) {
@@ -46,6 +46,10 @@ int main(void) {
 
     ebuf_forward(e);  // ここでcurがEOFを指すように
     ebuf_delete(e);   // ここでEOFを削除するように試みる
+#endif
+
+#ifdef ENSHU1_C
+
 #endif
     return 0;
 }
