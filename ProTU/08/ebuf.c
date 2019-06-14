@@ -121,3 +121,12 @@ void ebuf_yank(ebufp e, ebufp y) {
     // eの現在行を前に移す
     ebuf_backward(e);
 }
+
+/*========================================================*
+ * 関数ebuf_copy: 削除はせずに、現在行のコピーをヤンク用の
+ * リストに追加する。現在行は一つ先に移動する。
+ *========================================================*/
+void ebuf_copy(ebufp e, ebufp y) {
+    ebuf_insert(y, e->cur->str);
+    ebuf_forward(e);
+}

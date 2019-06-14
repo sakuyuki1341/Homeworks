@@ -7,6 +7,7 @@
 //#define ENSHU1_B
 #define ENSHU1_C
 
+
 void expect_str(char *s1, char *s2, char *msg) {
     printf("%s '%s':'%s' %s\n", strcmp(s1, s2)?"NG":"OK", s1, s2, msg);
 }
