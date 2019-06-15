@@ -256,7 +256,6 @@ int main(void) {
 
 実行例1:
 -------------------------------------------------------------------------------
-[y1810678@red99 08]$ gcc8 test_ebuf.c ebuf.c
 [y1810678@red99 08]$ ./a.out
 OK 'def':'def' line 1: def
 OK 'jkl':'jkl' line 1: jkl
@@ -285,18 +284,154 @@ OK 'abc':'abc' line 2: abc
 
 
 
-選択した課題2:
+選択した課題2: 演習2_e
+    演習1_cのように削除した結果を戻せるコマンド「ｙ」を追加する。
 
-方針2: 課題をどのようにして解くかの方針説明---数行以上
+方針2:
+    上記の課題で作成した関数ebuf_yankをコマンド「ｙ」にて呼び出し
+    できるようにする。
 
-コード2: プログラム一式(動くものを貼ること)
+コード2:
+    今回使用するファイルはebuf.c, ebuf.h, editor.cの３つだが、
+    ebuf.c, ebuf.hは上記の課題にて掲載したため、本課題での掲載は
+    省略する。
+-------------------------------------------------------------------------------
+// editor.c
+#include <stdio.h>
+#include <string.h>
+#include "ebuf.h"
 
-実行例2: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
 
-解説2: プログラムの説明ひととおり(きちんとここで説明すること)
+bool getl(char s[], int lim) {
+  int c, i = 0;
+  for(c = getchar(); c != EOF && c != '\n'; c = getchar()) {
+    s[i++] = c; if(i+1 >= lim) { break; }
+  }
+  s[i] = '\0'; return c != EOF;
+}
 
-考察2: 課題をやって分かったこと---数行以上
+bool readfile(ebufp e, char *fname) {
+  char str[200];
+  FILE *f = fopen(fname, "r");
+  if(f == NULL) { return false; }
+  while(fgets(str, 200, f) != NULL) {
+    int len = strlen(str);
+    if(len > 0) { str[len-1] = '\0'; }
+    ebuf_insert(e, str);
+  }
+  fclose(f); return true;
+}
+
+bool writefile(ebufp e, char *fname) {
+  FILE *f = fopen(fname, "w");
+  if(f == NULL) { return false; }
+  ebuf_top(e);
+  while(!ebuf_iseof(e)) {
+    fprintf(f, "%s\n", ebuf_str(e)); ebuf_forward(e);
+  }
+  fclose(f); return true;
+}
+
+int main(void) {
+  char buf[200];
+  ebufp e = ebuf_new();
+  ebufp y = ebuf_new();
+  printf("> ");
+  while(getl(buf, 200)) {
+    if(buf[0] == 'q') { // quit
+      break;
+
+    } else if(buf[0] == 'p') { // print
+      printf("   %s\n", ebuf_str(e));
+
+    } else if(buf[0] == 't') { // top
+      ebuf_top(e);
+
+    } else if(buf[0] == 'f') { // fwd
+      if(buf[1] >= 1) {
+        for(int i = 0; i < buf[1]; i++) {
+          ebuf_forward(e);
+        }
+      } else {
+        ebuf_forward(e);
+      }
+
+    } else if(buf[0] == 'b') { // back
+      if(buf[1] >= 1) {
+        for(int i = 0; i < buf[1]; i++) {
+          ebuf_backward(e);
+        }
+      } else {
+        ebuf_backward(e);
+      }
+
+    } else if(buf[0] == 'i') { // insert
+      ebuf_insert(e, buf+1);
+
+    } else if(buf[0] == 'r') { // read file
+      readfile(e, buf+1);
+
+    } else if(buf[0] == 'w') { // write file
+      writefile(e, buf+1);
+
+    } else if(buf[0] == 'd') { // delete
+      ebuf_delete_y(e, y);
+
+    } else if(buf[0] == 'y') {
+      ebuf_yank(e, y);
+
+    } else if(buf[0] == 'r') { // replace
+      ebuf_replace(e, buf+1);
+
+    } else {  // other --- fwd and print
+      ebuf_forward(e); printf("   %s\n", ebuf_str(e));
+    }
+    printf("> ");
+  }
+  return 0;
+}
+-------------------------------------------------------------------------------
+
+実行例2:
+-------------------------------------------------------------------------------
+[y1810678@red99 08]$ ./a.out
+> iThis is a pen.
+> iThat is a dog.
+> t
+> d
+> t
+> p
+   That is a dog.
+> f
+> p
+
+   EOF
+> y
+> t
+> p
+   That is a dog.
+> f
+> p
+   This is a pen.
+> q
+-------------------------------------------------------------------------------
+
+解説2:
+    基本的には方針に書いた通り、ebuf_yankをコマンド「ｙ」で
+    呼び出しているだけである。
+    また、yank用のリストyはリストeが作成されるのと同じタイミング
+    で作成されている。
+
+考察2:
+    上記の課題でebuf_yankを作成したときにはあまり利便性を感じなかったが
+    この課題で実際にエディタに実装したことにより、その大切さがわかった気がする。
 
 
 
-アンケート: アンケート再掲+回答
+アンケート:
+    Q1.双連結リストの操作が自由にできるようになりましたか
+    A1.自由にできるようになった。図に記せば大抵の繋ぎ変えは可能だと思われる。
+    Q2.画面エディタについてどのように理解しましたか
+    A2.今回課題で提出はしていないが、作成し、内容も理解できた。
+    Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+    A3.特にこれと言ってないが、演習2bが２つあったので、課題番号をどう書こうか悩んだ。
