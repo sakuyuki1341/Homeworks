@@ -1,0 +1,281 @@
+レポート8B
+
+@@@ 1810678 山田 朔也 (個人作業)
+
+
+
+選択した課題1: 演習1_c
+    別のリストを用意しておき、セル削除時にただ削除するのではなく
+    その別のリストに繋がるようにする。
+    また、その別のリストからセルを外して現在位置の上に挿入する
+    ebuf_yankを作成する。
+
+方針1:
+    まずyank用のリストはmain関数内の上部で記述し、コレを
+    今回の課題にあうようにセルを削除する関数ebuf_delete_yと
+    ebuf_yankにもとのデータ用のリストと一緒に引き渡すように
+    する。
+    そして、受け取ったのち必要な繋ぎ替えの操作を各関数にて行う。
+
+コード1:
+-------------------------------------------------------------------------------
+// ebuf.c
+
+#include <stdlib.h>
+#include <string.h>
+#include "ebuf.h"
+
+
+struct line {
+    struct line *prev, *next; char str[MAXSTR];
+};
+
+struct ebuf { struct line *head, *cur; };
+
+/*========================================================*
+ * 関数ebuf_new: 新規バッファの作成
+ *========================================================*/
+ebufp ebuf_new() {
+    ebufp r = (ebufp)malloc(sizeof(struct ebuf));
+    r->head = (struct line*)malloc(sizeof(struct line));
+    r->cur = r->head->next = r->head->prev = r->head;
+    strcpy(r->head->str, "EOF"); return r;
+}
+
+/*========================================================*
+ * 関数ebuf_iseof: 現在行がEOF行かどうか調べる。
+ * 戻り値はEOFならtrue, EOFでないならfalse
+ *========================================================*/
+bool ebuf_iseof(ebufp e) { return e->cur == e->head; }
+
+/*========================================================*
+ * 関数ebuf_forward: 現在行を一行先に移動
+ *========================================================*/
+bool ebuf_forward(ebufp e) {
+    if(e->cur == e->head) { return false; }
+    e->cur = e->cur->next; return true;
+}
+
+/*========================================================*
+ * 関数ebuf_backward: 現在行を一行前に移動
+ *========================================================*/
+bool ebuf_backward(ebufp e) {
+    if(e->cur->prev == e->head) { return false; }
+    e->cur = e->cur->prev; return true;
+}
+
+/*========================================================*
+ * 関数ebuf_top: 現在行を先頭に移動
+ *========================================================*/
+void ebuf_top(ebufp e) { e->cur = e->head->next; }
+
+/*========================================================*
+ * 関数ebuf_str: 現在行の文字列を返す
+ *========================================================*/
+char *ebuf_str(ebufp e) { return e->cur->str; }
+
+/*========================================================*
+ * 関数ebuf_insert: 現在行の上に指定した文字列を持つ行を插入
+ *========================================================*/
+void ebuf_insert(ebufp e, char *s) {
+    struct line *p = (struct line*)malloc(sizeof(struct line));
+    strncpy(p->str, s, MAXSTR); p->str[MAXSTR-1] = '\0';
+    p->prev = e->cur->prev; p->next = e->cur;
+    e->cur->prev->next = p; e->cur->prev = p;
+}
+
+/*========================================================*
+ * 関数ebuf_replace: 現在行の内容を指定した文字列に
+ * 取り換える。
+ *========================================================*/
+void ebuf_replace(ebufp e, char *s) {
+    strcpy(e->cur->str, s);
+}
+
+/*========================================================*
+ * 関数ebuf_delete: 現在行を削除する。削除した後の
+ * 現在行は一つ先を指す。
+ *========================================================*/
+void ebuf_delete(ebufp e) {
+    if(!ebuf_forward(e)) {
+        printf("EOF行は削除できない\n");
+    } else {
+        e->cur->prev->prev->next = e->cur;
+        e->cur->prev = e->cur->prev->prev;
+    }
+}
+
+/*========================================================*
+ * 関数ebuf_delete_y: 現在行を削除し、削除されたセルが
+ * ヤンク用のリストに追加される。
+ * 削除した後の現在行は一つ先を指す。
+ *========================================================*/
+void ebuf_delete_y(ebufp e, ebufp y) {
+    if(ebuf_iseof(e)) {
+        printf("EOF行は削除できない\n");
+    } else {
+        // 接続の順番変更(第一段階)
+        e->cur->prev->next = e->cur->next;
+        e->cur->next = y->cur;
+        y->cur->prev->next = e->cur;
+
+        // eの現在行を一つ先に移す
+        e->cur = e->cur->prev->next;
+
+        // 接続の順番変更(第二段階)
+        e->cur->prev = e->cur->prev->prev;
+        y->cur->prev->next->prev = y->cur->prev;
+        y->cur->prev = y->cur->prev->next;
+    }
+}
+
+/*========================================================*
+ * 関数ebuf_yank: 削除された行を、現在行の上に插入する。
+ *========================================================*/
+void ebuf_yank(ebufp e, ebufp y) {
+    // 接続の順番変更(第一段階)
+    y->cur->prev->prev->next = y->cur;
+    y->cur->prev->next = e->cur;
+    e->cur->prev->next = y->cur->prev;
+    y->cur->prev = y->cur->prev->prev;
+    e->cur->prev->next->prev = e->cur->prev;
+    e->cur->prev = e->cur->prev->next;
+
+    // eの現在行を前に移す
+    ebuf_backward(e);
+}
+
+/*========================================================*
+ * 関数ebuf_copy: 削除はせずに、現在行のコピーをヤンク用の
+ * リストに追加する。現在行は一つ先に移動する。
+ *========================================================*/
+void ebuf_copy(ebufp e, ebufp y) {
+    ebuf_insert(y, e->cur->str);
+    ebuf_forward(e);
+}
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+// ebuf.h
+
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAXSTR 100
+
+struct ebuf;
+typedef struct ebuf *ebufp;
+
+ebufp ebuf_new();            // create ebuf
+bool ebuf_iseof(ebufp e);    // see if current line is EOF
+bool ebuf_forward(ebufp e);  // forward 1 line
+bool ebuf_backward(ebufp e); // backward 1 line
+void ebuf_top(ebufp e);      // go to top
+char *ebuf_str(ebufp e);    // obtain current line string
+void ebuf_insert(ebufp e, char *s); // insert a line
+void ebuf_replace(ebufp e, char *s);    // replace str
+void ebuf_delete(ebufp e); // delete line
+void ebuf_delete_y(ebufp e, ebufp y);   // delete line
+void ebuf_yank(ebufp e, ebufp y);   // yank line
+void ebuf_copy(ebufp e, ebufp y);   // copy line
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+// test_ebuf.c
+
+#include <stdio.h>
+#include <string.h>
+#include "ebuf.h"
+
+//#define ENSHU1_EX
+//#define ENSHU1_A
+//#define ENSHU1_B
+#define ENSHU1_C
+
+
+void expect_str(char *s1, char *s2, char *msg) {
+    printf("%s '%s':'%s' %s\n", strcmp(s1, s2)?"NG":"OK", s1, s2, msg);
+}
+
+int main(void) {
+#ifdef ENSHU1_EX
+    ebufp e = ebuf_new();
+    ebuf_insert(e, "abc"); ebuf_insert(e, "def");
+    ebuf_top(e); expect_str(ebuf_str(e), "abc", "line 1: abc");
+    ebuf_forward(e); expect_str(ebuf_str(e), "def", "line 2: def");
+    ebuf_insert(e, "ghi"); ebuf_top(e);
+    ebuf_forward(e); expect_str(ebuf_str(e), "ghi", "new line 2: ghi");
+    ebuf_forward(e); expect_str(ebuf_str(e), "def", "new line 3: def");
+#endif
+
+#ifdef ENSHU1_A
+    ebufp e = ebuf_new();
+    ebuf_insert(e, "abc");
+    ebuf_insert(e, "def");
+    ebuf_top(e);
+
+    ebuf_replace(e, "jkl");   // ここでabcをjklに変更
+    expect_str(ebuf_str(e), "jkl", "line 1: jkl");
+
+    ebuf_forward(e);
+    expect_str(ebuf_str(e), "def", "line 2: def");
+#endif
+
+#ifdef ENSHU1_B
+    ebufp e = ebuf_new();
+    ebuf_insert(e, "abc");
+    ebuf_insert(e, "def");
+    ebuf_top(e);
+
+    ebuf_delete(e);   // ここでabcを削除
+    expect_str(ebuf_str(e), "def", "line 1: def");
+
+    ebuf_forward(e);  // ここでcurがEOFを指すように
+    ebuf_delete(e);   // ここでEOFを削除するように試みる
+#endif
+
+#ifdef ENSHU1_C
+    ebufp e = ebuf_new();
+    ebufp y = ebuf_new(); // ヤンク用リスト
+    ebuf_insert(e, "abc");
+    ebuf_insert(e, "def");
+    ebuf_top(e);
+
+    ebuf_delete_y(e, y);   // ここでabcを削除
+    expect_str(ebuf_str(e), "def", "line 1: def");
+
+    ebuf_insert(e, "jkl");
+    ebuf_top(e);
+    expect_str(ebuf_str(e), "jkl", "line 1: jkl");
+    ebuf_forward(e);
+
+    ebuf_yank(e, y);    // ここでabcを戻す
+    expect_str(ebuf_str(e), "abc", "line 2: abc");
+#endif
+    return 0;
+}
+-------------------------------------------------------------------------------
+
+実行例1:
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+解説1: プログラムの説明ひととおり(きちんとここで説明すること)
+
+考察1: 課題をやって分かったこと---数行以上
+
+
+
+選択した課題2: 課題番号 + 課題の要約
+
+方針2: 課題をどのようにして解くかの方針説明---数行以上
+
+コード2: プログラム一式(動くものを貼ること)
+
+実行例2: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
+
+解説2: プログラムの説明ひととおり(きちんとここで説明すること)
+
+考察2: 課題をやって分かったこと---数行以上
+
+
+
+アンケート: アンケート再掲+回答

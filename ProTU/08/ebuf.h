@@ -17,3 +17,4 @@ void ebuf_replace(ebufp e, char *s);    // replace str
 void ebuf_delete(ebufp e); // delete line
 void ebuf_delete_y(ebufp e, ebufp y);   // delete line
 void ebuf_yank(ebufp e, ebufp y);   // yank line
+void ebuf_copy(ebufp e, ebufp y);   // copy line
