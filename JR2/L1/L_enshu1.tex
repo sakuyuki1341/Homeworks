@@ -1,0 +1,97 @@
+\documentclass{jsarticle}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{amsmath}
+
+\title{情報領域演習第二 L演習(クラス3) レポート}
+\author{学籍番号: 1810678 \\
+        名前: 山田朔也}
+
+\begin{document}
+\maketitle
+  \section{問1}
+    \subsection{(a)}
+    回路素子の情報の保存の方法が、電圧のHighかLowの二通りで表すのが電圧の検出をする上で一番簡単であるから。
+
+    \subsection{(b)}
+    上記にもあるが、回路はHighとLowの二通りの情報を保存しておくことができる。そのため、そのうちのHighの情報しか使用しない１進法は同一の回路であっても、２進法に比べて半分の情報しか保存しておくことができずに、回路の肥大化を招くことが理由である。
+
+    \subsection{(c)}
+    一部の数学的問題(素因数分解など)の解を得るのに、2進数であれば時間がかかるが、1進数であればエラトステネスの篩で十分計算できる。そういった人為的に計算を簡易化する上で計算機構に1進数を用いる利点があるだろう。
+
+  \section{問2}
+    2で割っていくという操作はつまり、(本来は入らないが)2進数の1桁目に変換したい数値を入れ、それを2で割ることで桁上げをしているということに他ならない。そのため、2で割り切れたものは桁上りをするが、2で割り切れなかったものは桁上げされず、その桁に残り続ける。そのため、変換対象の数Nを2で割っていき、最後にあまりを逆順に並べればいいのである。
+
+  \section{問3}
+    \subsection{(a)}
+    \begin{table}[H]
+      \caption{$x \oplus yの真理値表$}
+      \label{tab:3_a}
+      \centering
+      \begin{tabular}{|c|c|c|} \hline
+        $x$ & $y$ & $x \oplus y$ \\ \hline
+        0 & 0 & 0 \\
+        0 & 1 & 1 \\
+        1 & 0 & 1 \\
+        1 & 1 & 0 \\ \hline
+      \end{tabular}
+    \end{table}
+
+    \subsection{(b)}
+    $x \oplus x$で入力される組は$0 \oplus 0$と$1 \oplus 1$しかなく、これらはどちらも0と等しいため、$x \oplus x = 0$は成立する。
+
+    \subsection{(c)}
+    表\ref{tab:3_a}から、$y=0$のとき$x \oplus 0 = x$は成立し、$y=1$のとき$x \oplus = \overline{x}$も成立する。
+
+    \subsection{(d)}
+    $x \oplus (y \oplus z)と(x \oplus y) \oplus z$を真理値表にまとめると
+    \begin{table}[H]
+      \caption{$x \oplus (y \oplus z)と(x \oplus y) \oplus z$の真理値表}
+      \label{tab:3_d}
+      \centering
+      \begin{tabular}{|c|c|c|c|c|c|c|} \hline
+        $x$ & $y$ & $z$ & $y \oplus z$ & $x \oplus y$ & $x \oplus (y \oplus z)$ & $(x \oplus y) \oplus z$\\ \hline
+        0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 1 & 0 & 1 & 1 \\
+        0 & 1 & 0 & 1 & 1 & 1 & 1 \\
+        0 & 1 & 1 & 0 & 1 & 0 & 0 \\
+        1 & 0 & 0 & 0 & 1 & 1 & 1 \\
+        1 & 0 & 1 & 1 & 1 & 0 & 0 \\
+        1 & 1 & 0 & 1 & 0 & 0 & 0 \\
+        1 & 1 & 1 & 0 & 0 & 1 & 1 \\ \hline
+      \end{tabular}
+    \end{table}
+    表\ref{tab:3_d}のようになるため、この表から$x \oplus (y \oplus z)=(x \oplus y) \oplus z$は成立する。
+
+    \subsection{(e)}
+    鍵$k$をランダムに作成することによって、その結果作成される暗号文$t \oplus k$も完全にランダムなものとなる。そのため、外部の攻撃者からは頻度分析などを利用しても内容文を知り得ることはできないと考えられる。
+
+  \section{問4}
+    \subsection{(a)}
+    $x \uparrow y$の式に$y = x$を代入すると
+    \begin{align}
+      x \uparrow x &= \overline{(x \cdot x)} \notag \\
+                   &= \overline{x}
+    \end{align}
+    となるため$\overline{x} = x \uparrow x$は成立する。
+
+    \subsection{(b)}
+    \begin{align}
+      x \cdot y &= \overline{\overline{x \cdot y}} \notag \\
+                &= \overline{x \uparrow y} \notag \\
+                &= (x \uparrow y) \uparrow (x \uparrow y)
+    \end{align}
+    よって$x \cdot y$は$(x \uparrow y) \uparrow (x \uparrow y)$と表される。
+
+    \subsection{(c)}
+    \begin{align}
+      x + y &= \overline{\overline{x + y}} \notag \\
+            &= \overline{\overline{x} \cdot \overline{y}} \notag \\
+            &= \overline{(x \uparrow x) \cdot (y \uparrow y)} \notag \\
+            &= (x \uparrow x) \uparrow (y \uparrow y)
+    \end{align}
+    よって$x + y$は$(x \uparrow x) \uparrow (y \uparrow y)$と表される。
+
+\end{document}
