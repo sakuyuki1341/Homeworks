@@ -1,0 +1,265 @@
+\documentclass{jsarticle}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{amsmath}
+
+\title{情報領域演習第二 K演習(クラス3) レポート}
+\author{学籍番号: 1810678 \\
+        名前: 山田朔也}
+
+\begin{document}
+\maketitle
+  \section{宿題1-1}
+    \subsection{}
+    \begin{table}[H]
+      \caption{病気の感染の有無に関する周辺確率表}
+      \label{tab1}
+      \centering
+      \begin{tabular}{c|c}
+        感染している & 感染していない \\ \hline
+        $1 / 500$ & $499 / 500$ \\
+      \end{tabular}
+    \end{table}
+
+    \subsection{}
+    \begin{table}[H]
+      \caption{「感染あり」「感染なし」の条件付き確率表}
+      \label{tab2}
+      \centering
+      \begin{tabular}{c|c|c}
+        & 感染あり & 感染なし \\ \hline
+        感染済み & $4/5$ & $1/5$ \\ \hline
+        未感染  & $1/10$ & $9/10$ \\
+      \end{tabular}
+    \end{table}
+
+    \subsection{}
+      ベイズの定理より、実際に感染している確率は以下のようになる
+      \begin{align}
+        \frac{\frac{4}{5} \times \frac{1}{500}}{\frac{4}{5} \times \frac{1}{500} + \frac{1}{10} \times \frac{499}{500}}
+        &= \frac{8}{8 + 499} \notag \\
+        &= \frac{8}{507}
+      \end{align}
+      よって診断結果が感染ありだという結果を知らされた患者が実際に感染している確率は$\frac{8}{507}$となる。
+
+  \section{宿題1-2}
+    \subsection{}
+    \begin{table}[H]
+      \caption{病気の感染の有無に関する周辺確率表}
+      \label{tab3}
+      \centering
+      \begin{tabular}{c|c}
+        感染している & 感染していない \\ \hline
+        $1 / 1000$ & $999 / 1000$ \\
+      \end{tabular}
+    \end{table}
+
+    \subsection{}
+    \begin{table}[H]
+      \caption{「感染あり」「感染なし」の条件付き確率表}
+      \label{tab4}
+      \centering
+      \begin{tabular}{c|c|c}
+        & 感染あり & 感染なし \\ \hline
+        感染済み & $7/10$ & $3/10$ \\ \hline
+        未感染  & $3/10$ & $7/10$ \\
+      \end{tabular}
+    \end{table}
+
+    \subsection{}
+    ベイズの定理より、実際に感染している確率は以下のようになる
+    \begin{align}
+      \frac{\frac{7}{10} \times \frac{1}{1000}}{\frac{7}{10} \times \frac{1}{1000} + \frac{3}{10} \times \frac{999}{1000}}
+      &= \frac{7}{7 + 2997} \notag \\
+      &= \frac{7}{3004}
+    \end{align}
+    よって診断結果が感染ありだという結果を知らされた患者が実際に感染している確率は$\frac{7}{3004}$となる。
+
+    \subsection{}
+    ベイズの定理より、実際に感染している確率は以下のようになる
+    \begin{align}
+      \frac{\frac{4}{5} \times \frac{1}{1000}}{\frac{4}{5} \times \frac{1}{1000} + \frac{2}{5} \times \frac{999}{1000}}
+      &= \frac{4}{4 + 1998} \notag \\
+      &= \frac{2}{1001}
+    \end{align}
+    よって診断結果が感染ありだという結果を知らされた患者が実際に感染している確率は$\frac{2}{1001}$となる。
+  \section{宿題2}
+    \subsection{}
+    (a)\\
+    累積分布関数のグラフは以下のようになる\\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    (b)\\
+    $X$の平均$E[X]$は
+    \begin{align}
+      E[X] = 1\times \frac{1}{2} + 2\times \frac{1}{6} + 3\times \frac{1}{3} = \frac{11}{6}
+    \end{align}
+    となる。また、$X$の分散$V[X]$は
+    \begin{align}
+      E[X^2] &= 1^2\times\frac{1}{2} + 2^2\times \frac{1}{6} + 3^2\times\frac{1}{3} \notag \\
+      &= \frac{25}{6}
+    \end{align}
+    より
+    \begin{align}
+      V[X] = \frac{25}{6} - \left(\frac{11}{6}\right)^2 = \frac{29}{36}
+    \end{align}
+    となる。
+
+    \subsection{}
+    練習問題2の累積分布関数から確率密度関数は以下の様になる。
+    \begin{equation}
+      f(x) = \left\{
+                \begin{array}{@{\,}cl@{\,}}
+                  0 & x<0 \\
+                  1/4 & x = 0 \\
+                  1/2 & 0<x<1 \\
+                  1/4 & x = 1
+                \end{array}
+            \right.
+    \end{equation}
+    なので、平均リターン、つまり平均値$E[X]$は以下のようになる。
+    \begin{align}
+      E[X] &= \frac{1}{4}\times0 + \int_0^1 \frac{x}{2}dx + \frac{1}{4}\times1 \notag \\
+      &= 0+ \left[\frac{x^2}{4}\right]_0^1 + \frac{1}{4} \notag \\
+      &= \frac{1}{2}
+    \end{align}
+    また分散$V[X]$は
+    \begin{align}
+      E[X^2] &= \frac{1}{4}\times0^2 + \int_0^1 \frac{x^2}{2}dx + \frac{1}{4}\times1^2 \notag \\
+      &= 0+ \left[\frac{x^3}{6}\right]_0^1 + \frac{1}{4} \notag \\
+      &= \frac{5}{12}
+    \end{align}
+    より
+    \begin{align}
+      V[X] &= E[X^2] - \left\{E[X]\right\}^2 \notag \\
+      &= \frac{5}{12} - \left(\frac{1}{2}\right)^2 \notag \\
+      &= \frac{1}{6}
+    \end{align}
+    よって、標準偏差は
+    \begin{equation}
+      \sqrt{V[X]} = \frac{1}{\sqrt{6}}
+    \end{equation}
+    となる。
+
+    \subsection{}
+    (a)
+    確率密度関数より、累積分布関数は以下のようになる
+    \begin{equation}
+      F[X] = \left\{
+      \begin{array}{ll}
+        2x^2 & 0\le x\le \frac{1}{2} \\
+        -2x^2 + 4x -1 & \frac{1}{2}\le x\le1
+      \end{array}
+      \right.
+    \end{equation}
+    よってグラフは以下の通りとなる。\\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    (b)\\
+    節3.2と同じように計算していくと平均値$E[X]$は
+    \begin{align}
+      E[X] &= \int_0^{\frac{1}{2}}4x^2 dx + \int_{\frac{1}{2}}^1 -4x^2 + 4xdx \notag \\
+      &= \left[\frac{4}{3}x^3\right]_0^{\frac{1}{2}} + \left[\frac{-4}{3}x^3 + 2x^2\right]_{\frac{1}{2}}^1 \notag \\
+      &= \frac{1}{6} + \frac{1}{3} \notag \\
+      &= \frac{1}{2}
+    \end{align}
+    となる。また、分散$V[X]$は
+    \begin{align}
+      E[X^2] &= \int_0^{\frac{1}{2}}4x^3 dx + \int_{\frac{1}{2}}^1 -4x^3 + 4x^2dx \notag \\
+      &= \left[x^4\right]_0^{\frac{1}{2}} + \left[-x^4 + \frac{4}{3}x^3\right]_{\frac{1}{2}}^1 \notag \\
+      &= \frac{1}{16} + \frac{11}{48} \notag \\
+      &= \frac{7}{24}
+    \end{align}
+    より
+    \begin{align}
+      V[X] &= E[X^2] - \left\{E[X]\right\}^2 \notag \\
+      &= \frac{7}{24} - \left(\frac{1}{2}\right)^2 \notag \\
+      &= \frac{1}{24}
+    \end{align}
+    となる。
+
+    \section{宿題3-1}
+    まず、$1\le k\le N$を2つの部分
+    \begin{equation}
+      \left\{
+      \begin{array}{l}
+        |k-\mu| < a \\
+        |k-\mu| \ge \\
+      \end{array}
+      \right.
+    \end{equation}
+    に分けて考える。
+    ここで分散${\sigma}^2$は以下の関係のようになる
+    \begin{align}
+      {\sigma}^2
+      &= \sum_{|k-\mu| < a} (k-\mu)^2 p_k + \sum_{|k-\mu| \ge a} (k-\mu)^2 p_k \notag \\
+      &\ge \sum_{|k-\mu| \ge a} (k-\mu)^2 p_k \notag \\
+      &\ge \sum_{|k-\mu| \ge a} a^2 p_k \notag \\
+      &= a^2\sum_{|k-\mu| \ge a} p_k \notag \\
+      &= a^2 P(|X-\mu| \ge a)
+    \end{align}
+    よって、チェビシェフの不等式は成立する。
+
+    \section{宿題3-2}
+    マルコフの不等式とチェビシェフの不等式はそれぞれ以下のような式である
+    \begin{equation}
+      P(X \ge a)\le \frac{\mu}{a}
+    \end{equation}
+    \begin{equation}
+      P(|X-\mu| \ge a)\le \frac{{\sigma}^2}{a^2}
+    \end{equation}
+
+    \subsection{}
+    式(18)に$\mu = 400,\, a=1000$を代入して計算すると
+    \begin{align}
+      P(X \ge 1000) &\le \frac{400}{1000} \notag \\
+      &\le \frac{2}{5}
+    \end{align}
+    となる。
+
+    \subsection{}
+    式(18)に$\mu = 20,\, a=10000$を代入して計算すると
+    \begin{align}
+      P(X \ge 10000) &\le \frac{20}{10000} \notag \\
+      &\le \frac{1}{500}
+    \end{align}
+    となる。
+
+    \subsection{}
+    式(19)に$\mu = 400,\, \sigma = 200,\, a=600$を代入して計算すると
+    \begin{align}
+      P(|X-400| \ge 600) &\le \frac{{200}^2}{600^2} \notag \\
+      &\le \frac{1}{9}
+    \end{align}
+    となる。
+
+    \subsection{}
+    式(19)に$\mu = 400,\, \sigma = 200,\, a=9600$を代入して計算すると
+    \begin{align}
+      P(|X-400| \ge 600) &\le \frac{{200}^2}{9600^2} \notag \\
+      &\le \frac{4}{9216}
+    \end{align}
+    となる。
+
+\end{document}
