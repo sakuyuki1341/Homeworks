@@ -77,3 +77,9 @@ isetp iset_difference(isetp s, isetp t) {
     }
     return d;
 }
+
+isetp iset_exclusive_or(isetp s, isetp t) {
+    isetp e1 = iset_new(); isetp e2 = iset_new();
+    e1 = iset_difference(s, t); e2 = iset_difference(t, s);
+    return iset_union(e1, e2);
+}

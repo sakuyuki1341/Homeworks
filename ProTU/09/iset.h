@@ -14,3 +14,4 @@ void iset_subelt(isetp s, int e); // remove e from s
 isetp iset_union(isetp s, isetp q); // set union
 isetp iset_intersection(isetp s, isetp t); // set intersection
 isetp iset_difference(isetp s, isetp t); // set difference
+isetp iset_exclusive_or(isetp s, isetp t); // set exclusive_or
