@@ -13,6 +13,7 @@ isetp iset_new() {
 }
 
 void iset_free(isetp s) { free(s->a); free(s); }
+
 static int isin1(isetp s, int e) {
     for(int i = 0; i < s->size; ++i) {
         if(s->a[i] == e) { return i; }
@@ -49,4 +50,30 @@ isetp iset_union(isetp s, isetp t) {
         if(!iset_isin(s, t->a[i])) { iset_addelt(u, t->a[i]); }
     }
     return u;
+}
+
+isetp iset_intersection(isetp s, isetp t) {
+    isetp i = iset_new();
+    for(int j = 0; j < s->size; j++) {
+        for(int k = 0; k < t->size; k++) {
+            if(s->a[j] == t->a[k]) {
+                iset_addelt(i, s->a[j]);
+            }
+        }
+    }
+    return i;
+}
+
+/*========================================================*
+ * 関数iset_difference(isetp s, isetp t): 集合sから集合t
+ * を引いた集合dを返す
+ *========================================================*/
+isetp iset_difference(isetp s, isetp t) {
+    isetp d = iset_new();
+    for(int i = 0; i < s->size; i++) {
+        if(!iset_isin(t, s->a[i])) {
+            iset_addelt(d, s->a[i]);
+        }
+    }
+    return d;
 }

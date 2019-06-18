@@ -12,3 +12,5 @@ int iset_max(isetp s);            // return max value
 void iset_addelt(isetp s, int e); // add e to s
 void iset_subelt(isetp s, int e); // remove e from s
 isetp iset_union(isetp s, isetp q); // set union
+isetp iset_intersection(isetp s, isetp t); // set intersection
+isetp iset_difference(isetp s, isetp t); // set difference
