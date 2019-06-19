@@ -1,0 +1,56 @@
+\documentclass{jsarticle}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+
+\title{情報領域演習第二 L演習(クラス3) レポート}
+\author{学籍番号: 1810678 \\
+        名前: 山田朔也}
+
+\begin{document}
+  \maketitle
+  \begin{description}
+      \item[問一]
+      \begin{description}
+          \item[(a)]
+          まず、与えられた論理式$f$の否定$\overline{f}$を計算し、それを積和標準形に変形する。その後、積和標準形で表された論理式$\overline{f}$のさらに否定$\overline{\overline{f}}$を計算することで、和積標準形に変換することができる。これらの計算は全てド・モルガンの法則を適用し、分配律に沿って計算することで求めることが可能である。
+
+          \item[(b)]
+          \begin{description}
+              \item[i.]
+              まず、与えられた論理式$f_1$の否定$\overline{f_1}$を計算する
+              \begin{align}
+                  \overline{f_1} &= \overline{(x\overline{y}\overline{z} + \overline{x}y\overline{z} +  \overline{x}\overline{y}z)} \notag \\
+                                 &= \overline{(x\overline{y}\overline{z})} \cdot \overline{(\overline{x}y\overline{z})} \cdot \overline{(\overline{x}\overline{y}z)} \notag \\
+                                 &= (\overline{x}+y+z) \cdot (x+\overline{y}+z) \cdot (x+y+\overline{z}) \notag \\
+                                 &= \overline{x}\overline{y}\overline{z} + \overline{x}yz + xyz + xy\overline{z} + x\overline{y}z
+              \end{align}
+              この
+          \end{description}
+      \end{description}
+
+  \end{description}
+\end{document}
