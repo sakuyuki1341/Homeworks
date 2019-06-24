@@ -19,20 +19,22 @@ list initlist(void) {
     list l;
 
     // add your code here
+    n = (list)malloc(sizeof(struct node));
+    n->next = NULL;
 
     return l;
 }
 
 position first(list l) {
-    // add your code here
+    return l;
 }
 
 position next(list l, position p) {
-    // add your code here
+    return p->next;
 }
 
 position end(list l) {
-    // add your code here
+    list p = 
 }
 
 elementtype retrieve(list l, position p) {

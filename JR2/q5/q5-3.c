@@ -6,10 +6,14 @@ struct node{
     struct node *next;
 };
 
+typedef struct node *nodep;
+
 struct node *initlist() {
     struct node *n;
 
     // add your code here
+    n = (nodep)malloc(sizeof(struct node));
+    n->next = NULL;
 
     return n;
 }
@@ -17,6 +21,15 @@ struct node *initlist() {
 void insert(struct node *p, char x) {
 
     // add your code here
+    nodep n = (nodep)malloc(sizeof(struct node));
+    n->element = x;
+    n->next = NULL;
+
+    nodep q = p;
+    for(; q->next != NULL;) {
+        q = q->next;
+    }
+    q->next = n;
 
 }
 
@@ -32,7 +45,15 @@ void printlist(struct node *p) {
 void remove_1st(struct node *p) {
 
     // add your code here
-
+    char del = p->next->element;
+    nodep q = p;
+    for(; q->next != NULL;) {
+        if(q->next->element == del) {
+            q->next = q->next->next;
+        } else {
+            q = q->next;
+        }
+    }
 }
 
 int main(int argc, char *argv[]) {
