@@ -19,34 +19,56 @@ list initlist(void) {
     list l;
 
     // add your code here
-    n = (list)malloc(sizeof(struct node));
-    n->next = NULL;
+    l = (list)malloc(sizeof(struct node));
+    l->next = NULL;
 
     return l;
 }
 
 position first(list l) {
-    return l;
+    // add your code here
+    return l->next;
 }
 
 position next(list l, position p) {
+    // add your code here
     return p->next;
 }
 
 position end(list l) {
-    list p = 
+    // add your code here
+    for(; l->next != NULL; l = l->next){
+        // do nothing
+    }
+    return l;
 }
 
 elementtype retrieve(list l, position p) {
     // add your code here
+    return p->element;
 }
 
 position find(list l, elementtype e) {
     // add your code here
+    for(; l->next != NULL; l = l->next) {
+        for(int i = 0; e[i]!='\0';i++) {
+            if(l->next->element[i] < e[i]) {
+                break;
+            } else if(l->next->element[i] == e[i]) {
+                continue;
+            }
+            return l;
+        }
+    }
+    return l;
 }
 
 void insert(list l, position p, elementtype e) {
     // add your code here
+    list n = initlist();
+    n->element = e;
+    n->next = p->next;
+    p->next = n;
 }
 
 void printlist(list l) {
@@ -80,5 +102,3 @@ int main(void) {
     }
     return 0;
 }
-
-
