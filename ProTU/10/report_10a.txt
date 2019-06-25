@@ -1,0 +1,147 @@
+レポート10A
+
+@@@ 1810678 山田朔也 (個人作業)
+
+選択した課題: 演習1_b
+    最も降水量の多い都市のデータだけを打ち出す。
+
+方針:
+    とりあえず最初のデータを最大値と仮定して、順に比較していく。
+    その際に、その仮定した値よりも大きいものが存在すれば最大値を更新して
+    最大値を求めて、それを出力する。
+
+コード:
+---------------------------------------------------------------------
+// csvdemo.c --- demonstration for csv_read.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "csv.h"
+
+// #define ENSHU_A
+#define ENSHU_B
+
+#ifdef ENSHU_A
+int main(int argc, char *argv[]) {
+  csvp data[1000], p;
+  int size = csv_read(argv[1], 1000, data);
+  if(size <= 0) { return 0; }
+//qsort(data+1, size-1, sizeof(csvp), cmp1); // **
+  p = data[0];
+  printf("%11s %11s %11s\n", p->cell[0], p->cell[1], p->cell[2]);
+  for(int i = 1; i < size; ++i) {
+    p = data[i];
+    printf("%11s %11.3f %11.3f\n",
+           p->cell[0], atof(p->cell[1]), atof(p->cell[2])/12.0);
+  }
+  return 0;
+}
+#endif
+
+#ifdef ENSHU_B
+int main(int argc, char *argv[]) {
+    csvp data[1000], p;
+    int size = csv_read(argv[1], 1000, data);
+    if(size <= 0) { return 0; }
+  //qsort(data+1, size-1, sizeof(csvp), cmp1); // **
+    p = data[0];
+    printf("%11s %11s %11s\n", p->cell[0], p->cell[1], p->cell[2]);
+    float max = atof(data[1]->cell[2]);
+    int i, j = 1;
+    for(i = 1; i < size; ++i) {
+        p = data[i];
+        if(max < atof(p->cell[2])) {
+            max = atof(p->cell[2]);
+            j = i;
+        }
+    }
+    printf("%11s %11.3f %11.3f\n", data[j]->cell[0], atof(data[j]->cell[1]), atof(data[j]->cell[2]));
+    return 0;
+}
+#endif
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// csv.c --- csv file read/write API impl.
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "csv.h"
+#define MAXLINE 1000
+
+static char *readline(FILE *f) {
+  char buf[MAXLINE], *str;
+  if(fgets(buf, MAXLINE, f) == NULL) { return NULL; }
+  int len = strlen(buf);
+  if(buf[len-1] == '\n') { buf[--len] = '\0'; }
+  str = (char*)malloc(len+1); strcpy(str, buf); return str;
+}
+
+static csvp read1(FILE *f) {
+  char *arr[100], *s = readline(f); if(s == NULL) { return NULL; }
+  int i = 0;
+  for(arr[i++] = s; *s != '\0'; ++s) {
+    if(*s == ',') { *s = '\0'; arr[i++] = s+1; }
+  }
+  csvp r = (csvp)malloc(sizeof(struct csv) + i*sizeof(char*));
+  r->num = i;
+  for(i = 0; i < r->num; ++i) { r->cell[i] = arr[i]; }
+  return r;
+}
+
+int csv_read(char *fname, int limit, csvp arr[]) {
+  int size = 0; csvp line;
+  FILE *f = fopen(fname, "rb"); if(f == NULL) { return -1; }
+  while((line = read1(f)) != NULL) {
+    if(size+1 >= limit) { size = -2; break; }
+    arr[size++] = line;
+  }
+  fclose(f); return size;
+}
+
+void csv_write(char *fname, int size, csvp arr[]) {
+  FILE *f = fopen(fname, "wb"); if(f == NULL) { return; }
+  for(int i = 0; i < size; ++i) {
+    fprintf(f, "%s", arr[i]->cell[0]);
+    for(int j = 1; j < arr[i]->num; ++j) { fprintf(f, ",%s", arr[i]->cell[j]); }
+    fprintf(f, "\n");
+  }
+  fclose(f);
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// csv.h --- csv file read/write API.
+struct csv { int num; char *cell[1]; };
+typedef struct csv *csvp;
+int csv_read(char *fname, int limit, csvp arr[]);
+void csv_write(char *fname, int size, csvp arr[]);
+---------------------------------------------------------------------
+
+実行例:
+---------------------------------------------------------------------
+$ ./a.exe data.csv
+       city  temprature precitipation
+   Kanazawa      14.100    2592.600
+---------------------------------------------------------------------
+
+解説:
+    基本的には方針通りに記述している。また、最大値の更新の際にその番目を
+    保存し、これを出力の際に利用するようにしている。
+
+レビュー課題:
+    わざわざpを更新せずにjを利用し出力しているのが記述量が減って良いと思われた。
+
+考察:
+    この課題に対しては特に言うものは無いだろう。
+    csvファイルの読み書きについてだが、これを利用する上で
+    文字列の配列などの構造的に複雑になりがちなのでポインタや
+    構造体などへ深い理解が必要なように感じた。
+
+アンケート:
+    Q1. CSVファイルを読み込んでデータ処理できそうですか。
+    A1.処理できると思われる。これを用いれば余計な機能のついている
+    計算ソフトを使うこともしなくて良いと思われた。
+    Q2.プログラムのコードを見て時間計算量が分かりそうですか。
+    A2.なんとか分かると思われる。
+    Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+    A3.ファイルへの読み書きをもう少し学びたいと思った。
