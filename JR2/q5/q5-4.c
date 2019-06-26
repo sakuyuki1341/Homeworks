@@ -50,17 +50,19 @@ elementtype retrieve(list l, position p) {
 
 position find(list l, elementtype e) {
     // add your code here
-    for(; l->next != NULL; l = l->next) {
-        for(int i = 0; e[i]!='\0';i++) {
-            if(l->next->element[i] < e[i]) {
+    position p = l;
+    for(; p->next != NULL; ) {
+        for(int i = 0; e[i]!='\0'; i++) {
+            if(p->next->element[i] < e[i]) {
                 break;
-            } else if(l->next->element[i] == e[i]) {
+            } else if(p->next->element[i] == e[i]) {
                 continue;
             }
-            return l;
+            return p;
         }
+        p = next(l,p);
     }
-    return l;
+    return p;
 }
 
 void insert(list l, position p, elementtype e) {
