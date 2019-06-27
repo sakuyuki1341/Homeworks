@@ -69,7 +69,9 @@ position find(list l, elementtype e) {
 void insert(list l, position p, elementtype e) {
     // add your code here
     list n = initlist();
-    n->element = e;
+    char* ele = (char*)malloc(sizeof(char) * (MAXLENGTH+3));
+    strcpy(ele, e);
+    n->element = ele;
     n->next = p->next;
     p->next = n;
 }
