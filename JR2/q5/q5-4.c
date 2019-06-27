@@ -52,10 +52,11 @@ position find(list l, elementtype e) {
     // add your code here
     position p = l;
     for(; p->next != NULL; ) {
-        for(int i = 0; e[i]!='\0'; i++) {
-            if(p->next->element[i] < e[i]) {
+        char* pn_ele =p->next->element;
+        for(int i = 0; e[i]!='\n'; i++) {
+            if(pn_ele[i] < e[i] || pn_ele[i] == '\n') {
                 break;
-            } else if(p->next->element[i] == e[i]) {
+            } else if(pn_ele[i] == e[i]) {
                 continue;
             }
             return p;
