@@ -34,196 +34,251 @@
   \maketitle
   \begin{description}
       \item[課題1]
-      まず、作成したソースコードを、Listing\ref{prob1}に示す。
-      \begin{lstlisting}[caption=課題1のソースコード, label=prob1]
-          .data
-          .text
-      newline:.asciiz "\n"
-          .globl main
-          .ent main
-      main:
-          subu    $sp, 16
-          sw      $ra, 12($sp)
-          li      $t0, 10
-          li      $t1, 15
-          li      $t2, 5
-          add     $a0, $t0, $t1
-          sub     $a0, $a0, $t2
-          li      $v0, 1
-          syscall
-          la      $a0, newline
-          li      $v0, 4
-          syscall
-          move    $v0, $zero
-          lw      $ra, 12($sp)
-          addu    $sp, 16
-          jr      $ra
-          .end
-      \end{lstlisting}
-      また、この実行例は以下のListing\ref{prob1_ex}ようになる。
-      \begin{lstlisting}[caption=課題1の実行例, label=prob1_ex]
-      (spim) load "prob1.asm"
-      (spim) run
-      20
-      \end{lstlisting}
+      \begin{description}
+          \item[ソースコード]
+          まず、作成したソースコードを、Listing\ref{prob1}に示す。
+          \begin{lstlisting}[caption=課題1のソースコード, label=prob1]
+              .data
+              .text
+          newline:.asciiz "\n"
+              .globl main
+              .ent main
+          main:
+              subu    $sp, 16
+              sw      $ra, 12($sp)
+              li      $t0, 10
+              li      $t1, 15
+              li      $t2, 5
+              add     $a0, $t0, $t1
+              sub     $a0, $a0, $t2
+              li      $v0, 1
+              syscall
+              la      $a0, newline
+              li      $v0, 4
+              syscall
+              move    $v0, $zero
+              lw      $ra, 12($sp)
+              addu    $sp, 16
+              jr      $ra
+              .end
+          \end{lstlisting}
 
+          \item[実行例]
+          また、この実行例は以下のListing\ref{prob1_ex}ようになる。
+          \begin{lstlisting}[caption=課題1の実行例, label=prob1_ex]
+          (spim) load "prob1.asm"
+          (spim) run
+          20
+          \end{lstlisting}
+
+          \item[解説と考察]
+          まずこのコードでは、t0,t1,t2レジスタに計算に必要な各値を入れていく。
+          その後add命令とsub命令を用いて求める値を計算してa0レジスタに値を入れる。
+          そしてsyscallのサービスの一つである、print\_intを行いa0レジスタ内の整数値を表示、最後に改行を画面に表示してプログラムは終了する。
+
+          また、このコードであるが、まだ使用するレジスタ数を減らす方法がある。
+          計算するためにわざわざt0~t2レジスタに値を代入していたが、それ以前からa0レジスタを使用することによって、a0,t0,t1だけで実行したい計算を行うことができるだろう。
+          また、即値演算命令を用いればa0レジスタのみで計算を行うことも可能である。
+          \\
+      \end{description}
 
       \item[課題2]
-      まず、作成したソースコードを、Listing\ref{prob2}に示す。
-      \begin{lstlisting}[caption=課題2のソースコード, label=prob2]
-          .data
-      newline:.asciiz "\n"        #改行を画面に表示するおまじない
-          .text
-          .globl main
-          .ent main
-      main:
-          subu    $sp, 16
-          sw      $ra, 12($sp)
-          li      $t0, 9
-          li      $t1, 2
-          div     $t0, $t1
+      \begin{description}
+          \item[ソースコード]
+          まず、作成したソースコードを、Listing\ref{prob2}に示す。
+          \begin{lstlisting}[caption=課題2のソースコード, label=prob2]
+              .data
+          newline:.asciiz "\n"        #改行を画面に表示するおまじない
+              .text
+              .globl main
+              .ent main
+          main:
+              subu    $sp, 16
+              sw      $ra, 12($sp)
+              li      $t0, 9
+              li      $t1, 2
+              div     $t0, $t1
 
-          mflo    $a0
-          li      $v0, 1          #整数を出力する命令
-          syscall                 #$a0の値を画面に表示
+              mflo    $a0
+              li      $v0, 1          #整数を出力する命令
+              syscall                 #$a0の値を画面に表示
 
-          la      $a0, newline    #$a0にnewlineで定義された文字列をコピー
-          li      $v0, 4          #文字列を出力する命令
-          syscall                 #改行を画面に表示
+              la      $a0, newline    #$a0にnewlineで定義された文字列をコピー
+              li      $v0, 4          #文字列を出力する命令
+              syscall                 #改行を画面に表示
 
-          mfhi    $a0
-          li      $v0, 1
-          syscall
+              mfhi    $a0
+              li      $v0, 1
+              syscall
 
-          la      $a0, newline
-          li      $v0, 4
-          syscall
+              la      $a0, newline
+              li      $v0, 4
+              syscall
 
-          move    $v0, $zero
-          lw      $ra, 12($sp)
-          addu    $sp, 16
-          jr      $ra
-          .end
-      \end{lstlisting}
-      また、この実行例は以下のListing\ref{prob2_ex}ようになる。
-      \begin{lstlisting}[caption=課題2の実行例, label=prob2_ex]
-      (spim) load "prob2.asm"
-      (spim) run
-      4
-      1
-      \end{lstlisting}
+              move    $v0, $zero
+              lw      $ra, 12($sp)
+              addu    $sp, 16
+              jr      $ra
+              .end
+          \end{lstlisting}
 
+          \item[実行例]
+          また、この実行例は以下のListing\ref{prob2_ex}ようになる。
+          \begin{lstlisting}[caption=課題2の実行例, label=prob2_ex]
+          (spim) load "prob2.asm"
+          (spim) run
+          4
+          1
+          \end{lstlisting}
+
+          \item[解説と考察]
+          まずこのコードでは、t0,t1レジスタに計算に必要な各値を入れていく。
+          その後div命令用いて求める値を計算して,LOレジスタとHIレジスタの中身をa0レジスタに入れ、表示していく。
+
+          今回の課題は前課題と異なり、使用するレジスタをこれ以上減らすことはできないだろう。
+          なぜならdiv命令は即値による演算ができず、値はレジスタを経由して指定するしかないからである。
+          また、move命令は汎用レジスタ名しか指定できないため、HI,LOからデータを移す時はmflo,mfhiを利用することに注意が必要だと思われる。
+          \\
+      \end{description}
 
       \item[課題3]
-      まず、作成したソースコードを、Listing\ref{prob3}に示す。
-      \begin{lstlisting}[caption=課題3のソースコード, label=prob3]
-          .data
-      newline:.asciiz "\n"        #改行を画面に表示するおまじない
-          .text
-          .globl main
-          .ent main
-      main:
-          subu    $sp, 16
-          sw      $ra, 12($sp)
+      \begin{description}
+          \item[ソースコード]
+          まず、作成したソースコードを、Listing\ref{prob3}に示す。
+          \begin{lstlisting}[caption=課題3のソースコード, label=prob3]
+              .data
+          newline:.asciiz "\n"        #改行を画面に表示するおまじない
+              .text
+              .globl main
+              .ent main
+          main:
+              subu    $sp, 16
+              sw      $ra, 12($sp)
 
-          li      $v0, 5
-          syscall                 #read_int
-          move    $t0, $v0
+              li      $v0, 5
+              syscall                 #read_int
+              move    $t0, $v0
 
-          li      $v0, 5
-          syscall                 #read_int
-          move    $t1, $v0
+              li      $v0, 5
+              syscall                 #read_int
+              move    $t1, $v0
 
-          add     $a0, $t0, $t1
+              add     $a0, $t0, $t1
 
-          li      $v0, 1          #整数を出力する命令
-          syscall                 #$a0の値を画面に表示
+              li      $v0, 1          #整数を出力する命令
+              syscall                 #$a0の値を画面に表示
 
-          la      $a0, newline    #$a0にnewlineで定義された文字列をコピー
-          li      $v0, 4          #文字列を出力する命令
-          syscall                 #改行を画面に表示
+              la      $a0, newline    #$a0にnewlineで定義された文字列をコピー
+              li      $v0, 4          #文字列を出力する命令
+              syscall                 #改行を画面に表示
 
-          move    $v0, $zero
-          lw      $ra, 12($sp)
-          addu    $sp, 16
-          jr      $ra
-          .end
-      \end{lstlisting}
-      また、この実行例は以下のListing\ref{prob3_ex}ようになる。
-      \begin{lstlisting}[caption=課題3の実行例, label=prob3_ex]
-      (spim) load "prob3.asm"
-      (spim) run
-      150
-      12
-      162
-      \end{lstlisting}
+              move    $v0, $zero
+              lw      $ra, 12($sp)
+              addu    $sp, 16
+              jr      $ra
+              .end
+          \end{lstlisting}
 
+          \item[実行例]
+          また、この実行例は以下のListing\ref{prob3_ex}ようになる。
+          \begin{lstlisting}[caption=課題3の実行例, label=prob3_ex]
+          (spim) load "prob3.asm"
+          (spim) run
+          150
+          12
+          162
+          \end{lstlisting}
 
+          \item[解説と考察]
+          まずこのコードでは、syscallのサービスの一つのread\_intを用いて2つの数値をt0,t1レジスタにそれぞれ代入していく。
+          その後add命令用いて求める値を計算して,その結果をa0レジスタに入れ、表示していく。
+
+          今回の課題は前課題と異なり、逆にmove命令を利用するのが良いだろう。
+          また、その他にもadd命令を利用して代入する方法もあるが、moveが一番単純明快だと思われる。
+          \\
+      \end{description}
 
       \item[課題4]
-      まず、作成したソースコードを、Listing\ref{prob4}に示す。
-      \begin{lstlisting}[caption=課題4のソースコード, label=prob4]
-          .data
-      newline:.asciiz "\n"        #改行を画面に表示するおまじない
-      hoge:.word  1 4 1 4 2 1 3 5
-      bar:.word 0 0 0 0 0 0 0 0
-          .text
-          .align 2
-          .globl main
-          .ent main
-      main:
-          subu    $sp, 16
-          sw      $ra, 12($sp)
+      \begin{description}
+          \item[ソースコード]
+          まず、作成したソースコードを、Listing\ref{prob4}に示す。
+          \begin{lstlisting}[caption=課題4のソースコード, label=prob4]
+              .data
+          newline:.asciiz "\n"        #改行を画面に表示するおまじない
+          hoge:.word  1 4 1 4 2 1 3 5
+          bar:.word 0 0 0 0 0 0 0 0
+              .text
+              .align 2
+              .globl main
+              .ent main
+          main:
+              subu    $sp, 16
+              sw      $ra, 12($sp)
 
-          la      $t0, hoge
-          la      $t1, bar
-          li      $t2, 0          #i
-          li      $t3, 8          #定数
-          li      $t4, 0          #sum
+              la      $t0, hoge
+              la      $t1, bar
+              li      $t2, 0          #i
+              li      $t3, 8          #定数
+              li      $t4, 0          #sum
 
-      k1: bge     $t2, $t3, k2
+          k1: bge     $t2, $t3, k2
 
-          sll     $t5, $t2, 2
-          add     $t6, $t5, $t1
-          add     $t5, $t5, $t0
-          lw      $t7, 0($t5)
+              sll     $t5, $t2, 2
+              add     $t6, $t5, $t1
+              add     $t5, $t5, $t0
+              lw      $t7, 0($t5)
 
-          add     $t4, $t4, $t7
+              add     $t4, $t4, $t7
 
-          sw      $t4, 0($t6)
+              sw      $t4, 0($t6)
 
-          move    $a0, $t4
+              lw      $t7, 0($t7)
 
-          li      $v0, 1          #整数を出力する命令
-          syscall                 #$a0の値を画面に表示
+              move    $a0, $t7
 
-          la      $a0, newline    #$a0にnewlineで定義された文字列をコピー
-          li      $v0, 4          #文字列を出力する命令
-          syscall                 #改行を画面に表示
+              li      $v0, 1          #整数を出力する命令
+              syscall                 #$a0の値を画面に表示
 
-          add     $t2, $t2, 1
-          b       k1
+              la      $a0, newline    #$a0にnewlineで定義された文字列をコピー
+              li      $v0, 4          #文字列を出力する命令
+              syscall                 #改行を画面に表示
 
-      k2: move    $v0, $zero
-          lw      $ra, 12($sp)
-          addu    $sp, 16
-          jr      $ra
+              add     $t2, $t2, 1
+              b       k1
 
-          .end
-      \end{lstlisting}
-      また、この実行例は以下のListing\ref{prob4_ex}ようになる。
-      \begin{lstlisting}[caption=課題4の実行例, label=prob4_ex]
-      (spim) load "prob4.asm"
-      (spim) run
-      1
-      5
-      6
-      10
-      12
-      13
-      16
-      21
-      \end{lstlisting}
+          k2: move    $v0, $zero
+              lw      $ra, 12($sp)
+              addu    $sp, 16
+              jr      $ra
 
+              .end
+          \end{lstlisting}
+
+          \item[実行例]
+          また、この実行例は以下のListing\ref{prob4_ex}ようになる。
+          \begin{lstlisting}[caption=課題4の実行例, label=prob4_ex]
+          (spim) load "prob4.asm"
+          (spim) run
+          1
+          5
+          6
+          10
+          12
+          13
+          16
+          21
+          \end{lstlisting}
+
+          \item[解説と考察]
+          まずこのコードでは、hogeとbarという名前の配列を作成し、変数i,sumと定数用のレジスタを確保する。
+          次にループの中身を実装していく。
+          まず最初に条件分岐命令を用いてループを実行するかどうかを判定する。
+          その後、sllを用いて、配列が0番目からi番目までのアドレスのズレを計算してt5レジスタに保存しておく。
+          また、これに乗じてbarのi番目のアドレスをt6レジスタに、hogeのi番目のアドレスをt5レジスタに保存する。
+          そしてsumの値を計算した後barのi番目に書き込み、
+
+          今回の課題は前課題と異なり、逆にmove命令を利用するのが良いだろう。
+          また、その他にもadd命令を利用して代入する方法もあるが、moveが一番単純明快だと思われる。
+      \end{description}
   \end{description}
 \end{document}

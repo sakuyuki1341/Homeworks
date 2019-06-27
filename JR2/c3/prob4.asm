@@ -27,7 +27,9 @@ k1: bge     $t2, $t3, k2
 
     sw      $t4, 0($t6)
 
-    move    $a0, $t4
+    lw      $t7, 0($t6)
+
+    move    $a0, $t7
 
     li      $v0, 1          #整数を出力する命令
     syscall                 #$a0の値を画面に表示
