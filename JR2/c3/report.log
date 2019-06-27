@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.14159265-p3.8.1-180226-2.6 (utf8.sjis) (TeX Live 2018/W32TeX) (preloaded format=platex 2018.6.11)  28 JUN 2019 00:53
+This is e-pTeX, Version 3.14159265-p3.8.1-180226-2.6 (utf8.sjis) (TeX Live 2018/W32TeX) (preloaded format=platex 2018.6.11)  28 JUN 2019 01:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -234,36 +234,16 @@ LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 8.64899pt on input line 41.
 
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.66           \item
-                    [実行例]
-? 
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.74           \item
-                    [解説と考察]
-? 
 [1
 
-] [2] [3] [4] [5] (./report.aux) ) 
+] [2] [3] [4] [5] [6] (./report.aux) ) 
 Here is how much of TeX's memory you used:
  3210 strings out of 493273
  39616 string characters out of 6148004
- 167630 words of memory out of 5000000
+ 169630 words of memory out of 5000000
  7155 multiletter control sequences out of 15000+600000
  14332 words of font info for 64 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  27i,6n,32p,223b,1800s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on report.dvi (5 pages, 15044 bytes).
+Output written on report.dvi (6 pages, 16724 bytes).
