@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef char elementtype;
 
@@ -42,11 +43,19 @@ void freeList(node* list) {
     }
 }
 
+bool
 
 int findMaxRemoval(node *head){
 
     // add your code here
-
+    elementtype now;
+    node* here = head;
+    int count = 0;
+    // 中央部削除
+    for(int i = 0; here->next != NULL; i++) {
+        now =
+    }
+    return count;
 }
 
 int main(int argc, char *argv[]){
@@ -59,4 +68,3 @@ int main(int argc, char *argv[]){
     freeList(head);
     return 0;
 }
-
