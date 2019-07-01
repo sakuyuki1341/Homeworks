@@ -2,28 +2,308 @@
 
 @@@ 1810678 山田朔也 (個人作業)
 
-選択した課題1:
+選択した課題1: 演習1_c
+    最も平均気温が高い都市と低い都市のデータを打ち出す。
 
-方針1: 課題をどのようにして解くかの方針説明---数行以上
+方針1:
+    各要素を順に確認し、その中で最大のものと最小のものの番目を保存。
+    その番目を用いて最後にその都市のデータを打ち出す。
 
-コード1: プログラム一式(動くものを貼ること)
+コード1:
+---------------------------------------------------------------------
+// csvdemo.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "csv.h"
 
-実行例1: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
+int main(int argc, char *argv[]) {
+    csvp data[1000], p;
+    int size = csv_read(argv[1], 1000, data);
+    if(size <= 0) { return 0; }
+  //qsort(data+1, size-1, sizeof(csvp), cmp1); // **
+    p = data[0];
+    printf("%11s %11s %11s\n", p->cell[0], p->cell[1], p->cell[2]);
+    float max = atof(data[1]->cell[1]);
+    float min = atof(data[1]->cell[1]);
+    int maxp = 1, minp = 1;
+    for(int i = 1; i < size; ++i) {
+        p = data[i];
+        if(max < atof(p->cell[1])) {
+            max = atof(p->cell[1]);
+            maxp = i;
+        }
+        if(min > atof(p->cell[1])) {
+            min = atof(p->cell[1]);
+            minp = i;
+        }
+    }
+    printf("平均気温最大の都市: %11s %11.3f %11.3f\n", data[maxp]->cell[0], atof(data[maxp]->cell[1]), atof(data[maxp]->cell[2]));
+    printf("平均気温最小の都市: %11s %11.3f %11.3f\n", data[minp]->cell[0], atof(data[minp]->cell[1]), atof(data[minp]->cell[2]));
+    return 0;
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// csv.c --- csv file read/write API impl.
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "csv.h"
+#define MAXLINE 1000
 
-解説1: プログラムの説明ひととおり(きちんとここで説明すること)
+static char *readline(FILE *f) {
+  char buf[MAXLINE], *str;
+  if(fgets(buf, MAXLINE, f) == NULL) { return NULL; }
+  int len = strlen(buf);
+  if(buf[len-1] == '\n') { buf[--len] = '\0'; }
+  str = (char*)malloc(len+1); strcpy(str, buf); return str;
+}
 
-考察1: 課題をやって分かったこと---数行以上
+static csvp read1(FILE *f) {
+  char *arr[100], *s = readline(f); if(s == NULL) { return NULL; }
+  int i = 0;
+  for(arr[i++] = s; *s != '\0'; ++s) {
+    if(*s == ',') { *s = '\0'; arr[i++] = s+1; }
+  }
+  csvp r = (csvp)malloc(sizeof(struct csv) + i*sizeof(char*));
+  r->num = i;
+  for(i = 0; i < r->num; ++i) { r->cell[i] = arr[i]; }
+  return r;
+}
 
-選択した課題2: 課題番号 + 課題の要約
+int csv_read(char *fname, int limit, csvp arr[]) {
+  int size = 0; csvp line;
+  FILE *f = fopen(fname, "rb"); if(f == NULL) { return -1; }
+  while((line = read1(f)) != NULL) {
+    if(size+1 >= limit) { size = -2; break; }
+    arr[size++] = line;
+  }
+  fclose(f); return size;
+}
 
-方針2: 課題をどのようにして解くかの方針説明---数行以上
+void csv_write(char *fname, int size, csvp arr[]) {
+  FILE *f = fopen(fname, "wb"); if(f == NULL) { return; }
+  for(int i = 0; i < size; ++i) {
+    fprintf(f, "%s", arr[i]->cell[0]);
+    for(int j = 1; j < arr[i]->num; ++j) { fprintf(f, ",%s", arr[i]->cell[j]); }
+    fprintf(f, "\n");
+  }
+  fclose(f);
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// csv.h --- csv file read/write API.
+struct csv { int num; char *cell[1]; };
+typedef struct csv *csvp;
+int csv_read(char *fname, int limit, csvp arr[]);
+void csv_write(char *fname, int size, csvp arr[]);
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+city,temprature,precitipation
+Sapporo,8.2,1129.6
+Sendai,11.9,1204.5
+Tokyo,15.6,1405.3
+Kanazawa,14.1,2592.6
+Oosaka,16.3,1318.0
+Hiroshima,16.2,1511.8
+Kouchi,16.4,2582.4
+Fukuoka,16.2,1604.3
+Naha,22.4,2036.8
+---------------------------------------------------------------------
+
+実行例1:
+---------------------------------------------------------------------
+$ ./a.exe  data.csv
+city  temprature precitipation
+平均気温最大の都市        Naha      22.400    2036.800
+平均気温最小の都市     Sapporo       8.200    1129.600
+---------------------------------------------------------------------
+
+解説1:
+    まず、このプログラムはcsvdemo.cにmain関数が存在しており、これを
+    ライブラリファイルとして用意しているcsv.cとリンクさせてコンパイルして
+    実行ファイルを作成。その実行ファイルにコマンドライン引数としてdata.csvを
+    渡すことでdata.csvの内容を特定の条件に応じて合わせて表示するように記述している。
+    肝心のcsvdemo.cの中身だが、まずdata.csvの内容を読み込む。その後、
+    平均気温の最大値と最小値を保存しておく変数、そしてその最大値と最小値
+    のデータの存在する番目を保存しておく変数を宣言。
+    これらに１つ目のデータを仮として読み込ませておき、データを全て確認しつつ
+    最大値としておいておいたデータよりも大きいデータならば更新を掛けるというように
+    最大値を求める。また、この更新がかかった時の番目を番目保存用の変数に保存しておく。
+    コレを最小値にも適用し、最終的な目的の値を得たのち、これを用いて結果を
+    打ち出すようにしている。
+
+考察1:
+    配列の中にポインタを保存し、コレを操作することの利便性は高いと感じた。
+    また、この方式はcsvファイルの保存形式とよく合っていることもわかる。
+    この時、注意が必要なこととして、これらはchar型なので数値として比較
+    する際にはatoiなどを実行しなくてはならない。
+
+
+
+選択した課題2: 演習2_c
+    平均気温の高い順に並べる。ただし平均気温が同じ場合は
+    都市名の昇順に並べる。
+
+方針2:
+    関数qsortを用いて並べていく。
+    評価関数は、どちらが高いか低いかによって返り値を定め、
+    同じ場合は関数strcmpを呼び出し、その結果を返している。
 
 コード2: プログラム一式(動くものを貼ること)
+---------------------------------------------------------------------
+// csvdemo_1.c --- demonstration for csv_read w/ sorting.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "csv.h"
+
+static int cmp1(const void *x, const void *y) { // comp-fn.
+  csvp a = *(csvp*)x, b = *(csvp*)y;
+  return strcmp(a->cell[0], b->cell[0]);
+}
+
+static int cmp2(const void *x, const void *y) { // comp-fn.
+  csvp a = *(csvp*)x, b = *(csvp*)y;
+  if(strcmp(a->cell[0], b->cell[0]) < 0) {
+      return 1;
+  } else if(strcmp(a->cell[0], b->cell[0]) > 0) {
+      return -1;
+  } else {
+      return 0;
+  }
+}
+
+static int cmp4(const void *x, const void *y) {
+    csvp a = *(csvp*)x, b = *(csvp*)y;
+    if(atof(a->cell[1]) > atof(b->cell[1])) {
+        return 1;
+    } else if (atof(a->cell[1]) < atof(b->cell[1])) {
+        return -1;
+    } else {
+        return strcmp(a->cell[0], b->cell[0]);
+     }
+}
+
+int main(int argc, char *argv[]) {
+  csvp data[1000], p;
+  int size = csv_read(argv[1], 1000, data);
+  if(size <= 0) { return 0; }
+  qsort(data+1, size-1, sizeof(csvp), cmp4); // **
+  p = data[0];
+  printf("%11s %11s %11s\n", p->cell[0], p->cell[1], p->cell[2]);
+  for(int i = 1; i < size; ++i) {
+    p = data[i];
+    printf("%11s %11.3f %11.3f\n",
+           p->cell[0], atof(p->cell[1]), atof(p->cell[2])/12.0);
+  }
+  return 0;
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// csv.c --- csv file read/write API impl.
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "csv.h"
+#define MAXLINE 1000
+
+static char *readline(FILE *f) {
+  char buf[MAXLINE], *str;
+  if(fgets(buf, MAXLINE, f) == NULL) { return NULL; }
+  int len = strlen(buf);
+  if(buf[len-1] == '\n') { buf[--len] = '\0'; }
+  str = (char*)malloc(len+1); strcpy(str, buf); return str;
+}
+
+static csvp read1(FILE *f) {
+  char *arr[100], *s = readline(f); if(s == NULL) { return NULL; }
+  int i = 0;
+  for(arr[i++] = s; *s != '\0'; ++s) {
+    if(*s == ',') { *s = '\0'; arr[i++] = s+1; }
+  }
+  csvp r = (csvp)malloc(sizeof(struct csv) + i*sizeof(char*));
+  r->num = i;
+  for(i = 0; i < r->num; ++i) { r->cell[i] = arr[i]; }
+  return r;
+}
+
+int csv_read(char *fname, int limit, csvp arr[]) {
+  int size = 0; csvp line;
+  FILE *f = fopen(fname, "rb"); if(f == NULL) { return -1; }
+  while((line = read1(f)) != NULL) {
+    if(size+1 >= limit) { size = -2; break; }
+    arr[size++] = line;
+  }
+  fclose(f); return size;
+}
+
+void csv_write(char *fname, int size, csvp arr[]) {
+  FILE *f = fopen(fname, "wb"); if(f == NULL) { return; }
+  for(int i = 0; i < size; ++i) {
+    fprintf(f, "%s", arr[i]->cell[0]);
+    for(int j = 1; j < arr[i]->num; ++j) { fprintf(f, ",%s", arr[i]->cell[j]); }
+    fprintf(f, "\n");
+  }
+  fclose(f);
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// csv.h --- csv file read/write API.
+struct csv { int num; char *cell[1]; };
+typedef struct csv *csvp;
+int csv_read(char *fname, int limit, csvp arr[]);
+void csv_write(char *fname, int size, csvp arr[]);
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+city,temprature,precitipation
+Sapporo,8.2,1129.6
+Sendai,11.9,1204.5
+Tokyo,15.6,1405.3
+Kanazawa,14.1,2592.6
+Oosaka,16.3,1318.0
+Hiroshima,16.2,1511.8
+Kouchi,16.4,2582.4
+Fukuoka,16.2,1604.3
+Naha,22.4,2036.8
+---------------------------------------------------------------------
 
 実行例2: 適宜(グラフィクス等実行例がテキストで作れないものは除く)
+---------------------------------------------------------------------
+$ ./a.exe data.csv
+       city  temprature precitipation
+    Sapporo       8.200      94.133
+     Sendai      11.900     100.375
+   Kanazawa      14.100     216.050
+      Tokyo      15.600     117.108
+    Fukuoka      16.200     133.692
+  Hiroshima      16.200     125.983
+     Oosaka      16.300     109.833
+     Kouchi      16.400     215.200
+       Naha      22.400     169.733
+---------------------------------------------------------------------
 
-解説2: プログラムの説明ひととおり(きちんとここで説明すること)
+解説2:
+    まず、このプログラムはcsvdemo_1.cにmain関数が存在しており、これを
+    ライブラリファイルとして用意しているcsv.cとリンクさせてコンパイルして
+    実行ファイルを作成。その実行ファイルにコマンドライン引数としてdata.csvを
+    渡すことでdata.csvの内容を特定の条件に応じて合わせて表示するように記述している。
+    実際の並べ替えだが、評価関数をcmp4として作成し、コレを用いて関数qsortを実行し
+    並べ替えを実現している。cmp4の評価方法はどちらが高いか低いかによって返り値を定め、
+    同じ場合は関数strcmpを呼び出し、その結果を返している。
 
-考察2: 課題をやって分かったこと---数行以上
+考察2:
+    並べ替えにおいて、評価関数を用意し、それに応じてソートを行ってくれるライブラリ
+    の利便性は計り知れないだろう。また、この平均気温だが、これはもちろんのこと
+    文字列なのでこれをきちんとatofしなければ正しい結果が表示されない所に
+    注意が必要だと考えられる。
 
-アンケート: アンケート再掲+回答
+アンケート:
+    Q1. CSVファイルを読み込んでデータ処理できそうですか。
+     A1. 比較的簡単に行えると思われる。ただ、csvにどのような順に保存しておくかを知っている場合に限る。
+    Q2. プログラムのコードを見て時間計算量が分かりそうですか。
+     A2. おおよそであれば分かるが、細かい計算までは不安が残る。
+    Q3. リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+     A3. 非常に大変な内容であったが、これらは日常的に用いることができそうな感覚があった。
