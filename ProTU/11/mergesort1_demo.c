@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
   clock_gettime(CLOCK_REALTIME, &tm2);
   for(int i = 0; i < n; ++i) { printf(" %d", a[i]); }
   printf("\n");
-  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9(tm.tv_nsec-tm1.tv_nsec);
+  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9(tm2.tv_nsec-tm1.tv_nsec);
   printf("time = %.4f\n", dt);
   return 0;
 }
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
   clock_gettime(CLOCK_REALTIME, &tm2);
   for(int i = 0; i < n; ++i) { printf(" %d", a[i]); }
   printf("\n");
-  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9(tm.tv_nsec-tm1.tv_nsec);
+  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9(tm2.tv_nsec-tm1.tv_nsec);
   printf("time = %.4f\n", dt);
   return 0;
 }
