@@ -10,8 +10,8 @@
 
 // #define ENSHU_EX
 // #define ENSHU_4_FT
-// #define ENSHU_4_ST
- #define ENSHU_4_TT
+ #define ENSHU_4_ST
+// #define ENSHU_4_TT
 
 static int a[MAXDATA];
 
