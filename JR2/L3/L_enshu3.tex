@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{url}
+\usepackage{subcaption}
 
 \lstset{
   basicstyle={\ttfamily},
@@ -61,6 +62,7 @@
                     $S_5$ & $S_4 \,,\, 0$ & $S_0 \,,\, 1$ \\ \hline
                 \end{tabular}
             \end{table}
+
             ここからこの状態遷移表を講義で習ったように、等価な状態でグループ分けをしてしていくと以下の表\ref{tab2}のようになった。
             \begin{table}[H]
                 \centering
@@ -76,14 +78,14 @@
                      & $S_4$ & $B_1^1$ & $B_2^1$ \\ \hline
                 \end{tabular}
             \end{table}
-            これより、簡単化ができる。そして、簡単化後の状態遷移表と、その符号化を行った状態遷移表は以下の表\ref{tab3}ようになる。
+
+            これより、簡単化ができる。そして、簡単化後の状態遷移表と、その符号化を行った状態遷移表は以下の表\ref{tab3},\ref{tab4}のようになる。
             \begin{table}[H]
                 \centering
-                \caption{各処理後の状態遷移表}
-                \label{tab3}
                 \begin{minipage}{0.4\columnwidth}
                     \centering
                     \caption{簡単化後の状態遷移表}
+                    \label{tab3}
                     \begin{tabular}{|c|c|c|} \hline
                         & 0 & 1 \\ \hline
                         $S_0^*$ & $S_0^* \,,\, 1$ & $S_1^* \,,\, 0$ \\ \hline
@@ -94,6 +96,7 @@
                 \begin{minipage}{0.4\columnwidth}
                     \centering
                     \caption{符号化後の状態遷移表}
+                    \label{tab4}
                     \begin{tabular}{|c|c|c|} \hline
                         & 0 & 1 \\ \hline
                         00 & $00 \,,\, 1$ & $01 \,,\, 0$ \\ \hline
@@ -102,17 +105,86 @@
                     \end{tabular}
                 \end{minipage}
             \end{table}
-            ここから論理式を求めていく。まず、符号化した状態の0,1の列において下位ビットを$s_0$,上位ビットを$s_1$とする。
-            また、入力は$x$,出力を$f$とすると、$s_0 \,,\, s_1 \,,\, f$のカルノー図は以下のようになる。
-            \begin{table}
-                \centering
-                \caption{様々なカルノー図}
-                \label{tab4}
-                \begin{minipage}
-                    
-                \end{minipage}
-            \end{table}
 
+            ここから論理式を求めていく。まず、符号化した状態の0,1の列において下位ビットを$s_0$,上位ビットを$s_1$とする。
+            また、入力は$x$,出力を$f$とすると、$s_0 \,,\, s_1 \,,\, f$のカルノー図は以下の図\ref{fig2}のようになる。
+            \begin{figure}[H]
+                \centering
+                \begin{subfigure}{0.2\columnwidth}
+                    \centering
+                    \includegraphics[width=\columnwidth]{fig_2_f.eps}
+                    \caption{$f$のカルノー図}
+                    \label{fig2_f}
+                \end{subfigure}
+                \begin{subfigure}{0.2\columnwidth}
+                    \centering
+                    \includegraphics[width=\columnwidth]{fig_2_s0.eps}
+                    \caption{$s_0$のカルノー図}
+                    \label{fig2_s0}
+                \end{subfigure}
+                \begin{subfigure}{0.2\columnwidth}
+                    \centering
+                    \includegraphics[width=\columnwidth]{fig_2_s1.eps}
+                    \caption{$s_1$のカルノー図}
+                    \label{fig2_s1}
+                \end{subfigure}
+                \caption{カルノー図}
+                \label{fig2}
+            \end{figure}
+
+            次にこれらのカルノー図から論理式を作成すると以下のようになる。
+            \begin{align}
+                f &= \overline{x s_0 s_1} + xs_0 \\
+                s_0 &= \overline{x}s_1 + x\overline{s_0 s_1} \\
+                s_1 &= \overline{x}s_0 + xs_1
+            \end{align}
+
+            これを回路化したものが以下の図\ref{fig3}となる。
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=10cm]{fig_3.eps}
+                \caption{作成された回路図}
+                \label{fig3}
+            \end{figure}
+
+            \item[(c)]
+            まず、最初に考えるのは2進数において各ビットが1になった場合に増える値は$\pmod 3$における値である。
+            これは以下のようになる。
+            \begin{align}
+                \cdots \,1\,2\,1\,2\,1\,2\, \cdots
+            \end{align}
+            ここから、$n$が3の倍数となるためには「間が奇数個離れた1となっているビットが3つ存在する」もしくは「2つの1となっているビットの間が偶数個離れている、もしくは隣り合っている」
+            という条件を$n$が満たしている必要がある。
+            これらを満たすように設計したものが(a)で記述した図\ref{fig1}である。この回路はその状態遷移図を簡単化したものであるため、正しく動作することが分かる。
+      \end{description}
+
+      \item[問2.]
+      \begin{description}
+          \item[(a)]
+          アルゴリズム自体は問1と全く同一のものを用いて計算することとなる。
+          また、今回は簡単化の手間を省くため、問1で簡単化された後の状態遷移表を用いて状態遷移図書いていくこととする。
+          実際に書いた状態遷移図は以下の図\ref{fig4}のようになった。
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width = 10cm]{fig_4.eps}
+              \caption{最上位ビットから読み取った時の状態遷移図}
+              \label{fig4}
+          \end{figure}
+
+          \item[(b)]
+          この回路は問1.の(b)の図\ref{fig3}と同一である。
+
+          \item[(c)]
+          これも問1と同様であるため問1の(c)と同一の理由である。
+      \end{description}
+
+      \item[問3.]
+      分かりませんでした。ただ、$n$の$pmod 3$は3通りに分けられることに関係があるのでは無いかと思いました。
+
+      \item[問4.]
+      \begin{description}
+          \item[(a)]
+          
       \end{description}
   \end{description}
 \end{document}
