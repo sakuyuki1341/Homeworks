@@ -39,7 +39,7 @@ k2:     move    $v0, $zero
 func:   move    $v0, $a0
 
         mult    $v0, $v0
-        mfl0    $v0
+        mflo    $v0
 
         add     $v0, $v0, 1
 
