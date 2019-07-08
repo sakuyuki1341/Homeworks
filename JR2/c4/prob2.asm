@@ -15,7 +15,7 @@ k1:     bge     $s0, $s1, k2
 
         sll     $s3, $s0, 2     #hoge読み込み準備
         add     $s3, $s3, $s2
-        lw      $a0, 0($3)
+        lw      $a0, 0($s3)
 
         jal     print
 
