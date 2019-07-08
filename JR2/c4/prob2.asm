@@ -19,6 +19,8 @@ k1:     bge     $s0, $s1, k2
 
         jal     print
 
+        add     $s0, $s0, 1
+
         b       k1
 
 k2:     move    $v0, $zero
