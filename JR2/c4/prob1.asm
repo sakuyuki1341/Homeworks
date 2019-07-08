@@ -22,6 +22,8 @@ k1:     beq     $t0, $t1, k2
 
         sub     $t0, $t0, 1
 
+        b       k1
+
 k2:     move    $a0, $t2
         li      $v0, 1          #整数を出力する命令
         syscall                 #$a0の値を画面に表示
