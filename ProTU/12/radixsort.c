@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]) {
     for(int i = 0; i < n; ++i) { a[i] = rand()%10000; }
 
     clock_gettime(CLOCK_REALTIME, &tm1);
-    radixsort1(n, a);
+    radixsort2(n, a);
     clock_gettime(CLOCK_REALTIME, &tm2);
     for(int i = 0; i < n; ++i) { printf(" %d", a[i]); }
     printf("\n");
