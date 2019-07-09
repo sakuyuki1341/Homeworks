@@ -35,10 +35,10 @@ static void rs2(int *a, int n) {
         }
         int ac = 0;
         for(int i = 0; i < bc+1; i++) {
-            a[ac++] = b[bc++];
+            a[ac++] = b[i];
         }
         for(int i = 0; i < cc+1; i++) {
-            a[ac++] = c[cc++];
+            a[ac++] = c[i];
         }
     }
 }
