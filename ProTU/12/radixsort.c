@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAXDATA 10000
+#define MAXDATA 1000000
 
 static int arr_f[MAXDATA];
 
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
     srand(time(NULL));
     struct timespec tm1, tm2;
 
-    for(int i = 0; i < n; ++i) { arr_f[i] = rand()%2; }
+    for(int i = 0; i < n; ++i) { arr_f[i] = rand()%10000; }
 
     clock_gettime(CLOCK_REALTIME, &tm1);
     radixsort(n, arr_f);
