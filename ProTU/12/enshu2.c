@@ -1,4 +1,4 @@
-// radixsort.c --- radixsort (upper->lower) from specified mask
+// enshu2.c
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
