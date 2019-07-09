@@ -23,9 +23,11 @@ static void rs1(int *a, int i, int j, int mask) {
 
 static void rs2(int *a, int n) {
     int maxmask = MAXDATA;
+    int ac = 0;
     int *b = (int*)(malloc(sizeof(int)*n)); int bc = 0;
     int *c = (int*)(malloc(sizeof(int)*n)); int cc = 0;
     for(int mask = 1; mask < maxmask; mask *= 2) {
+        bc = 0; cc = 0; ac = 0;
         for(int i = 0; i < n; ++i) {
             if((a[i]&mask) == 0) {
                 b[bc++] = a[i];
@@ -33,7 +35,6 @@ static void rs2(int *a, int n) {
                 c[cc++] = a[i];
             }
         }
-        int ac = 0;
         for(int i = 0; i < bc; i++) {
             a[ac++] = b[i];
         }
