@@ -62,7 +62,7 @@ k6:     move    $v0, $t0        #戻り値を専用レジスタに格納
 func:   move    $s7, $ra        #戻り番地の保存
 
         move    $t0, $a0        #条件分岐の準備
-        div     $t0, 2
+        div     $t0,2
         mflo    $t0
 
         beq     $t0,$zero,toc1  #条件分岐
