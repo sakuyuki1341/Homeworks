@@ -14,12 +14,11 @@ static void swap(int *a, int i, int j) {
 
 static bool is_sorted(int* a, int n) {
     bool flag_yes = true;
-    for(int i = 0; i < n; i++) {
+    for(int i = 0; i < n-1; i++) {
         if(a[i] > a[i+1]) {
             flag_yes = false;
         }
     }
-    printf("do is_sorted\n");
     return flag_yes;
 }
 
