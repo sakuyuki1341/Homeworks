@@ -53,7 +53,7 @@ calc2:  li      $t0, 0          #sum
         li      $t1, 1          #i
 
 k5:     bgt     $t1,$a0,k6      #forにおけるi<=a
-        add     $t0,$t0,1       #sum += 1
+        add     $t0,$t0,$t1     #sum += i
         add     $t1, 1          #i++
         b       k5
 
