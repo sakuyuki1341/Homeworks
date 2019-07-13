@@ -19,6 +19,7 @@ static bool is_sorted(int* a, int n) {
             flag_yes = false;
         }
     }
+    printf("do is_sorted\n");
     return flag_yes;
 }
 
