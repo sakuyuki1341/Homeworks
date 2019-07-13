@@ -53,4 +53,4 @@ print:  li      $v0, 1          #整数を出力する命令
         li      $v0, 4          #文字列を出力する命令
         syscall                 #改行を画面に表示
 
-        j       $ra
+        jr      $ra
