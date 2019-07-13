@@ -63,7 +63,7 @@ func:   move    $s7, $ra        #戻り番地の保存
 
         li      $t0, 2          #条件分岐の準備
         div     $a0, $t0
-        mflo    $t0
+        mfhi    $t0
 
         beq     $t0,$zero,toc1  #条件分岐
 
