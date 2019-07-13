@@ -1,4 +1,4 @@
-// mergesort1demo.c --- demonstration of mergesort1.
+// mergesort1.c --- demonstration of mergesort1.
 // sortdemo.c --- demonstration for basic sort.
 #include <stdbool.h>
 #include <stdio.h>
