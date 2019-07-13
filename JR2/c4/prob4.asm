@@ -70,7 +70,7 @@ func:   move    $s7, $ra        #戻り番地の保存
         beq     $t0,$zero,toc1  #条件分岐
 
         jal     calc2           #calc2呼び出し
-        j       rtmain
+        b       rtmain
 
 toc1:   jal     calc1           #calc1呼び出し
 
