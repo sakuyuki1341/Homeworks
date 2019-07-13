@@ -24,8 +24,8 @@ static bool is_sorted(int* a, int n) {
 
 static void bs(int* a, int n) {
     while (!is_sorted(a, n)) {
-        for(int i = 1; i < n; i++) {
-            swap(a, (rand() % (n-i))+i, i-1);
+        for(int i = 0; i < n; i++) {
+            swap(a, (rand() % (n-i))+i, i);
         }
     }
 }
