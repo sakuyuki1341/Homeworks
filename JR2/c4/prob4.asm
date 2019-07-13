@@ -43,6 +43,7 @@ calc1:  li      $t0, 1          #factorial
 k3:     ble     $t1, $zero, k4  #forにおけるi>0
         mul     $t0,$t0,$t1     #factorial *= i
         sub     $t1, 1          #i--
+        b       k3
 
 k4:     move    $v0, $t0        #戻り値を専用レジスタに格納
         jr      $ra             #親に帰る
@@ -54,6 +55,7 @@ calc2:  li      $t0, 0          #sum
 k5:     bgt     $t1,$a0,k6      #forにおけるi<=a
         add     $t0,$t0,1       #sum += 1
         add     $t1, 1          #i++
+        b       k3
 
 k6:     move    $v0, $t0        #戻り値を専用レジスタに格納
         jr      $ra             #親に帰る

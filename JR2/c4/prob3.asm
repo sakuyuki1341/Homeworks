@@ -21,14 +21,15 @@ k1:     bge     $s0, $s1, k2
         jal     func
         add     $s3, $s3, $v0
 
-        move    $a0, $s3
-        jal     print
 
         add     $s0, $s0, 1
 
         b       k1
 
-k2:     move    $v0, $zero
+k2:     move    $a0, $s3
+        jal     print
+
+        move    $v0, $zero
         lw      $ra, 12($sp)
         addu    $sp, 16
         jr      $ra
