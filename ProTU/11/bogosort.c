@@ -8,7 +8,7 @@ static void swap(int *a, int i, int j) {
     int x = a[i]; a[i] = a[j]; a[j] = x;
 }
 
-static bool is_sorted(int* a, int n) {
+static bool is_sorted(int n, int* a) {
     bool flag_yes = true;
     for(int i = 0; i < n-1; i++) {
         if(a[i] > a[i+1]) {
@@ -18,16 +18,16 @@ static bool is_sorted(int* a, int n) {
     return flag_yes;
 }
 
-static void bs(int* a, int n) {
-    while (!is_sorted(a, n)) {
+static void bs(int n, int* a) {
+    while (!is_sorted(n, a)) {
         for(int i = 0; i < n; i++) {
             swap(a, (rand() % (n-i))+i, i);
         }
     }
 }
 
-void bogosort(int* a, int n) {
-    bs(a, n);
+void bogosort(int n, int* a) {
+    bs(n, a);
 }
 
 void expect_sort_iarray(int n, void (*f)(int m, int *a), char *msg) {
