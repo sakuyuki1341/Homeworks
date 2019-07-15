@@ -1,0 +1,345 @@
+レポートn11B
+
+@@@ 1810678 山田朔也 (個人作業)
+
+選択した課題1: 演習1
+    キューを使ったマージソートのコードを動かし、整列できることや整列時間を確認する。
+    加えて、キューの代わりにスタックを使うとどうなるか理由とともに予想し、こちらも単体テストを行う。
+
+方針1:
+    まず、用意されたコードを実際に動かし整列時間を確認する。
+    次にスタックをキューの代わりに使った場合の挙動を予想、その内容を考察に記述する。
+    最後にスタックに変えたものを実行し、整列時間などを確認して予想と一致しているか確認する。
+
+コード1:
+---------------------------------------------------------------------
+// mergesort_queue.c --- test mergesort of queue
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "pqueue.h"
+
+int *ivec_new(int size) {
+  int *a = (int*)malloc((size+1) * sizeof(int));
+  a[0] = size; return a;
+}
+
+int *ivec_merge(int *b, int *c) {
+  int ib = 1, ic = 1, ia = 1, *a = ivec_new(b[0]+c[0]);
+  while(ia <= a[0]) {
+    if(ib > b[0])          { a[ia++] = c[ic++]; }
+    else if(ic > c[0])     { a[ia++] = b[ib++]; }
+    else if(c[ic] < b[ib]) { a[ia++] = c[ic++]; }
+    else                   { a[ia++] = b[ib++]; }
+  }
+  return a;
+}
+
+void mergesort_queue(int n, int* a) {
+  pqueuep q = pqueue_new(n+1);
+  int *v, *w;
+  for(int i = 0; i < n; ++i) {
+    v = ivec_new(1); v[1] = a[i]; pqueue_enq(q, v);
+  }
+  while(true) {
+    v = (int*)pqueue_deq(q); if(pqueue_isempty(q)) { break; }
+    w = (int*)pqueue_deq(q); pqueue_enq(q, ivec_merge(v, w));
+    free(v); free(w);
+  }
+  for(int i = 0; i < n; ++i) { a[i] = v[i+1]; }
+}
+
+void expect_sort_iarray(int n, void (*f)(int m, int *a), char *msg) {
+  int c = 0, *a = (int*)malloc(n * sizeof(int));
+  srand(time(NULL));
+  for(int i = 0; i < n; ++i) { a[i] = rand()%10000; }
+  struct timespec tm1, tm2;
+  clock_gettime(CLOCK_REALTIME, &tm1);
+  (*f)(n, a);
+  clock_gettime(CLOCK_REALTIME, &tm2);
+  for(int i = 1; i < n; ++i) {
+    if(a[i-1] <= a[i]) { continue; } // correct order
+    if(++c < 5) {
+      printf("  wrong order at %d: %d > %d\n", i-1, a[i-1], a[i]);
+    } else if(c == 5) {
+      printf("  more wrong place omitted.\n");
+    }
+  }
+  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9*(tm2.tv_nsec-tm1.tv_nsec);
+  printf("%s time=%.4f %s\n", c==0?"OK":"NG", dt, msg); free(a);
+}
+
+int main(int argc, char *argv[]) {
+  int n = atoi(argv[1]);
+  expect_sort_iarray(n, mergesort_queue, "mergesort_queue");
+  return 0;
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// pqueue.c --- pointer type queue impl. with array
+#include <stdlib.h>
+#include "pqueue.h"
+struct pqueue { int ip, op, size; void **arr; };
+pqueuep pqueue_new(int size) {
+  pqueuep p = (pqueuep)malloc(sizeof(struct pqueue));
+  p->ip = p->op = 0; p->size = size;
+  p->arr = (void**)malloc(size * sizeof(void*)); return p;
+}
+bool pqueue_isempty(pqueuep p) { return p->ip == p->op; }
+bool pqueue_isfull(pqueuep p) { return (p->ip+1)%p->size == p->op; }
+void pqueue_enq(pqueuep p, void *v) {
+  if(pqueue_isfull(p)) { return; }
+  p->arr[p->ip++] = v; if(p->ip >= p->size) { p->ip = 0; }
+}
+void *pqueue_deq(pqueuep p) {
+  if(pqueue_isempty(p)) { return 0; }
+  void *v = p->arr[p->op++]; if(p->op >= p->size) { p->op = 0; }
+  return v;
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// pqueue.h --- int type queue interface
+#include <stdbool.h>
+struct pqueue;
+typedef struct pqueue *pqueuep;
+pqueuep pqueue_new(int size);
+bool pqueue_isempty(pqueuep p);
+bool pqueue_isfull(pqueuep p);
+void pqueue_enq(pqueuep p, void *v);
+void *pqueue_deq(pqueuep p);
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// mergesort_stack.c --- test mergesort of stack
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "pstack.h"
+
+int *ivec_new(int size) {
+  int *a = (int*)malloc((size+1) * sizeof(int));
+  a[0] = size; return a;
+}
+
+int *ivec_merge(int *b, int *c) {
+  int ib = 1, ic = 1, ia = 1, *a = ivec_new(b[0]+c[0]);
+  while(ia <= a[0]) {
+    if(ib > b[0])          { a[ia++] = c[ic++]; }
+    else if(ic > c[0])     { a[ia++] = b[ib++]; }
+    else if(c[ic] < b[ib]) { a[ia++] = c[ic++]; }
+    else                   { a[ia++] = b[ib++]; }
+  }
+  return a;
+}
+
+void mergesort_stack(int n, int* a) {
+  pstackp s = pstack_new(n+1);
+  int *v, *w;
+  for(int i = 0; i < n; ++i) {
+    v = ivec_new(1); v[1] = a[i]; pstack_push(s, v);
+  }
+  while(true) {
+    v = (int*)pstack_pop(s); if(pstack_isempty(s)) { break; }
+    w = (int*)pstack_pop(s); pstack_push(s, ivec_merge(v, w));
+    free(v); free(w);
+  }
+  for(int i = 0; i < n; ++i) { a[i] = v[i+1]; }
+}
+
+void expect_sort_iarray(int n, void (*f)(int m, int *a), char *msg) {
+  int c = 0, *a = (int*)malloc(n * sizeof(int));
+  srand(time(NULL));
+  for(int i = 0; i < n; ++i) { a[i] = rand()%10000; }
+  struct timespec tm1, tm2;
+  clock_gettime(CLOCK_REALTIME, &tm1);
+  (*f)(n, a);
+  clock_gettime(CLOCK_REALTIME, &tm2);
+  for(int i = 1; i < n; ++i) {
+    if(a[i-1] <= a[i]) { continue; } // correct order
+    if(++c < 5) {
+      printf("  wrong order at %d: %d > %d\n", i-1, a[i-1], a[i]);
+    } else if(c == 5) {
+      printf("  more wrong place omitted.\n");
+    }
+  }
+  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9*(tm2.tv_nsec-tm1.tv_nsec);
+  printf("%s time=%.4f %s\n", c==0?"OK":"NG", dt, msg); free(a);
+}
+
+int main(int argc, char *argv[]) {
+  int n = atoi(argv[1]);
+  expect_sort_iarray(n, mergesort_stack, "mergesort_stack");
+  return 0;
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// pstack.c --- pointer type stack impl. with array
+#include <stdlib.h>
+#include "pstack.h"
+struct pstack { int ptr, lim; void **arr; };
+pstackp pstack_new(int size) {
+  pstackp p = (pstackp)malloc(sizeof(struct pstack));
+  p->ptr = 0; p->lim = size; p->arr = (void**)malloc(size * sizeof(void*));
+  return p;
+}
+bool pstack_isempty(pstackp p) { return p->ptr <= 0; }
+bool pstack_isfull(pstackp p) { return p->ptr >= p->lim; }
+void pstack_push(pstackp p, void *v) { p->arr[p->ptr++] = v; }
+void *pstack_pop(pstackp p) { return p->arr[--(p->ptr)]; }
+void *pstack_top(pstackp p) { return p->arr[p->ptr - 1]; }
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// pstack.h --- pointer type stack interface
+#include <stdbool.h>
+struct pstack;
+typedef struct pstack *pstackp;
+pstackp pstack_new(int size);
+bool pstack_isempty(pstackp p);
+bool pstack_isfull(pstackp p);
+void pstack_push(pstackp p, void *v);
+void *pstack_pop(pstackp p);
+void *pstack_top(pstackp p);
+---------------------------------------------------------------------
+
+実行例1:
+---------------------------------------------------------------------
+$ ./a.out 10000
+OK time=0.0017 mergesort_queue
+$ ./a.out 100000
+OK time=0.0190 mergesort_queue
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+[y1810678@red99 11]$ ./a.out 10000
+OK time=0.1120 mergesort
+[y1810678@red99 11]$ ./a.out 100000
+OK time=11.1714 mergesort
+---------------------------------------------------------------------
+
+解説1:
+    まず、pqueue.c, pqueue.h, pstack.c, pstack.hはそのまま例示されたコードを使用している。
+    mergesort_queue.cは、例示されたmergesort1demo.cのコードに前回例示されたexpect_sort_iarray関数を導入し、この関数を用いることができるようにmain関数を編集してある。
+    mergesort_stack.cは、mergesort_queue.cのqueueに対する操作をそのままstackに置き換えたものである。
+
+考察1:
+    まず、キューの代わりにスタックを使うとどうなるかの予想内容を記述していく。
+    結論から言うと、スタックを使用すると計算量が増加する。具体的数値としてはキューならば計算量はO(n log(n))だがスタックならばO(n^2)となる。
+    理由だが、スタックはキューと異なりLIFO型である。そのため、最後にスタックに入れた配列と、最後から一個前に入れたものから順番に併合していく事となる。
+    今回のコードでは、最初にもとの配列を大きさが1の配列に分解し、それをスタックに詰め込んでいる。
+    よってマージ処理が開始するとスタック領域の最上位配列とその下の配列を併合していき、最上位配列の大きさが1,2,3,…,nというように増えていくこととなる。
+    そのためn回の比較がn回実行される。つまり計算量がスタックだとO(n^2)となると予想される。
+    次にこの予想が実際に合致しているか考えていく。
+    根拠として挙げられるのは実行時間である。実行時間を見るに、おおよそ上記の予想が一致しているのが分かる。
+
+
+
+選択した課題2: 演習5
+    ボゴソートを実装し、動作と時間を確認する。
+    また、時間計算量を見積もり、実測と比較検討する。
+
+方針2:
+    まず、ランダムに入れ替えを行う。
+    その後、別関数としてソートされているかどうかを確かめる関数を用意して、それを実行する。
+    最後にソートされていなければもう一度ランダムに入れ替えを行う。
+    また、時間計算量の見積もり、比較検討は考察にて行う。
+
+コード2:
+---------------------------------------------------------------------
+// bogosort.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+static void swap(int *a, int i, int j) {
+    int x = a[i]; a[i] = a[j]; a[j] = x;
+}
+
+static bool is_sorted(int n, int* a) {
+    bool flag_yes = true;
+    for(int i = 0; i < n-1; i++) {
+        if(a[i] > a[i+1]) {
+            flag_yes = false;
+        }
+    }
+    return flag_yes;
+}
+
+static void bs(int n, int* a) {
+    while (!is_sorted(n, a)) {
+        for(int i = 0; i < n; i++) {
+            swap(a, (rand() % (n-i))+i, i);
+        }
+    }
+}
+
+void bogosort(int n, int* a) {
+    bs(n, a);
+}
+
+void expect_sort_iarray(int n, void (*f)(int m, int *a), char *msg) {
+  int c = 0, *a = (int*)malloc(n * sizeof(int));
+  srand(time(NULL));
+  for(int i = 0; i < n; ++i) { a[i] = rand()%10000; }
+  struct timespec tm1, tm2;
+  clock_gettime(CLOCK_REALTIME, &tm1);
+  (*f)(n, a);
+  clock_gettime(CLOCK_REALTIME, &tm2);
+  for(int i = 1; i < n; ++i) {
+    if(a[i-1] <= a[i]) { continue; } // correct order
+    if(++c < 5) {
+      printf("  wrong order at %d: %d > %d\n", i-1, a[i-1], a[i]);
+    } else if(c == 5) {
+      printf("  more wrong place omitted.\n");
+    }
+  }
+  double dt = (tm2.tv_sec-tm1.tv_sec) + 1e-9*(tm2.tv_nsec-tm1.tv_nsec);
+  printf("%s time=%.4f %s\n", c==0?"OK":"NG", dt, msg); free(a);
+}
+
+int main(int argc, char const *argv[]) {
+    if(!(argc == 2 && argv[1] > 0)) {
+        printf("並び替える数の量を指定してください\n");
+        return 0;
+    }
+
+    int n = atoi(argv[1]);
+    expect_sort_iarray(n, bogosort, "bogosort");
+    return 0;
+}
+---------------------------------------------------------------------
+
+実行例2:
+---------------------------------------------------------------------
+[y1810678@red99 11]$ ./a.out 10
+OK time=1.3274 bogosort
+[y1810678@red99 11]$ ./a.out 10
+OK time=0.4404 bogosort
+[y1810678@red99 11]$ ./a.out 10
+OK time=0.1229 bogosort
+[y1810678@red99 11]$ ./a.out 10
+OK time=0.0434 bogosort
+---------------------------------------------------------------------
+
+解説2:
+    まず、main関数にてコマンドライン引数が設定されているかどうかを確認する。
+    そしてこの引数とともに、expect_sort_iarrayに実行するbogosort関数を渡し、expect_sort_iarray内でコレを実行。
+    関数bogosortは実処理を行う関数bsへの引き継ぎ用となる。
+    関数bsでボゴソートを実行している。whileを使用してソートされていなければもう一度ランダムに入れ替えを行うようにしている。
+    ランダムな入れ替え方は、配列の前方からswap関数を用いて入れ替えをしつつランダムに選択していく。
+
+考察2:
+    まず、この関数は安定ソートではない。そのため計算量は主に最悪計算量、最良計算量、平均計算量の3種類あると考えられる。
+    では順番に考えていく。
+    最悪計算量はO(∞)となる。なぜなら、ランダムに並び替えなため最悪ソートが完了しないということも考えられるからである。
+    最良計算量はO(n)となる。なぜなら、最初の並び替えにてソートが完了する可能性があるからである。
+    平均計算量はO(n・n!)となる。なぜなら、一回の並び替えの計算量がO(n)で、これを繰り返す回数の期待値のオーダーがn!であるからである。
+    これを実行例と比較すると、確かに計算量が示すように幅が大きいことが分かる。また、おおよそこの平均値が平均計算量が示すものになることも分かる。
+
+アンケート:
+    Q1.自力で書ける整列アルゴリズムは何と何でしょう。
+    A1.バブルソートとマージソートは確実に書ける。
+    Q2.整列が安定かどうか判断できるようになりましたか。
+    A2.判断できるようになった。
+    Q3.リフレクション（今回の課題で分かったこと）・感想・要望をどうぞ。
+    A3.高熱が治ったと思ったら咳が出始めて本当にしんどいです。
