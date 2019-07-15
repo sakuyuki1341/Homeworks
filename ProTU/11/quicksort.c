@@ -5,8 +5,8 @@
 #include <time.h>
 
 // #define ENSHU_4_FT
-#define ENSHU_4_ST
-// #define ENSHU_4_TT
+// #define ENSHU_4_ST
+#define ENSHU_4_TT
 
 // quicksort (normal)--------------------------------------
 static void iswap(int *a, int i, int j) {
