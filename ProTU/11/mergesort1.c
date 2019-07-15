@@ -5,13 +5,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include "pqueue.h"
-#define MAXDATA 1000000
-static int a[MAXDATA];
 
 int *ivec_new(int size) {
   int *a = (int*)malloc((size+1) * sizeof(int));
   a[0] = size; return a;
 }
+
 int *ivec_merge(int *b, int *c) {
   int ib = 1, ic = 1, ia = 1, *a = ivec_new(b[0]+c[0]);
   while(ia <= a[0]) {
@@ -22,6 +21,7 @@ int *ivec_merge(int *b, int *c) {
   }
   return a;
 }
+
 void mergesort1(int n, int* a) {
   pqueuep q = pqueue_new(n+1);
   int *v, *w;
