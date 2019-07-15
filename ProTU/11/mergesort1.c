@@ -65,7 +65,7 @@ void qs_adv(int* a, int i, int j) {
     for(int k = i; k < j; ++k) {
       if(a[k] < pivot) { iswap(a, s++, k); }
     }
-    iswap(a, j, s); qs(a, i, s-1); qs(a, s+1, j);
+    iswap(a, j, s); qs_adv(a, i, s-1); qs_adv(a, s+1, j);
   }
 
  void quicksort_adv(int *a, int n) { qs_adv(a, 0, n-1); }
