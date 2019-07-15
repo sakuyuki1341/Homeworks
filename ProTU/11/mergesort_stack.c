@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "pqueue.h"
+#include "pstack.h"
 
 int *ivec_new(int size) {
   int *a = (int*)malloc((size+1) * sizeof(int));
@@ -22,15 +22,15 @@ int *ivec_merge(int *b, int *c) {
   return a;
 }
 
-void mergesort1(int n, int* a) {
-  pqueuep q = pqueue_new(n+1);
+void mergesort_stack(int n, int* a) {
+  pstackp s = pstack_new(n+1);
   int *v, *w;
   for(int i = 0; i < n; ++i) {
-    v = ivec_new(1); v[1] = a[i]; pqueue_enq(q, v);
+    v = ivec_new(1); v[1] = a[i]; pstack_push(s, v);
   }
   while(true) {
-    v = (int*)pqueue_deq(q); if(pqueue_isempty(q)) { break; }
-    w = (int*)pqueue_deq(q); pqueue_enq(q, ivec_merge(v, w));
+    v = (int*)pstack_pop(s); if(pstack_isempty(s)) { break; }
+    w = (int*)pstack_pop(s); pstack_push(s, ivec_merge(v, w));
     free(v); free(w);
   }
   for(int i = 0; i < n; ++i) { a[i] = v[i+1]; }
@@ -58,6 +58,6 @@ void expect_sort_iarray(int n, void (*f)(int m, int *a), char *msg) {
 
 int main(int argc, char *argv[]) {
   int n = atoi(argv[1]);
-  expect_sort_iarray(n, mergesort1, "mergesort");
+  expect_sort_iarray(n, mergesort_stack, "mergesort");
   return 0;
 }
