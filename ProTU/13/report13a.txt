@@ -1,0 +1,137 @@
+レポート13A
+
+@@@ 1810678 山田朔也 (個人作業)
+
+選択した課題: 演習1_b
+    探索(get)の関数の再起を除去してループに書き直す。
+
+方針:
+    第6回で学習した末尾再帰の除去方法に習って書き直す。
+    つまり、関数をループ化してその中で実引数のパラメータを書き換えていく。
+
+コード:
+---------------------------------------------------------------------
+// itbl.c --- itbl impl with binary search tree.
+#include <stdlib.h>
+#include <stdio.h>
+#include "itbl.h"
+
+// #define RECURF
+#define LOOPF
+
+typedef struct ent *entp;
+struct ent { int key, val; entp left, right; };
+struct itbl { entp root; };
+itblp itbl_new() {
+  itblp p = (itblp)malloc(sizeof(struct itbl));
+  p->root = NULL; return p;
+}
+
+#ifdef RECURF
+static int get(entp p, int k) {
+  if(p == NULL) { return -1; }
+  if(k == p->key) { return p->val; }
+  return get((k < p->key) ? p->left : p->right, k);
+}
+#endif
+#ifdef LOOPF
+static int get(entp p, int k) {
+    while(1) {
+        if(p == NULL) { return -1; }
+        if(k == p->key) { return p->val; }
+        if(k < p->key) {
+            p = p->left;
+        } else {
+            p = p->right;
+        }
+    }
+}
+#endif
+
+int itbl_get(itblp p, int k) { return get(p->root, k); }
+
+static void put(entp *p, int k, int v) {
+  if(*p == NULL) {
+    entp q = *p = (entp)malloc(sizeof(struct ent));
+    q->left = q->right = NULL; q->key = k; q->val = v;
+  } else if(k == (*p)->key) {
+    (*p)->val = v;
+  } else {
+    put((k < (*p)->key) ? &((*p)->left) : &((*p)->right), k, v);
+  }
+}
+
+void itbl_put(itblp p, int k, int v) { put(&(p->root), k, v); }
+static void pr(entp p) {
+  if(p->left != NULL) { printf("("); pr(p->left); printf(") "); }
+  printf("%d:%d", p->key, p->val);
+  if(p->right != NULL) { printf(" ("); pr(p->right); printf(")"); }
+}
+
+void itbl_pr(itblp p) {
+  if(p->root != NULL) { printf("("); pr(p->root); printf(")\n"); }
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// itbl.h --- int table api.
+struct itbl;
+typedef struct itbl *itblp;
+itblp itbl_new();                     // allocate new tbl
+void itbl_put(itblp t, int k, int v); // store value
+int itbl_get(itblp t, int k);         // obtain value
+//void itbl_delete(itblp t, int k);     // delete key/value
+void itbl_pr(itblp t);                // print contents
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// treedemo.c --- demonstration of bstree operation
+#include <stdlib.h>
+#include <stdio.h>
+#include "itbl.h"
+
+int main(int argc, char *argv[]) {
+  int n = atoi(argv[1]);
+  itblp p = itbl_new();
+  for(int i = 1; i < argc; ++i) {
+    int v = atoi(argv[i]);
+    if(v >= 0) { itbl_put(p, v, i); }
+//  else       { itbl_delete(p, -v); }
+    itbl_pr(p);
+  }
+  return 0;
+}
+---------------------------------------------------------------------
+
+実行例:
+---------------------------------------------------------------------
+$ gcc treedemo.c itbl.c
+$ ./a.exe 5 2 1 7 6 9
+(5:1)
+((2:2) 5:1)
+(((1:3) 2:2) 5:1)
+(((1:3) 2:2) 5:1 (7:4))
+(((1:3) 2:2) 5:1 ((6:5) 7:4))
+(((1:3) 2:2) 5:1 ((6:5) 7:4 (9:6))
+---------------------------------------------------------------------
+
+解説:
+    今回3種類のファイルがあるが、itbl.hとtreedemo.cについては例示されたコードをそのまま使用しているだけである。
+    itbl.cだが、これは例示されたbstree.cにループで作成されたコードを追加したものである。
+    また、再帰で記述されたのitbl_getとループで記述されたitbl_get関数はマクロをコメントアウトすることで切り替えられるようにしてある。
+    ループ版itbl_get関数だが、まず関数の頭でwhile(1)を持ってきて、内部でループするようにする。
+    次に脱出条件を設定し、ループの最後にて実引数のパラメータ変更している。
+
+
+レビュー課題:
+    三項演算子を使ったほうがコードが短縮されて良いのではないか。
+
+考察:
+    今回は残念ながら時間が無いため非常に簡単な課題のみしかできなかった。
+    ただ、再帰の除去のちょっとした復習となった点ではある程度の益のある課題であったと思った。
+
+アンケート:
+    Q1.2分探索木がプログラムできるようになりましたか。
+    A1.少し怪しい、体調と時間の兼ね合い上復習する時間は少ないができるだけやろうと考えている。
+    Q2.AVLやB木のアルゴリズムを理解しましたか。
+    A2.理解はできるようになった。
+    Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+    A3.体調治らなくて辛いです()
