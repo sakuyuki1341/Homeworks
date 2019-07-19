@@ -43,14 +43,28 @@ int main(void) {
     iset_free(s); iset_free(t); iset_free(r);
 #endif
 #ifdef ENSHU_2
-    int a[] = { 5 };
+    int a[] = {1, 3, 5, 7, 9};
     isetp s = iset_new();
-    iset_addelt(s, 1); iset_addelt(s, 3); iset_addelt(s, 5);
+    iset_addelt(s, 1); iset_addelt(s, 3); iset_addelt(s, 5); iset_addelt(s, 7); iset_addelt(s, 9);
+    expect_iset(s, 9, 5, a, "initial(s): { 1 3 5 7 9 }");
     isetp t = iset_new();
+    iset_addelt(t, 9);
+    s = iset_difference(s, t);
+    int b[] = {1, 3, 5, 7};
+    expect_iset(s, 9, 4, b, "-{ 9 }: { 1 3 5 7 }");
+    iset_addelt(s, 9);
+    expect_iset(s, 9, 5, a, "+{ 9 }: { 1 3 5 7 9 }");
+    iset_free(t); t = iset_new();
+    iset_addelt(t, 7); iset_addelt(t, 9);
+    s = iset_difference(s, t);
+    int c[] = {1, 3, 5};
+    expect_iset(s, 9, 3, c, "-{ 7 9 }: { 1 3 5 }");
+    iset_free(t); t = iset_new();
     iset_addelt(t, 1); iset_addelt(t, 2); iset_addelt(t, 3);
-    isetp r = iset_difference(s, t);
-    expect_iset(r, 9, 1, a, "{ 5 }");
-    iset_free(s); iset_free(t); iset_free(r);
+    s = iset_difference(s, t);
+    int d[] = {5};
+    expect_iset(s, 9, 1, d, "-{ 1 2 3 }: { 5 }");
+    iset_free(s); iset_free(t);
 #endif
     return 0;
 }
