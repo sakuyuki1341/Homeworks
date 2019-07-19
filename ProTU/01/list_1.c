@@ -87,7 +87,7 @@ void fibonacci(int n) {
   int a, b, x;
   a = b = x = 1;
   printf("1 ");
-  for(int i = 0; i < n; i++) {
+  for(int i = 1; i < n; i++) {
     x = b;
     b = b + a;
     a = x;
