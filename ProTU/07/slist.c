@@ -5,8 +5,8 @@
 //#define ENSHU1_EX
 //#define ENSHU1_A
 //#define ENSHU1_B
-//#define ENSHU1_C
-#define ENSHU1_D
+#define ENSHU1_C
+//#define ENSHU1_D
 
 struct node {
     double data;
@@ -71,6 +71,11 @@ int main(int argc, char *argv[]) {
     plist(p);
 #endif
 #ifdef ENSHU1_C
+    if(p == NULL || p->next == NULL || p->next->next == NULL) {
+        printf("長さが3以上のリストを用意してください\n");
+        return 0;
+    }
+
     // リストの2～4番目のアドレスを保存
     nodep a_2 = p->next;
     nodep a_3 = p->next->next;
