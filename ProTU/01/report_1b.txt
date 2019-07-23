@@ -1,11 +1,17 @@
-学籍番号: 1810678
-@@@氏名: 山田 朔也
-ペアの学籍番号: 個人作業
-提出日時: 2019.4.15
+レポート1B
 
-【一つ目の課題】: 整数nを入力し、何らかの数列(今回はフィボナッチ数列)の最初のn項を出力するという課題
-　[プログラムのソースの記述]
--------------------------------------------------------
+@@@ 1810678 山田朔也 (個人作業)
+
+選択した課題1: 演習1_e
+    整数nを入力し、何らかの数列(今回はフィボナッチ数列)の最初のn項を出力する
+
+方針1:
+    変数をいくつか用意して、forループをn回ほど回しながら数列を表示していく。
+    nの入力はコマンドライン引数ではなく、scanfを用いる。
+
+コード1:
+---------------------------------------------------------------------
+#include <stdio.h>
 /*==================================================*
   引数nを与えられると、第n項までのフィボナッチ数列を表示してく
   れる関数
@@ -15,40 +21,155 @@ void fibonacci(int n) {
   int a, b, x;
   a = b = x = 1;
   printf("1 ");
-  for(int i = 0; i < n; i++) {
+  for(int i = 1; i < n; i++) {
     x = b;
     b = b + a;
     a = x;
     printf("%d ", a);
   }
 }
--------------------------------------------------------
-　[丁寧な説明]
-　　引数nを与えられると、第n項までのフィボナッチ数列を表示する関数
-　　戻り値はない
-　　内部では、三つの変数(a,b,x)を用意し、順番に足して、相互に保存することで計算している
+int main (void){
+  int n; printf("n> "); scanf("%d", &n);
 
-【二つ目の課題】: 演習2のaの(1)の画像を作成する課題
-　[プログラムソースの記述]
--------------------------------------------------------
-void a_1(void) {
-  eps_open("a_1.ps", 480, 480);
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
-      eps_drawrect(j*100 + 40, i*100 + 40, 60, 60);
-    }
-  }
+  fibonacci(n);
+  return 0;
 }
--------------------------------------------------------
-　[丁寧な説明]
-　　引数や戻り値はなく、画像を開いて四角形を描画するコード
-　　縦方向と横方向にそれぞれ4つずつ繰り返すためにforの中にforを
-　　記述している
+---------------------------------------------------------------------
 
-【アンケート】
-Q1.プログラムを作るという課題はどれくらい大変でしたか？
-　A1.想定通りに実行されないため、非常に苦戦した
-Q2.epsライブラリを使ってみてどのように感じましたか。
-　A2.扱い辛いと感じた
-Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
-　A3.レポートの雛形を作成して配布してくれるとありがたいです
+実行例1:
+---------------------------------------------------------------------
+$ ./a.exe
+n> 5
+1 1 2 3 5
+$ ./a.exe
+n> 10
+1 1 2 3 5 8 13 21 34 55
+$ ./a.exe
+n> 1
+1
+---------------------------------------------------------------------
+
+解説1:
+    まずこの関数において、変数a,bは数列の前方に進んで行き、この２つの変数を足し合わせることで次の項の値を計算していく。
+    また、足し合わせる際に元の値を保存するために変数xを用意している。
+    最後に関数内で最初に1を表示しているのは、forループ内の標準出力では1,2番目の1の表示が正常にいかないためである。
+
+考察1:
+    考察する内容も乏しいが、強いて言えばこういった定義が簡素な数列をプログラムで実現するのは簡単かつ高速であることが分かる。
+
+選択した課題2: 演習2_a_(1)
+    スライドに記載されているような絵を作成する。
+
+方針2:
+    四角形を描く関数を縦方向と横方向にそれぞれ4つずつ繰り返す。
+    また、その際に出てくる位置ずれは何度か作成しながら微調整する。
+
+コード2:
+---------------------------------------------------------------------
+// list_2.c --- 演習2_a_(1)
+#include <stdio.h>
+#include "eps.h"
+
+void a_1(void) {
+    eps_open("a_1.ps", 480, 480);
+    for(int i = 0; i < 4; i++) {
+        for(int j = 0; j < 4; j++) {
+            eps_drawrect(j*100 + 40, i*100 + 40, 60, 60);
+        }
+    }
+}
+
+int main(void) {
+  a_1();
+
+  eps_close();
+  return 0;
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// eps.c --- eps library implementation
+#include <stdio.h>
+#include "eps.h"
+static FILE *fd = NULL;
+static int fontid = 0;
+
+void eps_open(char *fname, int w, int h){
+  fd = fopen(fname, "wb");
+  fprintf(fd, "%%!PS-Adobe-2.0\n%%%%BoundingBox: 0 0 %d %d\n", w, h);
+}
+void eps_close(void) {
+  fprintf(fd, "showpage\n"); fclose(fd); fd = NULL;
+}
+void eps_cmd(char *cmd) {
+  fprintf(fd, "%s\n", cmd);
+}
+void eps_num(double val) {
+  fprintf(fd, "%.2f ", val);
+}
+void eps_drawline(double x0, double y0, double x1, double y1) {
+  fprintf(fd, "newpath %.2f %.2f moveto %.2f %.2f lineto stroke\n",
+          x0, y0, x1, y1);
+}
+static void rect(double x, double y, double w, double h) {
+  fprintf(fd, "newpath %.2f %.2f moveto %.2f 0 rlineto\n", x, y, w);
+  fprintf(fd, " 0 %.2f rlineto %.2f 0 rlineto closepath\n", h, -w, -h);
+}
+void eps_drawrect(double x, double y, double w, double h) {
+  rect(x, y, w, h); fprintf(fd, "stroke\n");
+}
+void eps_fillrect(double x, double y, double w, double h) {
+  rect(x, y, w, h); fprintf(fd, "fill\n");
+}
+static void circle(double x, double y, double r) {
+  fprintf(fd, "%.2f %.2f %.2f 0 360 arc closepath\n", x, y, r);
+}
+void eps_drawcircle(double x, double y, double r) {
+  circle(x, y, r); fprintf(fd, "stroke\n");
+}
+void eps_fillcircle(double x, double y, double r) {
+  circle(x, y, r); fprintf(fd, "fill\n");
+}
+int eps_newfont(char *font, double size) {
+  fprintf(fd, "/%s findfont %.2f scalefont /font%d exch def\n",
+          font, size, ++fontid);
+  return fontid;
+}
+void eps_puts(int id, double x, double y, char *s) {
+  fprintf(fd, "font%d setfont %.2f %.2f moveto (%s) show\n",
+          id, x, y, s);
+}
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+// eps.h --- eps library API
+void eps_open(char *fname, int w, int h);
+void eps_close(void);
+void eps_cmd(char *cmd);
+void eps_num(double val);
+void eps_drawline(double x0, double y0, double x1, double y1);
+void eps_drawrect(double x, double y, double w, double h);
+void eps_fillrect(double x, double y, double w, double h);
+void eps_drawcircle(double x, double y, double r);
+void eps_fillcircle(double x, double y, double r);
+int eps_newfont(char *font, double size);
+void eps_puts(int id, double x, double y, char *s);
+---------------------------------------------------------------------
+
+実行例2:
+    グラフィックのため掲示できない。
+
+解説2:
+    基本的には方針に沿って作成している。
+    eps.cに記述されている四角形を作成するeps_drawrect関数を縦横それぞれに4回ずつ繰り返すつまり合計16回繰り返すようにするようにしている。
+    その際に位置がずれるようにforループでもって位置を設定している。
+
+考察2:
+    プログラムを作成する段階で指定する数値と実際に作成される画像を比較したとき、想像と異なることが多かった。
+    そのためこういった画像生成に関してはトライ・アンド・エラーが非常に重要になってくるのではないかと思われた。
+
+アンケート:
+    Q1.プログラムを作るという課題はどれくらい大変でしたか？
+    A1.想定通りに実行されないため、非常に苦戦した
+    Q2.epsライブラリを使ってみてどのように感じましたか。
+    A2.扱い辛いと感じた
+    Q3.リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+    A3.レポートの雛形を作成して配布してくれるとありがたいです
