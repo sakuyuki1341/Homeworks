@@ -1,4 +1,4 @@
-// fibmemo.c --- calcurate fib with memoization.
+// pow3.c --- calcurate pow3 with memoization and not memoization.
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
