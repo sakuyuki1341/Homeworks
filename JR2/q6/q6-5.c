@@ -64,7 +64,7 @@ static int cmp1(const void *x, const void *y) {
         } else if(a_win < b_win) {
             return 1;
         } else {
-            if(a_last > b_last) {
+            if(a_last < b_last) {
                 return -1;
             } else {
                 return 1;
