@@ -50,9 +50,9 @@ void csv_write(char *fname, int size, csvp arr[]) {
 
 static int cmp1(const void *x, const void *y) {
     csvp a = *(csvp*)x, b = *(csvp*)y;
-    float a_win = atof(a->cell[1]), b_win = atof(b->cell[1]);
-    float a_lose = atof(a->cell[2]), b_lose = atof(b->cell[2]);
-    float a_last = atof(a->cell[4]), b_last = atof(b->cell[4]);
+    double a_win = atof(a->cell[1]), b_win = atof(b->cell[1]);
+    double a_lose = atof(a->cell[2]), b_lose = atof(b->cell[2]);
+    double a_last = atof(a->cell[4]), b_last = atof(b->cell[4]);
 
     if(a_win/(a_win+a_lose) > b_win/(a_win+b_lose)) {
         return -1;
