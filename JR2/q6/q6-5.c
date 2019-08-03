@@ -54,7 +54,7 @@ static int cmp1(const void *x, const void *y) {
     double a_lose = atof(a->cell[2]), b_lose = atof(b->cell[2]);
     double a_last = atof(a->cell[4]), b_last = atof(b->cell[4]);
 
-    if(a_win/(a_win+a_lose) > b_win/(a_win+b_lose)) {
+    if(a_win/(a_win+a_lose) > b_win/(b_win+b_lose)) {
         return -1;
     } else if(a_win/(a_win+a_lose) < b_win/(a_win+b_lose)) {
         return 1;
