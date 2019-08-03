@@ -56,7 +56,7 @@ static int cmp1(const void *x, const void *y) {
 
     if(a_win/(a_win+a_lose) > b_win/(b_win+b_lose)) {
         return -1;
-    } else if(a_win/(a_win+a_lose) < b_win/(a_win+b_lose)) {
+    } else if(a_win/(a_win+a_lose) < b_win/(b_win+b_lose)) {
         return 1;
     }
     if(a_win > b_win) {
