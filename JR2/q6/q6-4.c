@@ -51,9 +51,9 @@ void csv_write(char *fname, int size, csvp arr[]) {
 static int cmp1(const void *x, const void *y) {
     csvp a = *(csvp*)x, b = *(csvp*)y;
     if(atoi(a->cell[week]) > atoi(b->cell[week])) {
-        return 1;
-    } else if (atoi(a->cell[week]) < atoi(b->cell[week])) {
         return -1;
+    } else if (atoi(a->cell[week]) < atoi(b->cell[week])) {
+        return 1;
     } else {
         return strcmp(a->cell[0], b->cell[0]);
     }
@@ -67,9 +67,9 @@ static int cmp2(const void *x, const void *y) {
         sum_b += atoi(b->cell[i]);
     }
     if(sum_a > sum_b) {
-        return 1;
-    } else if (sum_a < sum_b) {
         return -1;
+    } else if (sum_a < sum_b) {
+        return 1;
     } else {
         return strcmp(a->cell[0], b->cell[0]);
     }
