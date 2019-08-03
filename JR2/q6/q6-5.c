@@ -65,9 +65,9 @@ static int cmp1(const void *x, const void *y) {
         return 1;
     }
     if(a_last > b_last) {
-        return -1;
-    } else {
         return 1;
+    } else {
+        return -1;
     }
 }
 
