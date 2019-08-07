@@ -6,6 +6,7 @@
 
 struct csv { int num; char *cell[1]; };
 typedef struct csv *csvp;
+int week = 1;
 
 static char *readline(FILE *f) {
   char buf[MAXLINE], *str;
@@ -47,11 +48,55 @@ void csv_write(char *fname, int size, csvp arr[]) {
   fclose(f);
 }
 
+static int cmp1(const void *x, const void *y) {
+    csvp a = *(csvp*)x, b = *(csvp*)y;
+    if(atoi(a->cell[week]) > atoi(b->cell[week])) {
+        return -1;
+    } else if (atoi(a->cell[week]) < atoi(b->cell[week])) {
+        return 1;
+    } else {
+        return strcmp(a->cell[0], b->cell[0]);
+    }
+}
+
+static int cmp2(const void *x, const void *y) {
+    csvp a = *(csvp*)x, b = *(csvp*)y;
+    int sum_a = 0, sum_b = 0;
+    for(int i = 1; i < 7; i++) {
+        sum_a += atoi(a->cell[i]);
+        sum_b += atoi(b->cell[i]);
+    }
+    if(sum_a > sum_b) {
+        return -1;
+    } else if (sum_a < sum_b) {
+        return 1;
+    } else {
+        return strcmp(a->cell[0], b->cell[0]);
+    }
+}
+
 int main(int argc,char *argv[]){
 	csvp data[1000], p;
     int size = csv_read(argv[1], 1000, data);
-    if(seze <= 0) {
+    if(size <= 0) {
         return 0;
     }
-    
+    for(int i = 0; i < 6; i++) {
+        qsort(data, size, sizeof(csvp), cmp1);
+        printf("Week %d: ",week);
+        for (int j = 0; j < size; j++) {
+            p = data[j];
+            printf("%s ", p->cell[0]);
+        }
+        printf("\n");
+        week++;
+    }
+    week = 1;
+    qsort(data, size, sizeof(csvp), cmp2);
+    printf("Total : ");
+    for(int i = 0; i < size; i++) {
+        printf("%s ", data[i]->cell[0]);
+    }
+    printf("\n");
+    return 0;
 }
