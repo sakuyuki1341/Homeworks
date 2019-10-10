@@ -38,6 +38,7 @@ int main(void) {
             }
             if(flag) {
                 place = i;  // 探索成功時場所保存
+                break;
             }
         }
     }

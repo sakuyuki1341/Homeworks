@@ -30,7 +30,9 @@ int main(void) {
 int power(int n, int k) {
     if(k == 1) {    // n^(1)のときnを2718で割った余りを返す
         return n % 2718;
-    } else if(k % 2 == 1) { // kが奇数のとき
+    } else if(k == 0) {
+        return 1;
+    }else if(k % 2 == 1) { // kが奇数のとき
         return power(n, k-1) % 2718 * n % 2718; // n^kとnをそれぞれ2718で割った余りを返す
     } else if(k % 2 == 0) { // kが偶数のとき
         int tmp = power(n, k/2) % 2718; // 一時保存
