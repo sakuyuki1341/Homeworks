@@ -43,7 +43,7 @@ int main(int argc, char const *argv[]) {
     int n;
     // 入力
     scanf("%d", &n);
-    x = power_golden(x, n);   // 計算実行
+    x = power_golden(x, n-1);   // 計算実行
     // 表示
     printf("%lld\n", x.a);  // Fn
     printf("%d\n", number_add);     // 足し算回数
