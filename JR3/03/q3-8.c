@@ -52,8 +52,8 @@ int main(int argc, char const *argv[]) {
     scanf("%d", &n);
     x = power_golden(x, n-1);   // 計算実行
     // 負の場合正に変換
-    if(x < 0) {
-        x += DIV;
+    if(x.a < 0) {
+        x.a += DIV;
     }
     // 表示
     printf("%lld\n", x.a);  // Fn
