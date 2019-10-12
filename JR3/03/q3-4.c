@@ -17,6 +17,7 @@ typedef struct {
 /************************************************
  * グローバル変数
  ************************************************/
+int number = 0;
 
 /************************************************
  * プロトタイプ宣言部
@@ -30,17 +31,22 @@ golden add_golden(golden x, golden y);
 // 引数の構造体に格納されている値の、積の値を格納した構造体を返す
 golden mult_golden(golden x, golden y);
 
+// 引数の構造体に格納されている値の、累乗の値を格納した構造体を返す
+golden power_golden(golden x, int n);
+
 /************************************************
  * 関数部
  ************************************************/
 int main(int argc, char const *argv[]) {
-    golden x, y;
+    golden x;
+    int n;
     // 入力
     scanf("%lld %lld", &x.a, &x.b);
-    scanf("%lld %lld", &y.a, &y.b);
-    x = mult_golden(x, y);   // 計算実行
+    scanf("%d", &n);
+    x = power_golden(x, n);   // 計算実行
     // 表示
     printf("%lld %lld\n", x.a, x.b);
+    printf("%d\n", number);
     return 0;
 }
 
@@ -64,9 +70,20 @@ golden add_golden(golden x, golden y) {
 
 // 引数の構造体に格納されている値の、積の値を格納した構造体を返す
 golden mult_golden(golden x, golden y) {
+    number += 1;
     golden z;
     // (a1 + b1φ) * (a2 + b2φ) = (a1a2 + b1b2) + (a1b2 + a2b1 + b1b2)φ
     z.a = x.a*y.a + x.b*y.b;
     z.b = x.a*y.b + x.b*y.b + x.b*y.a;
+    return z;
+}
+
+golden power_golden(golden x, int n) {
+    golden z;
+    if(n == 0) {
+        z.a = 1; z.b = 0;
+    } else {
+        z = mult_golden(x, power_golden(x, n-1));
+    }
     return z;
 }
