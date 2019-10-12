@@ -108,6 +108,6 @@ int cmp_golden(golden x, golden y) {
     } else if(x_about > y_about) {
         return 1;
     } else {
-        return 0;
-    }    
+        return -1;
+    }
 }
