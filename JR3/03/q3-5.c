@@ -85,7 +85,8 @@ golden power_golden(golden x, int n) {
     } else if(n % 2 == 1){
         z = mult_golden(x, power_golden(x, n-1));
     } else {
-        z = mult_golden(power_golden(x, n/2), power_golden(x, n/2));
+        z = power_golden(x, n/2);
+        z = mult_golden(z, z);
     }
     return z;
 }
