@@ -65,7 +65,7 @@ golden add_golden(golden x, golden y) {
 // 引数の構造体に格納されている値の、積の値を格納した構造体を返す
 golden mult_golden(golden x, golden y) {
     golden z;
-    z.a = x.a * y.a;
-    z.b = x.b * y.b;
+    z.a = x.a*y.a + x.b*y.b;
+    z.b = x.a*y.b + x.b*y.b + x.b*y.a;
     return z;
 }
