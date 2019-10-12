@@ -79,8 +79,9 @@ golden mult_golden(golden x, golden y) {
     number_add += 3;    // 足し算は3回実行
     number_mult += 5;   // 掛け算は5回実行
     golden z;
-    x.a = x.a % DIV; x.b = x.b % DIV;
-    y.a = y.a % DIV; y.b = y.b % DIV;
+    // 非負の余りの数にする
+    x.a = x.a % DIV + DIV; x.b = x.b % DIV + DIV;
+    y.a = y.a % DIV + DIV; y.b = y.b % DIV + DIV;
     // (a1 + b1φ) * (a2 + b2φ) = (a1a2 + b1b2) + (a1b2 + a2b1 + b1b2)φ
     // DIVで割った余りを代入
     z.a = x.a*y.a + x.b*y.b;
