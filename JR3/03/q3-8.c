@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #define GOLDEN 1.618
-#define DIV 2017
+#define DIV 2718
 
 /************************************************
  * 構造体宣言部
