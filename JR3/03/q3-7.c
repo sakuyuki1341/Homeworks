@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define GOLDEN 1.618
 
@@ -37,20 +38,29 @@ golden mult_golden(golden x, golden y);
 // 引数の構造体に格納されている値の、累乗の値を格納した構造体を返す
 golden power_golden(golden x, int n);
 
-// 引数の構造体に格納されている値を、比較し
-// 1つ目が大きければ'1', 2つ目が大きければ'-1', 同じならば'0'を返す
-int cmp_golden(golden x, golden y);
+// 引数の黄金比と整数を少数にして返す
+long double ration_golden(golden x);
 
 /************************************************
  * 関数部
  ************************************************/
 int main(int argc, char const *argv[]) {
     golden x, y;
+    int result = -1; // 結果保存
+    long double x_R, y_R; // 有理数化
     // 入力
     scanf("%lld %lld", &x.a, &x.b);
     scanf("%lld %lld", &y.a, &y.b);
+    // 計算
+    x_R = ration_golden(x);
+    y_R = ration_golden(y);
+    if(x.a == y.a && x.b == y.b) {
+        result = 0;
+    } else if(x_R > y_R) {
+        result = 1;
+    }
     // 表示
-    printf("%d\n", cmp_golden(x, y));     // 足し算回数
+    printf("%d\n", result);     // 足し算回数
     return 0;
 }
 
@@ -97,17 +107,7 @@ golden power_golden(golden x, int n) {
     return z;
 }
 
-// 引数の構造体に格納されている値を、比較し
-// 1つ目が大きければ'1', 2つ目が大きければ'-1', 同じならば'0'を返す
-int cmp_golden(golden x, golden y) {
-    __float128 x_about, y_about;
-    x_about = x.a + x.b*GOLDEN;
-    y_about = y.a + y.b*GOLDEN;
-    if(x_about == y_about) {
-        return 0;
-    } else if(x_about > y_about) {
-        return 1;
-    } else {
-        return -1;
-    }
+// 引数の黄金比と整数を少数にして返す
+long double ration_golden(golden x) {
+    return x.a + x.b * (1+sqrtl(5))/2;
 }
