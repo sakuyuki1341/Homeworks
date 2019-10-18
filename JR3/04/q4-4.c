@@ -59,31 +59,36 @@ int main(int argc, char const *argv[]) {
         const char tmp = buf[i];
 
         // 左括弧か右括弧で分岐
-        if(tmp == '(' || tmp == '[' || tmp == '{') {
+        if(tmp == '(' || tmp == '[' || tmp == '{' || tmp == '<') {
             push(&s, tmp);  // スタックに左括弧を格納
-        } else if(tmp == ')' || tmp == ']' || tmp == '}') {
+        } else if(tmp == ')' || tmp == ']' || tmp == '}' || tmp == '>') {
             char cmp = pop(&s); // スタックから左括弧を取り出し
             // 括弧が対応するか判定
             // 失敗なら異常終了
-            switch (tmp) {
+            switch (cmp) {
                 case '(':
-                    if(cmp != ')') {
+                    if(tmp != ')') {
                         printf("Bad.\n");
                         exit(1);
                     }
                     break;
                 case '[':
-                    if(cmp != ']') {
+                    if(tmp != ']') {
                         printf("Bad.\n");
                         exit(1);
                     }
                     break;
                 case '{':
-                    if(cmp != '}') {
+                    if(tmp != '}') {
                         printf("Bad.\n");
                         exit(1);
                     }
                     break;
+                case '<':
+                    if(tmp != '>') {
+                        printf("Bad.\n");
+                        exit(1);
+                    }
             }
         }
     }
