@@ -9,6 +9,10 @@
 /************************************************
  * 構造体宣言部
  ************************************************/
+typedef struct zahyo {
+    int x;
+    int y;
+} zahyo;
 
 /************************************************
  * グローバル変数
@@ -19,23 +23,25 @@ char buf[128];  // 標準入力保存
  * プロトタイプ宣言部
  ************************************************/
  // 値の更新
-void update(int *p, int i);
+void update(zahyo *p, int i, int j);
 
 /************************************************
  * 関数部
  ************************************************/
 int main(int argc, char const *argv[]) {
-    int x = 0, i;
+    zahyo xy = {0, 0};
+    int i, j;
     // 標準入力受け取り
     while (fgets(buf, sizeof(buf), stdin) != NULL) {
-        sscanf(buf, "%d", &i);  // 分割
-        update(&x, i);  // 更新
-        printf("%d\n", x);  // 表示
+        sscanf(buf, "%d %d", &i, &j);  // 分割
+        update(&xy, i, j);  // 更新
+        printf("%d %d\n", xy.x, xy.y);  // 表示
     }
     return 0;
 }
 
 // 値の更新
-void update(int *p, int i) {
-    *p += i;
+void update(zahyo *p, int i, int j) {
+    p->x += i;
+    p->y += j;
 }
