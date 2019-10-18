@@ -63,6 +63,7 @@ int main(int argc, char const *argv[]) {
             push(&s, tmp);  // スタックに左括弧を格納
         } else if(tmp == ')' || tmp == ']' || tmp == '}' || tmp == '>') {
             char cmp = pop(&s); // スタックから左括弧を取り出し
+            printf("%c\n", cmp);
             // 括弧が対応するか判定
             // 失敗なら異常終了
             switch (cmp) {
