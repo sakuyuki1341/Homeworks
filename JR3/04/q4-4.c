@@ -96,6 +96,7 @@ int main(int argc, char const *argv[]) {
 
     // 閉じきっていない括弧があるかどうか
     if(stackempty(&s)) {
+        printf("-1");
         printf("Bad.\n");
         exit(1);
     }
