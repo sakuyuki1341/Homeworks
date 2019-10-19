@@ -58,10 +58,6 @@ int main(int argc, char const *argv[]) {
         if(buf[0] == 'g') {
             getq(&q);
         } else {
-            if(q.front == MAXQUEUE) {
-                printf("Sorry.\n");
-                exit(1);
-            }
             sscanf(buf, "%d", &i);
             putq(&q, i);
             printf("front:%d\n", q.front);
@@ -94,9 +90,9 @@ elementtype getq(queue *p) {
 }
 
 void putq(queue *p, elementtype e) {
-    if(p->rear == MAXQUEUE) {
+    if(p->rear == MAXQUEUE || p->front == MAXQUEUE) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Overflow.\n");
+        printf("Sorry.\n");
         exit(1);
     } else {
         p->contents[p->rear++] = e; // 要素を追加した後、rearを一つ進める
