@@ -64,6 +64,7 @@ int main(int argc, char const *argv[]) {
             }
             sscanf(buf, "%d", &i);
             putq(&q, i);
+            printf("front:%d\n", q.front);
         }
         queue_printer(&q);
     }
