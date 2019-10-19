@@ -8,12 +8,19 @@
 #include <math.h>
 
 #define MAXQUEUE 128
+#define N 10
 
 /************************************************
  * 構造体宣言部
  ************************************************/
+// 座標構造体
+ typedef struct zahyo {
+     int x;
+     int y;
+ } zahyo;
+
 // 構造体ではないがここで宣言
-typedef int elementtype;
+typedef zahyo elementtype;
 
 // キュー構造体
 typedef struct queue {
@@ -25,7 +32,8 @@ typedef struct queue {
 /************************************************
  * グローバル変数
  ************************************************/
-char buf[128];  // 標準入力保存
+char buf[N + 2];  // 標準入力保存
+char heya[N][N];
 
 /************************************************
  * プロトタイプ宣言部
@@ -54,21 +62,63 @@ void queue_back(queue *p);
  ************************************************/
 int main(int argc, char const *argv[]) {
     queue q;    // キューの用意
-    int i;
-    initqueue(&q);  // キューの初期化
-    // 標準入力受け取り
-    while (fgets(buf, sizeof(buf), stdin) != NULL) {
-        // frontとrearを戻す
-        queue_back(&q);
-        // 分割して処理
-        if(buf[0] == 'g') {
-            getq(&q);
-        } else {
-            sscanf(buf, "%d", &i);
-            putq(&q, i);
+    int i, j;
+    int kyori[N][N]; // startからの距離を記録する用
+    zahyo start, goal;  // スタート, ゴールの用意
+
+    // kyoriの初期化
+    for(i = 0; i < N; i++) {
+        for(j = 0; j < N; j++) {
+            kyori[i][j] = -1;
         }
-        queue_printer(&q);
     }
+    initqueue(&q);  // キューの初期化
+
+    /// 標準入力受け取り
+    while (fgets(buf, sizeof(buf), stdin) != NULL) {
+        for(j = 0; j < N; j++) {
+            if(buf[j] == 'S') { // startの記録
+                start.x = i;
+                start.y = j;
+            } else if(buf[j] == 'J') {  // goalの記録
+                goal.x = i;
+                goal.y = j;
+            }
+            heya[i][j] = buf[j];
+        }
+        i++;
+    }
+
+    /// 最短距離計算
+    putq(&q, start);    // キューにstartを入れる
+    kyori[start.x][start.y] = 0;    // スタート位置に0
+    // 空になるまでループ
+    while (queueempty(&q) != 0) {
+        zahyo tmp = getq(&q);   // 先頭座標を取得
+        // 次の座標を関数に引き渡し
+        zahyo surroundigs[4] = {
+            {tmp.x, tmp.y + 1}, // up
+            {tmp.x, tmp.y - 1}, // down
+            {tmp.x - 1, tmp.y}, // left
+            {tmp.x + 1, tmp.y}  // right
+        };
+        for(i = 0; i < 4; i++) {
+            // 内部の壁を含む壁と壁の範囲外の場合とばす
+            if(surroundigs[i].x < 1 || 8 < surroundigs[i].x || surroundigs[i].y < 1 || 8 < surroundigs[i].y || heya[surroundigs[i].x][surroundigs[i].y] == '*') {
+                continue;
+            }
+            // 訪問済みの場合とばす
+            if(kyori[surroundigs[i].x][surroundigs[i].y] != -1) {
+                continue;
+            }
+            putq(&q, surroundigs[i]);   // キューに座標を入れる
+            kyori[surroundigs[i].x][surroundigs[i].y] = kyori[tmp.x][tmp.y]; // 距離更新
+        }
+    }
+
+    // 最短距離の表示
+    printf("%d\n", kyori[goal.x][goal.y]);
+
     return 0;
 }
 
@@ -95,6 +145,7 @@ elementtype getq(queue *p) {
 }
 
 void putq(queue *p, elementtype e) {
+    queue_back(p);
     if(p->rear + 1 == p->front || p->rear - p->front == MAXQUEUE - 1) {
         // 要素が入れられない場合、文を表示して異常終了
         printf("Overflow.\n");
@@ -105,6 +156,7 @@ void putq(queue *p, elementtype e) {
 }
 
 void queue_printer(queue *p) {
+    queue_back(p);
     // 最後に入れられた要素まで順に表示
     for(int i = p->front; i != p->rear; i++) {
         if(i == MAXQUEUE) {

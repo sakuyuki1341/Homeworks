@@ -55,12 +55,12 @@ int main(int argc, char const *argv[]) {
     initqueue(&q);  // キューの初期化
     // 標準入力受け取り
     while (fgets(buf, sizeof(buf), stdin) != NULL) {
+        // 分解して処理
         if(buf[0] == 'g') {
             getq(&q);
         } else {
             sscanf(buf, "%d", &i);
             putq(&q, i);
-            printf("front:%d\n", q.front);
         }
         queue_printer(&q);
     }
