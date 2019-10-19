@@ -58,6 +58,10 @@ int main(int argc, char const *argv[]) {
         if(buf[0] == 'g') {
             getq(&q);
         } else {
+            if(q.front == MAXQUEUE) {
+                printf("Sorry.\n");
+                exit(1);
+            }
             sscanf(buf, "%d", &i);
             putq(&q, i);
         }
