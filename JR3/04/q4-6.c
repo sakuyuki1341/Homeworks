@@ -94,13 +94,13 @@ void putq(queue *p, elementtype e) {
         printf("Overflow.\n");
         exit(1);
     } else {
-        p->contents[++p->rear] = e; // 要素を追加した後、rearを一つ進める
+        p->contents[p->rear++] = e; // 要素を追加した後、rearを一つ進める
     }
 }
 
 void queue_printer(queue *p) {
     // 最後に入れられた要素まで順に表示
-    for(int i = p->front; i < p->rear && queueempty(p) == 1; i++) {
+    for(int i = p->front; i < p->rear; i++) {
         printf("[%d]", p->contents[i]);
     }
     printf("\n");   // 表示後最後に改行
