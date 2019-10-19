@@ -98,7 +98,10 @@ int main(int argc, char const *argv[]) {
 
     // canvasを表示
     for(i = 0; i < 11; i++) {
-        printf("%s\n", canvas[i]);
+        for(j = 0; j < 11; j++) {
+            printf("%c", canvas[i][j]);
+        }
+        printf("\n");
     }
     return 0;
 }
