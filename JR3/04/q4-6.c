@@ -100,7 +100,7 @@ void putq(queue *p, elementtype e) {
 
 void queue_printer(queue *p) {
     // 最後に入れられた要素まで順に表示
-    for(int i = p->front; i < p->rear; i++) {
+    for(int i = p->front; i < p->rear && queueempty(p) == 1; i++) {
         printf("[%d]", p->contents[i]);
     }
     printf("\n");   // 表示後最後に改行
