@@ -55,6 +55,12 @@ int main(int argc, char const *argv[]) {
     initqueue(&q);  // キューの初期化
     // 標準入力受け取り
     while (fgets(buf, sizeof(buf), stdin) != NULL) {
+        if(q.front == MAXQUEUE) {
+            q.front = 0;
+        }
+        if(q.rear == MAXQUEUE) {
+            q.rear = 0;
+        }
         if(buf[0] == 'g') {
             getq(&q);
         } else {
@@ -90,9 +96,9 @@ elementtype getq(queue *p) {
 }
 
 void putq(queue *p, elementtype e) {
-    if(p->rear == MAXQUEUE || p->front == MAXQUEUE) {
+    if(p->rear + 1 == p->front || p->rear - p->front == MAXQUEUE - 1) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Sorry.\n");
+        printf("Overflow.\n");
         exit(1);
     } else {
         p->contents[p->rear++] = e; // 要素を追加した後、rearを一つ進める
@@ -101,7 +107,10 @@ void putq(queue *p, elementtype e) {
 
 void queue_printer(queue *p) {
     // 最後に入れられた要素まで順に表示
-    for(int i = p->front; i < p->rear; i++) {
+    for(int i = p->front; i != p->rear; i++) {
+        if(i == MAXQUEUE) {
+            i = 0;
+        }
         printf("[%d]", p->contents[i]);
     }
     printf("\n");   // 表示後最後に改行
