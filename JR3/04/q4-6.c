@@ -7,7 +7,7 @@
 #include <string.h>
 #include <math.h>
 
-#define MAXQUEUE 128
+#define MAXQUEUE 10
 
 /************************************************
  * 構造体宣言部
