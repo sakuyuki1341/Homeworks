@@ -77,6 +77,7 @@ int main(int argc, char const *argv[]) {
 
     // 周囲の' 'がなくなるまで'.'で埋め尽くす
     while(stackempty(&s) != 1) {
+        printf("doing\n");
         // 座標取り出し
         zahyo tmp = pop(&s);
         // 次の座標を関数に引き渡し
