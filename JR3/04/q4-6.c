@@ -13,7 +13,7 @@
  * 構造体宣言部
  ************************************************/
 // 構造体ではないがここで宣言
-typedef char elementtype;
+typedef int elementtype;
 
 // キュー構造体
 typedef struct queue {
