@@ -74,13 +74,14 @@ int main(int argc, char const *argv[]) {
     }
     initqueue(&q);  // キューの初期化
 
+    i = 0;
     /// 標準入力受け取り
     while (fgets(buf, sizeof(buf), stdin) != NULL) {
         for(j = 0; j < N; j++) {
             if(buf[j] == 'S') { // startの記録
                 start.x = i;
                 start.y = j;
-            } else if(buf[j] == 'J') {  // goalの記録
+            } else if(buf[j] == 'G') {  // goalの記録
                 goal.x = i;
                 goal.y = j;
             }
@@ -93,7 +94,7 @@ int main(int argc, char const *argv[]) {
     putq(&q, start);    // キューにstartを入れる
     kyori[start.x][start.y] = 0;    // スタート位置に0
     // 空になるまでループ
-    while (queueempty(&q) != 0) {
+    while (queueempty(&q) == 1) {
         zahyo tmp = getq(&q);   // 先頭座標を取得
         // 次の座標を関数に引き渡し
         zahyo surroundigs[4] = {
@@ -104,7 +105,7 @@ int main(int argc, char const *argv[]) {
         };
         for(i = 0; i < 4; i++) {
             // 内部の壁を含む壁と壁の範囲外の場合とばす
-            if(surroundigs[i].x < 1 || 8 < surroundigs[i].x || surroundigs[i].y < 1 || 8 < surroundigs[i].y || heya[surroundigs[i].x][surroundigs[i].y] == '*') {
+            if(surroundigs[i].x <= 0 || 9 <= surroundigs[i].x || surroundigs[i].y <= 0 || 9 <= surroundigs[i].y || heya[surroundigs[i].x][surroundigs[i].y] == '*') {
                 continue;
             }
             // 訪問済みの場合とばす
@@ -112,7 +113,7 @@ int main(int argc, char const *argv[]) {
                 continue;
             }
             putq(&q, surroundigs[i]);   // キューに座標を入れる
-            kyori[surroundigs[i].x][surroundigs[i].y] = kyori[tmp.x][tmp.y]; // 距離更新
+            kyori[surroundigs[i].x][surroundigs[i].y] = kyori[tmp.x][tmp.y] + 1; // 距離更新
         }
     }
 
