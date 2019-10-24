@@ -82,7 +82,7 @@ int queueempty(queue *p) {
 elementtype getq(queue *p) {
     if(queueempty(p) == 0) {
         // 空の場合、文を表示して異常終了
-        printf("Underflow.\n");
+        printf("Underflow\n");
         exit(1);
     } else {
         return p->contents[p->front++];  // 要素を返した後、frontを一つ進める
@@ -92,7 +92,7 @@ elementtype getq(queue *p) {
 void putq(queue *p, elementtype e) {
     if(p->rear == MAXQUEUE || p->front == MAXQUEUE) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Sorry.\n");
+        printf("Sorry\n");
         exit(1);
     } else {
         p->contents[p->rear++] = e; // 要素を追加した後、rearを一つ進める

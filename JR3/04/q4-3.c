@@ -78,7 +78,7 @@ int stackempty(stack *p) {
 elementtype pop(stack *p) {
     if(stackempty(p)) {
         // 空の場合、文を表示して異常終了
-        printf("Underflow.\n");
+        printf("Underflow\n");
         exit(1);
     } else {
         return p->contents[p->top--];  // 先頭要素を返した後、先頭を下げる
@@ -86,9 +86,9 @@ elementtype pop(stack *p) {
 }
 
 void push(stack *p, elementtype e) {
-    if(p->top == MAXSTACK) {
+    if(p->top == MAXSTACK-1) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Overflow.\n");
+        printf("Overflow\n");
         exit(1);
     } else {
         p->contents[++p->top] = e; // 要素の追加

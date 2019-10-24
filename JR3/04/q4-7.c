@@ -66,6 +66,8 @@ int main(int argc, char const *argv[]) {
         } else {
             sscanf(buf, "%d", &i);
             putq(&q, i);
+        }f(i == p->rear) {
+            break;
         }
         queue_printer(&q);
     }
@@ -78,16 +80,24 @@ void initqueue(queue *p) {
 }
 
 int queueempty(queue *p) {
-    if(p->front == p->rear) {
+    if(p->front == p->rear || (p->rear == 0 && p->front == MAXQUEUE)) {
         return 0;
     }
-    return 1;
-}
-
-elementtype getq(queue *p) {
+    return 1;f(i == p->rear) {
+            break;
+        }
+}f(i == p->rear) {
+            break;
+        }
+f(i == p->rear) {
+            break;
+        }
+elementtype getq(queue *p) {f(i == p->rear) {
+            break;
+        }
     if(queueempty(p) == 0) {
         // 空の場合、文を表示して異常終了
-        printf("Underflow.\n");
+        printf("Underflow\n");
         exit(1);
     } else {
         return p->contents[p->front++];  // 要素を返した後、frontを一つ進める
@@ -97,7 +107,7 @@ elementtype getq(queue *p) {
 void putq(queue *p, elementtype e) {
     if(p->rear + 1 == p->front || p->rear - p->front == MAXQUEUE - 1) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Overflow.\n");
+        printf("Overflow\n");
         exit(1);
     } else {
         p->contents[p->rear++] = e; // 要素を追加した後、rearを一つ進める
@@ -105,11 +115,16 @@ void putq(queue *p, elementtype e) {
 }
 
 void queue_printer(queue *p) {
+    queue_back(p);
     // 最後に入れられた要素まで順に表示
     for(int i = p->front; i != p->rear; i++) {
         if(i == MAXQUEUE) {
             i = 0;
         }
+        if(i == p->rear) {
+            break;
+        }
+        //printf("%d // %d // %d", p->front, p->rear, i);
         printf("[%d]", p->contents[i]);
     }
     printf("\n");   // 表示後最後に改行

@@ -95,6 +95,9 @@ int main(int argc, char const *argv[]) {
         }
     }
 
+    // スタート地点を埋める
+    canvas[N/2][N/2] = '.';
+
     // canvasを表示
     for(i = 0; i < 11; i++) {
         for(j = 0; j < 11; j++) {
@@ -102,6 +105,7 @@ int main(int argc, char const *argv[]) {
         }
         printf("\n");
     }
+
     return 0;
 }
 
@@ -120,7 +124,7 @@ int stackempty(stack *p) {
 elementtype pop(stack *p) {
     if(stackempty(p)) {
         // 空の場合、文を表示して異常終了
-        printf("Underflow.\n");
+        printf("Underflow\n");
         exit(1);
     } else {
         return p->contents[p->top--];  // 先頭要素を返した後、先頭を下げる
@@ -130,7 +134,7 @@ elementtype pop(stack *p) {
 void push(stack *p, elementtype e) {
     if(p->top == MAXSTACK) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Overflow.\n");
+        printf("Overflow\n");
         exit(1);
     } else {
         p->contents[++p->top] = e; // 要素の追加

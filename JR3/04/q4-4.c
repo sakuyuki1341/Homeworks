@@ -7,7 +7,7 @@
 #include <string.h>
 #include <math.h>
 
-#define MAXSTACK 128
+#define MAXSTACK 1024
 
 // マクロでは無いがここで記述
 typedef char elementtype;
@@ -68,25 +68,25 @@ int main(int argc, char const *argv[]) {
             switch (cmp) {
                 case '(':
                     if(tmp != ')') {
-                        printf("Bad.\n");
+                        printf("Bad\n");
                         exit(1);
                     }
                     break;
                 case '[':
                     if(tmp != ']') {
-                        printf("Bad.\n");
+                        printf("Bad\n");
                         exit(1);
                     }
                     break;
                 case '{':
                     if(tmp != '}') {
-                        printf("Bad.\n");
+                        printf("Bad\n");
                         exit(1);
                     }
                     break;
                 case '<':
                     if(tmp != '>') {
-                        printf("Bad.\n");
+                        printf("Bad\n");
                         exit(1);
                     }
             }
@@ -95,12 +95,12 @@ int main(int argc, char const *argv[]) {
 
     // 閉じきっていない括弧があるかどうか
     if(stackempty(&s) == 0) {
-        printf("Bad.\n");
+        printf("Bad\n");
         exit(1);
     }
 
     // 全て確認して問題なければGoodを表示して終了
-    printf("Good.\n");
+    printf("Good\n");
 
     return 0;
 }
@@ -120,7 +120,7 @@ int stackempty(stack *p) {
 elementtype pop(stack *p) {
     if(stackempty(p)) {
         // 空の場合、文を表示して異常終了
-        printf("Bad.\n");
+        printf("Bad\n");
         exit(1);
     } else {
         return p->contents[p->top--];  // 先頭要素を返した後、先頭を下げる
@@ -128,9 +128,9 @@ elementtype pop(stack *p) {
 }
 
 void push(stack *p, elementtype e) {
-    if(p->top == MAXSTACK) {
+    if(p->top == MAXSTACK-1) {
         // 要素が入れられない場合、文を表示して異常終了
-        printf("Bad.\n");
+        printf("Bad\n");
         exit(1);
     } else {
         p->contents[++p->top] = e; // 要素の追加
