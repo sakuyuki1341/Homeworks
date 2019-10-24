@@ -37,5 +37,9 @@ int main(int argc, char const *argv[]) {
 
 // 値の更新
 void update(int *p, int i) {
-    *p += i;
+    if(*p + i >= 100 || *p + i <= -100) {
+        *p = 0;
+    } else {
+        *p += i;
+    }
 }

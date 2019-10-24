@@ -42,6 +42,14 @@ int main(int argc, char const *argv[]) {
 
 // 値の更新
 void update(zahyo *p, int i, int j) {
-    p->x += i;
-    p->y += j;
+    if(p->x + i >= 100 || p->x + i <= -100) {
+        p->x = 0;
+    } else {
+        p->x += i;
+    }
+    if(p->y + j >= 100 || p->y + j <= -100) {
+        p->y = 0;
+    } else {
+        p->y += j;
+    }
 }
