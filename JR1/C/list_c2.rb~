@@ -1,7 +1,0 @@
-def calc_a(a,n)
-  if (n == 1)
-    return a
-  else
-    a_n = 2*Math.sqrt(calc_a(a,n-1))
-    return a_n
-end
