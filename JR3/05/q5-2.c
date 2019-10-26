@@ -38,11 +38,15 @@ void print_int_list(list l);
 int main(int argc, char const *argv[]) {
     int i;
     char buf[128];  //標準入力保存用
-    list l = NULL;  //リスト宣言
+    list l , last;  //頭付きリスト宣言
+    //頭付きリストの初期化
+    l->next = NULL;
+    last = l;
     //リストへの入力
     while(fgets(buf, sizeof(buf), stdin) != NULL) {
         sscanf(buf, "%d", &i);
-        l = cons(i, l);
+        last->next = cons(i, NULL);
+        last = last->next;
     }
     //リストの内容表示
     printf("length=%d\n", length(l));
@@ -65,7 +69,7 @@ list cons(elementtype e, list l) {
 ///
 int length(list l) {
     int i = 0;
-    for (i = 0; l != NULL; i++) {
+    for (i = 0; l->next != NULL; i++) {
         l = l->next;
     }
     return i;
@@ -76,8 +80,8 @@ int length(list l) {
 /// 要素の型はint型であるものに限る.
 ///
 void print_int_list(list l) {
-    for(int i = 0; l != NULL; i++) {
-        printf("[%d]", l->element);
+    for(int i = 0; l->next != NULL; i++) {
+        printf("[%d]", l->next->element);
         l = l->next;
     }
     printf("\n");
