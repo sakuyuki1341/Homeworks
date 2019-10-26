@@ -25,6 +25,7 @@ typedef struct node* list;  //リストの要素のポインタをリストと�
 /************************************************
  * プロトタイプ宣言部
  ************************************************/
+list list_init(void);
 list cons(elementtype e, list l);
 int length(list l);
 void print_int_list(list l);
@@ -38,9 +39,9 @@ void print_int_list(list l);
 int main(int argc, char const *argv[]) {
     int i;
     char buf[128];  //標準入力保存用
-    list l , last;  //頭付きリスト宣言
+    list l, last;  //頭付きリスト宣言
     //頭付きリストの初期化
-    l->next = NULL;
+    l = list_init();
     last = l;
     //リストへの入力
     while(fgets(buf, sizeof(buf), stdin) != NULL) {
@@ -52,6 +53,15 @@ int main(int argc, char const *argv[]) {
     printf("length=%d\n", length(l));
     print_int_list(l);
     return 0;
+}
+
+///
+/// 頭付きリストの初期化
+///
+list list_init(void) {
+    node *tmp = (node*)malloc(sizeof(node));
+    tmp->next = NULL;
+    return tmp;
 }
 
 ///

@@ -11,10 +11,10 @@
  ************************************************/
 typedef char elementtype;   //リストの要素の型
 
-struct node {   //リストの要素
+typedef struct node {   //リストの要素
     elementtype element;
     struct node *next;
-};
+} node;
 
 typedef struct node* list;  //リストの要素のポインタをリストと定義
 
@@ -25,6 +25,7 @@ typedef struct node* list;  //リストの要素のポインタをリストと�
 /************************************************
  * プロトタイプ宣言部
  ************************************************/
+list list_init(void);
 list cons(elementtype e, list l);
 int length(list l);
 void print_int_list(list l);
@@ -42,7 +43,7 @@ int main(int argc, char const *argv[]) {
     char c, buf[128];   //標準入力保存用
     list l, last;   // 頭付きリスト宣言
     //頭付きリスト初期化
-    l->next = NULL;
+    l = list_init();
     last = l;
 
     fgets(buf, sizeof(buf), stdin); //1行分標準入力から読み取り
@@ -70,10 +71,19 @@ int main(int argc, char const *argv[]) {
 }
 
 ///
+/// 頭付きリストの初期化
+///
+list list_init(void) {
+    node *tmp = (node*)malloc(sizeof(node));
+    tmp->next = NULL;
+    return tmp;
+}
+
+///
 /// リストlの先頭にeを追加したリストを返す関数.
 ///
 list cons(elementtype e, list l) {
-    struct node *tmp = (struct node*)malloc(sizeof(struct node));   //要素の確保
+    node *tmp = (node*)malloc(sizeof(node));   //要素の確保
     tmp->element = e;
     tmp->next = l;
     return tmp;
@@ -118,7 +128,7 @@ void print_char_list(list l) {
 /// 「頭のある」連結リストに対し、先頭に節点を挿入する関数
 ///
 void insert(list l, elementtype e) {
-    struct node *tmp = (struct node*)malloc(sizeof(struct node));
+    node *tmp = (node*)malloc(sizeof(node));
     tmp->element = e;
     tmp->next = l->next;
     l->next = tmp;
