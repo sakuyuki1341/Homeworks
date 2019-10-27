@@ -48,7 +48,7 @@ int main(int argc, char const *argv[]) {
     *[0]:標準入力そのまま
     *[1]:()で囲まれたもの
     *[2]:[]で囲まれたもの
-    *[3]:出力するためののも
+    *[3]:未使用
     */
     list l[4], last[4];   // 頭付きリスト宣言
     //頭付きリスト初期化
@@ -155,6 +155,7 @@ int main(int argc, char const *argv[]) {
         }
     }
 
+    /// 各リストの中身を表示
     print_char_list(l[1]);
     print_char_list(l[0]);
     print_char_list(l[2]);
