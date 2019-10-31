@@ -48,7 +48,6 @@ int main(int argc, char const *argv[]) {
     //リストの内容表示
     print_int_list_circ(l);
     return 0;
-    return 0;
 }
 
 ///
@@ -101,7 +100,8 @@ list max_place(list l) {
     elementtype max_data = l->element;  //最大値
     list end_of_list = search_last(l);  //最後尾を記憶
     list ret_place = l; //返り値用変数
-    while (l != end_of_list) {
+    l = l->next;
+    while (l != end_of_list->next) {
         if(l->element >= max_data) {
             max_data = l->element;
             ret_place = l;

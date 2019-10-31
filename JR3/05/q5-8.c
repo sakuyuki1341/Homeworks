@@ -57,6 +57,8 @@ int main(int argc, char const *argv[]) {
                 int absmove = abs(move->next->element);
                 if(i == move->next->element) {  //一致時追加しない
                     break;
+                } else if(move->next->next != NULL && i == move->next->next->element) {
+                    break;
                 } else if(absi == absmove) {    //絶対値一致時
                     if(i < 0) { //iが負の場合
                         move->next->next = cons(i, move->next->next);
@@ -72,14 +74,12 @@ int main(int argc, char const *argv[]) {
                 move = move->next;
             }
             if(move->next == NULL) {    //最後尾に追加する必要があれば追加
-                last->next = cons(i, NULL);
-                last = last->next;
+                move->next = cons(i, NULL);
             }
         }
     }
 
     //リストの内容表示
-    printf("length=%d\n", length(l));
     print_int_list(l);
     return 0;
 }
@@ -120,8 +120,7 @@ int length(list l) {
 ///
 void print_int_list(list l) {
     for(int i = 0; l->next != NULL; i++) {
-        printf("[%d]", l->next->element);
+        printf("%d\n", l->next->element);
         l = l->next;
     }
-    printf("\n");
 }

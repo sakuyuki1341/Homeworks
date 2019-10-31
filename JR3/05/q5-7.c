@@ -100,6 +100,7 @@ void delete(dlnode *p) {
     //節点の更新
     p->next->prev = p->prev;
     p->prev->next = p->next;
+    free(p);
 }
 
 ///
