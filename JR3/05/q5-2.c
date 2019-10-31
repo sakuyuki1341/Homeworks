@@ -11,10 +11,10 @@
  ************************************************/
 typedef int elementtype;    //リストの要素の型
 
-struct node {   //リストの要素
+typedef struct node {   //リストの要素
     elementtype element;
     struct node *next;
-};
+} node;
 
 typedef struct node* list;  //リストの要素のポインタをリストと定義
 
