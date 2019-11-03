@@ -85,20 +85,24 @@ int main() {
     return 0;
 }
 
- void carry(int* arr, int i) {
-     while(arr[i] >= 10) {
-         if(arr[i] >= 10000) {
-             arr[i+4] += 1;
-             arr[i] -= 10000;
-         } else if(arr[i] >= 1000) {
-             arr[i+3] += 1;
-             arr[i] -= 1000;
-         } else if(arr[i] >= 100) {
-             arr[i+2] += 1;
-             arr[i] -= 100;
-         } else if(arr[i] >= 10) {
-             arr[i+1] += 1;
-             arr[i] -= 10;
-         }
-     }
- }
+///
+/// 配列arrのi番目の数を繰り上げを行う関数
+/// 軽量版
+///
+void carry(int* arr, int i) {
+    while(arr[i] >= 10) {
+        if(arr[i] >= 10000) {
+            arr[i+4] += 1;
+            arr[i] -= 10000;
+        } else if(arr[i] >= 1000) {
+            arr[i+3] += 1;
+            arr[i] -= 1000;
+        } else if(arr[i] >= 100) {
+            arr[i+2] += 1;
+            arr[i] -= 100;
+        } else if(arr[i] >= 10) {
+            arr[i+1] += 1;
+            arr[i] -= 10;
+        }
+    }
+}
