@@ -16,7 +16,8 @@ typedef struct node {   //リストの要素
 	struct node *next;
 } node;
 
-typedef struct node* list;  //リストの要素のポインタをリストと定義
+typedef struct node node;
+typedef node* list;  //リストの要素のポインタをリストと定義
 
 /************************************************
  * グローバル変数
