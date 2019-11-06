@@ -27,29 +27,29 @@ int max_index(int a[], int n);
 /// メイン関数
 ///
 int main(int argc, char const *argv[]) {
-    char buf[128];  //標準入力保存用
-    int arr[128], i = 0;    //標準入力を数に直したもの
-    //入力が終了するまで繰り返し
-    while (fgets(buf, sizeof(buf), stdin) != NULL && i < 128) {
-        sscanf(buf, "%d", &arr[i++]);
-    }
-    //配列の最大値の添字を出力
-    printf("%d\n", max_index(arr, i));
-    return 0; 
+	char buf[128];  //標準入力保存用
+	int arr[128], i = 0;    //標準入力を数に直したもの
+	//入力が終了するまで繰り返し
+	while (fgets(buf, sizeof(buf), stdin) != NULL && i < 128) {
+		sscanf(buf, "%d", &arr[i++]);
+	}
+	//配列の最大値の添字を出力
+	printf("%d\n", max_index(arr, i));
+	return 0; 
 }
 
 ///
 /// 配列aに対し、先頭からn個のうちの最大値の添字を返す
 ///
 int max_index(int a[], int n) {
-    int max = a[0]; //一時最大値
-    int max_place = 0;  //一時最大値の位置
-    //n個まで繰り返し
-    for(int i  = 0; i < n; i++) {
-        if(max <= a[i]) {   //一時最大値の更新
-            max = a[i];
-            max_place = i;
-        }
-    }
-    return max_place;   //最大値の位置を返す
+	int max = a[0]; //一時最大値
+	int max_place = 0;  //一時最大値の位置
+	//n個まで繰り返し
+	for(int i  = 0; i < n; i++) {
+		if(max <= a[i]) {   //一時最大値の更新
+			max = a[i];
+			max_place = i;
+		}
+	}
+	return max_place;   //最大値の位置を返す
 }
