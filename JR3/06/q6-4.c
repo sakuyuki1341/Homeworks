@@ -86,7 +86,7 @@ int main(int argc, char const *argv[]) {
 
 	print_int_list_back(l_ans);
 	end = clock();
-	printf("operating times:%d[ms]\n", end - start);
+//	printf("operating times:%d[ms]\n", end - start);
 
 	return 0;
 }
