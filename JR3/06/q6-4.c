@@ -69,14 +69,14 @@ int main(int argc, char const *argv[]) {
 	list l_2_move = l_2;
 	list l_ans_move = l_ans;
 	for(int i = 0; i < len_2; i++) {
+		l_ans_move = move(l_ans, i);
+		l_1_move = l_1;
 		for(int j = 0; j < len_1; j++) {
 			l_ans_move->element += l_1_move->element * l_2_move->element;
 			l_1_move = move(l_1_move, 1);
 			l_ans_move = move(l_ans_move, 1);
 		}
-		l_1_move = l_1;
 		l_2_move = move(l_2_move, 1);
-		l_ans_move = move(l_ans, i);
 	}
 
 	len_ans = length(l_ans);    //長さの更新
