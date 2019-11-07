@@ -155,7 +155,7 @@ int length(list l) {
 ///
 void print_int_list_back(list l) {
 	int len = length(l);
-	int flag0 = true;
+	bool flag0 = true, flag_first = false;
 	for(int i = len - 1; i >= 0; i--) {
 		list move = l;
 		for(int j = 0; j < i; j++) {
@@ -164,12 +164,12 @@ void print_int_list_back(list l) {
 		if(move->element != 0) {
 			flag0 = false;
 		}
-		if(flag0 == false) {
+		if(flag0 == false && flag_first) {
+			printf("%04ld", move->element);
+		} else if(flag0 == false) {
 			printf("%ld", move->element);
+			flag_first = true;
 		}
-	}
-	if(flag0 == true) {
-		printf("0");
 	}
 	printf("\n");
 }
