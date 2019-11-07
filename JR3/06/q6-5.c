@@ -9,7 +9,7 @@
 /************************************************
  * 構造体等宣言部
  ************************************************/
-typedef unsigned long long int elementtype;    //リストの要素の型
+typedef unsigned long  elementtype;    //リストの要素の型
 
 typedef struct node {   //リストの要素
 	elementtype element;
@@ -22,14 +22,15 @@ typedef node* list;  //リストの要素のポインタをリストと定義
 /************************************************
  * グローバル変数
  ************************************************/
+int count = 0;	//追加した0の数
 
 /************************************************
  * プロトタイプ宣言部
  ************************************************/
+list init(void);
 list cons(elementtype e, list l);
 int length(list l);
 void print_int_list_back(list l);
-void call(list l1, list l2, list l_ret, int i1, int i2, int i_ret);
 void carry(list l, int i);
 list move(list l, int i);
 
@@ -40,112 +41,91 @@ list move(list l, int i);
 /// メイン関数
 ///
 int main(int argc, char const *argv[]) {
-	int d, i;
 	int len_1, len_2, len_ans;	//リストの長さ
-	char c, arr[4];	//標準入力保存用
-	list l_1 = NULL, l_2 = NULL;	//リスト宣言
-	//答え用配列のみ一つ要素をもたせておく
+	list l_1, l_2;	//入力リスト宣言
+	//答え用リストのみ一つ要素をもたせておく
+	//答えリストは一要素で数字一桁を表す
 	list l_ans = (node*)malloc(sizeof(node));
 	l_ans->element = 0;
 	l_ans->next = NULL;
-	//リストへの入力
-	i = 0;
-	while((c = getchar()) != '\n') {
-		switch(i) {
-			case 0:
-				d = (int)c - '0';
-				i++;
-				break;
-		
-			case 1:
-				d += ((int)c - '0') * 10;
-				i++;
-				break;
+	//リストl_1, l_2への入力
+	l_1 = init();
+	l_2 = init();
 
-			case 2:
-				d += ((int)c - '0') * 100;
-				i++;
-				break;
-
-			case 3:
-				d += ((int)c - '0') * 1000;
-				i++;
-				break;
-
-			case 4:
-				l_1 = cons(d, l_1);
-				i = 0;
-
-			default:
-				break;
-		}
-	}
-	if(i != 0) {
-		l_1 = cons(d, l_1);
-	}
-
-	i = 0;
-	while ((c = getchar()) != '\n')
-	{
-		switch (i)
-		{
-		case 0:
-			d = (int)c - '0';
-			i++;
-			break;
-
-		case 1:
-			d += ((int)c - '0') * 10;
-			i++;
-			break;
-
-		case 2:
-			d += ((int)c - '0') * 100;
-			i++;
-			break;
-
-		case 3:
-			d += ((int)c - '0') * 1000;
-			i++;
-			break;
-
-		case 4:
-			l_2 = cons(d, l_2);
-			i = 0;
-
-		default:
-			break;
-		}
-	}
-	if (i != 0) {
-		l_2 = cons(d, l_2);
-	}
 	//長さの取得
 	len_1 = length(l_1);
 	len_2 = length(l_2);
 
-	printf("length=%d\n", length(l_1));
-	print_int_list_back(l_1);
-
-	printf("length=%d\n", length(l_2));
-	print_int_list_back(l_2);
-
-	/*
 	//掛け算の実行
+	list l_1_move = l_1;
+	list l_2_move = l_2;
+	list l_ans_move = l_ans;
 	for(int i = 0; i < len_2; i++) {
+		l_ans_move = move(l_ans, i);
+		l_1_move = l_1;
 		for(int j = 0; j < len_1; j++) {
-			call(l_1, l_2, l_ans, j, i, i+j);
+			l_ans_move->element += l_1_move->element * l_2_move->element;
+			l_1_move = move(l_1_move, 1);
+			l_ans_move = move(l_ans_move, 1);
 		}
+		l_2_move = move(l_2_move, 1);
 	}
 
-	len_ans = length(l_ans);    //長さの更新
-	for(int i = 0; i < len_ans; i++) { //繰り上がりの処理
+	len_ans = length(l_ans);	//長さの更新
+
+	for(int i = 0; i < len_ans; i++) {	//繰り上がりの処理
 		carry(l_ans, i);
 	}
 
+	//追加した0の分だけ0を削除する
+	if(count >= 4) {
+		count -= 4;
+	}
+	while(l_ans->element == 0 && l_ans->next != NULL) {
+		l_ans = l_ans->next;
+	}
+	for(int i = 0; i < count; i++) {
+		l_ans->element = l_ans->element / 10;
+	}
+
 	print_int_list_back(l_ans);
-*/
+
 	return 0;
+}
+
+///
+/// 標準入力から数を受け取り、それを4桁ずつに分け、分けたものをリストに格納した
+/// リストを返す
+///
+list init(void) {
+	list l = NULL;	//リストの作成
+	int d = 0, i = 0;	//各種変数の宣言
+	char c = 0;	//標準入力用
+	//リストへ代入作業
+	while((c = getchar()) != '\n') {
+		if(i == 4) {
+			l = cons(d, l);
+			i = 0;
+		}
+		if(i == 0) {
+			d = (int)c - '0';
+			i++;
+		} else {
+			d = d * 10;
+			d += (int)c - '0';
+			i++;
+		}
+	}
+	//余ったdの後ろに4桁の整数になるよう0を追加した後リストに追加
+	for(; i < 4 && 0 < i; i++) {
+		d = d * 10;
+		count++;	//追加した0の数を覚えておく
+	}
+	if(i != 0) {
+		l = cons(d, l);
+		i = 0;
+	}
+	return l;	//リストを返す
 }
 
 ///
@@ -175,27 +155,23 @@ int length(list l) {
 ///
 void print_int_list_back(list l) {
 	int len = length(l);
+	int flag0 = true;
 	for(int i = len - 1; i >= 0; i--) {
 		list move = l;
 		for(int j = 0; j < i; j++) {
 			move = move->next;
 		}
-		printf("%d", move->element);
+		if(move->element != 0) {
+			flag0 = false;
+		}
+		if(flag0 == false) {
+			printf("%d", move->element);
+		}
+	}
+	if(flag0 == true) {
+		printf("0");
 	}
 	printf("\n");
-}
-
-///
-/// リストl_retのi_ret番目に、リストl1のi1番目の値とリストl2のi2番目の値の掛け合わせた値を加える
-/// ただし、リストの最初の要素を0番目とする
-///
-void call(list l1, list l2, list l_ret, int i1, int i2, int i_ret) {
-	// 各リストをそれぞれの場所まで進める
-	l1 = move(l1, i1);
-	l2 = move(l2, i2);
-	l_ret = move(l_ret, i_ret);
-
-	l_ret->element += l1->element * l2->element;
 }
 
 ///
@@ -203,22 +179,27 @@ void call(list l1, list l2, list l_ret, int i1, int i2, int i_ret) {
 /// ただし、リストの最初の要素を0番目とする
 ///
 void carry(list l, int i) {
+	// リストをi+1番目まで作成する
+	move(l, i + 1);
 	// リストをi番目まで進める
 	for(int j = 0; j < i; j++) {
 		l = l->next;
 	}
 
 	//繰り上げ処理
-	while (l->element >= 10) {
-		l->element -= 10;
-		if(l->next == NULL) {   //i番目がlの最後の要素の場合
-			node *tmp = (node*)malloc(sizeof(node));    //新しく要素を作成
-			//接続
-			tmp->element = 1;
-			tmp->next = NULL;
-			l->next = tmp;
-		} else {
+	while (l->element >= 10000) {
+		if(l->element >= 10000000) {
+			l->next->element += 1000;
+			l->element -= 10000000;
+		} else if(l->element >= 1000000) {
+			l->next->element += 100;
+			l->element -= 1000000;
+		} else if(l->element >= 100000) {
+			l->next->element += 10;
+			l->element -= 100000;
+		} else if(l->element >= 10000) {
 			l->next->element += 1;
+			l->element -= 10000;
 		}
 	}
 }

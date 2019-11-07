@@ -30,7 +30,6 @@ typedef node* list;  //リストの要素のポインタをリストと定義
 list cons(elementtype e, list l);
 int length(list l);
 void print_int_list_back(list l);
-void call(list l1, list l2, list l_ret, int i1, int i2, int i_ret);
 void carry(list l, int i);
 list move(list l, int i);
 
@@ -45,7 +44,7 @@ int main(int argc, char const *argv[]) {
 	int len_1, len_2, len_ans;	//リストの長さ
 	char c;	//標準入力保存用
 	list l_1 = NULL, l_2 = NULL;	//リスト宣言
-	//答え用配列のみ一つ要素をもたせておく
+	//答え用リストのみ一つ要素をもたせておく
 	list l_ans = (node*)malloc(sizeof(node));
 	l_ans->element = 0;
 	l_ans->next = NULL;
@@ -138,7 +137,7 @@ void print_int_list_back(list l) {
 /// ただし、リストの最初の要素を0番目とする
 ///
 void carry(list l, int i) {
-	// リストをi+4番目まで作成する
+	// リストをi+5番目まで作成する
 	move(l, i + 5);
 	// リストをi番目まで進める
 	for(int j = 0; j < i; j++) {
