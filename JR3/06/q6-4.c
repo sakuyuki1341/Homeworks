@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include <time.h>
 
 /************************************************
  * 構造体等宣言部
@@ -37,9 +38,11 @@ list move(list l, int i);
  * 関数部
  ************************************************/
 ///
-/// メイン関数
+/// メイン関数(
 ///
 int main(int argc, char const *argv[]) {
+	clock_t start, end;
+	start = clock();
 	int d;
 	int len_1, len_2, len_ans;   //リストの長さ
 	char c;  //標準入力保存用
@@ -74,6 +77,8 @@ int main(int argc, char const *argv[]) {
 	}
 
 	print_int_list_back(l_ans);
+	end = clock();
+	printf("処理時間:%d[ms]\n", end - start);
 
 	return 0;
 }
