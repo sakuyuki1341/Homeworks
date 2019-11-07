@@ -33,24 +33,37 @@ int main() {
 	//標準入力一行目
 	i = 0;
 	fgets(buf, sizeof(buf), stdin);
+	printf("%s\n", buf);
 	while(buf[i] != '\n') {
-		i++;
+		++i;
 	}
 	len1 = i;
-	for(i = 0; i < len1; i++) {
-		arr1[i] = (int)(buf[len1 - 1 - i] - '0');
+	printf("%d\n", len1);
+	for(i = 0; i < len1; ++i) {
+		arr1[i] = (int)(buf[len1-1-i]-'0');
 	}
 
 	//標準入力二行目
 	i = 0;
 	fgets(buf, sizeof(buf), stdin);
+	printf("%s\n", buf);
 	while(buf[i] != '\n') {
-		i++;
+		++i;
 	}
 	len2 = i;
-	for(i = 0; i < len2; i++) {
-		arr2[i] = (int)(buf[len2 - 1 - i] - '0');
+	printf("%d\n", len2);
+	for(i = 0; i < len2; ++i) {
+		arr2[i] = (int)(buf[len2-1-i]-'0');
 	}
+
+	for(i=len1-1; i >= 0; --i) {
+		printf("%d", arr1[i]);
+	}
+	printf("\n");
+	for(i=len2-1; i >= 0; --i) {
+		printf("%d", arr2[i]);
+	}
+	printf("\n");
 
 	//足し算実行
 	//桁数の少ない方を桁数の多い方へ足し合わせる
@@ -67,7 +80,7 @@ int main() {
 		if(arr1[len1] != 0) {   //最大桁が増えている場合
 			len1 += 1;
 		}
-		for(i = len2 - 1; i >= 0; i--) {
+		for(i = len1 - 1; i >= 0; i--) {
 			printf("%d", arr1[i]);
 		}
 		printf("\n");
