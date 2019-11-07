@@ -29,16 +29,14 @@ char buf[DIGITS + 2];   //標準入力用
 ///
 int main() {
 	int i, len1, len2;
-	int arr1[DIGITS] = {}, arr2[DIGITS] = {};   //数値保存及び足し算用
+	int arr1[DIGITS + 1] = {}, arr2[DIGITS + 1] = {};   //数値保存及び足し算用
 	//標準入力一行目
 	i = 0;
 	fgets(buf, sizeof(buf), stdin);
-	printf("%s\n", buf);
 	while(buf[i] != '\n') {
 		++i;
 	}
 	len1 = i;
-	printf("%d\n", len1);
 	for(i = 0; i < len1; ++i) {
 		arr1[i] = (int)(buf[len1-1-i]-'0');
 	}
@@ -46,24 +44,13 @@ int main() {
 	//標準入力二行目
 	i = 0;
 	fgets(buf, sizeof(buf), stdin);
-	printf("%s\n", buf);
 	while(buf[i] != '\n') {
 		++i;
 	}
 	len2 = i;
-	printf("%d\n", len2);
 	for(i = 0; i < len2; ++i) {
 		arr2[i] = (int)(buf[len2-1-i]-'0');
 	}
-
-	for(i=len1-1; i >= 0; --i) {
-		printf("%d", arr1[i]);
-	}
-	printf("\n");
-	for(i=len2-1; i >= 0; --i) {
-		printf("%d", arr2[i]);
-	}
-	printf("\n");
 
 	//足し算実行
 	//桁数の少ない方を桁数の多い方へ足し合わせる

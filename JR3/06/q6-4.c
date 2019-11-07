@@ -105,12 +105,21 @@ int length(list l) {
 ///
 void print_int_list_back(list l) {
 	int len = length(l);
+	int flag0 = true;
 	for(int i = len - 1; i >= 0; i--) {
 		list move = l;
 		for(int j = 0; j < i; j++) {
 			move = move->next;
 		}
-		printf("%d", move->element);
+		if(move->element != 0) {
+			flag0 = false;
+		}
+		if(flag0 == false) {
+			printf("%d", move->element);
+		}
+	}
+	if(flag0 == true) {
+		printf("0");
 	}
 	printf("\n");
 }

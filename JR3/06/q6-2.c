@@ -31,29 +31,29 @@ void carry(int* arr, int i);
 /// メイン関数
 ///
 int main() {
-	int i, j, len1, len2, len_ans;
+	int i, j, len1, len2, len_ans = 1;
 	int arr1[DIGITS] = {}, arr2[DIGITS] = {};   //数値保存用
 	int arr_ans[ANS] = {};  //回答用
 	//標準入力一行目
 	i = 0;
 	fgets(buf, sizeof(buf), stdin);
 	while(buf[i] != '\n') {
-		i++;
+		++i;
 	}
 	len1 = i;
-	for(i = 0; i < len1; i++) {
-		arr1[i] = (int)(buf[len1 - 1 - i] - '0');
+	for(i = 0; i < len1; ++i) {
+		arr1[i] = (int)(buf[len1-1-i]-'0');
 	}
 
 	//標準入力二行目
 	i = 0;
 	fgets(buf, sizeof(buf), stdin);
 	while(buf[i] != '\n') {
-		i++;
+		++i;
 	}
 	len2 = i;
-	for(i = 0; i < len2; i++) {
-		arr2[i] = (int)(buf[len2 - 1 - i] - '0');
+	for(i = 0; i < len2; ++i) {
+		arr2[i] = (int)(buf[len2-1-i]-'0');
 	}
 
 	//掛け算実行
@@ -77,7 +77,7 @@ int main() {
 	}
 
 	//arr_ansの表示
-	for(i = len_ans - 1; i >= 0; i--) {
+	for(i = len_ans-1; i >= 0; i--) {
 		printf("%d", arr_ans[i]);
 	}
 	printf("\n");
