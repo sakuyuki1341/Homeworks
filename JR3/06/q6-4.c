@@ -41,12 +41,10 @@ list move(list l, int i);
 /// メイン関数(
 ///
 int main(int argc, char const *argv[]) {
-	clock_t start, end;
-	start = clock();
 	int d;
-	int len_1, len_2, len_ans;   //リストの長さ
-	char c;  //標準入力保存用
-	list l_1 = NULL, l_2 = NULL;  //リスト宣言
+	int len_1, len_2, len_ans;	//リストの長さ
+	char c;	//標準入力保存用
+	list l_1 = NULL, l_2 = NULL;	//リスト宣言
 	//答え用配列のみ一つ要素をもたせておく
 	list l_ans = (node*)malloc(sizeof(node));
 	l_ans->element = 0;
@@ -85,8 +83,6 @@ int main(int argc, char const *argv[]) {
 	}
 
 	print_int_list_back(l_ans);
-	end = clock();
-//	printf("operating times:%d[ms]\n", end - start);
 
 	return 0;
 }
