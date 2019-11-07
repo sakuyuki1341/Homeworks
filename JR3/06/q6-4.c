@@ -65,10 +65,18 @@ int main(int argc, char const *argv[]) {
 	len_2 = length(l_2);
 
 	//掛け算の実行
+	list l_1_move = l_1;
+	list l_2_move = l_2;
+	list l_ans_move = l_ans;
 	for(int i = 0; i < len_2; i++) {
 		for(int j = 0; j < len_1; j++) {
-			call(l_1, l_2, l_ans, j, i, i+j);
+			l_ans_move->element += l_1_move->element * l_2_move->element;
+			l_1_move = move(l_1_move, 1);
+			l_ans_move = move(l_ans_move, 1);
 		}
+		l_1_move = l_1;
+		l_2_move = move(l_2_move, 1);
+		l_ans_move = move(l_ans, i);
 	}
 
 	len_ans = length(l_ans);    //長さの更新
@@ -78,7 +86,7 @@ int main(int argc, char const *argv[]) {
 
 	print_int_list_back(l_ans);
 	end = clock();
-	printf("処理時間:%d[ms]\n", end - start);
+	printf("operating times:%d[ms]\n", end - start);
 
 	return 0;
 }
@@ -127,19 +135,6 @@ void print_int_list_back(list l) {
 		printf("0");
 	}
 	printf("\n");
-}
-
-///
-/// リストl_retのi_ret番目に、リストl1のi1番目の値とリストl2のi2番目の値の掛け合わせた値を加える
-/// ただし、リストの最初の要素を0番目とする
-///
-void call(list l1, list l2, list l_ret, int i1, int i2, int i_ret) {
-	// 各リストをそれぞれの場所まで進める
-	l1 = move(l1, i1);
-	l2 = move(l2, i2);
-	l_ret = move(l_ret, i_ret);
-
-	l_ret->element += l1->element * l2->element;
 }
 
 ///
