@@ -165,7 +165,7 @@ void print_int_list_back(list l) {
 			flag0 = false;
 		}
 		if(flag0 == false) {
-			printf("%d", move->element);
+			printf("%ld", move->element);
 		}
 	}
 	if(flag0 == true) {
