@@ -156,7 +156,7 @@ int length(list l) {
 void print_int_list_back(list l) {
 	int len = length(l);
 	bool flag0 = true, flag_first = false;
-	for(int i = len - 1; i >= 0; i--) {
+	for(int i = len - 1; i > 0; i--) {
 		list move = l;
 		for(int j = 0; j < i; j++) {
 			move = move->next;
@@ -170,6 +170,23 @@ void print_int_list_back(list l) {
 			printf("%ld", move->element);
 			flag_first = true;
 		}
+	}
+	switch(count) {
+		case 1:
+			printf("%03ld", l->element);
+			break;
+
+		case 2:
+			printf("%02ld", l->element);
+			break;
+
+		case 3:
+			printf("%01ld", l->element);
+			break;
+
+		default:
+			printf("%04ld", l->element);
+			break;
 	}
 	printf("\n");
 }
