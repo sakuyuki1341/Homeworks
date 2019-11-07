@@ -171,22 +171,26 @@ void print_int_list_back(list l) {
 			flag_first = true;
 		}
 	}
-	switch(count) {
-		case 1:
-			printf("%03ld", l->element);
-			break;
+	if(flag0) {
+		printf("%ld", l->element);
+	} else {
+		switch(count) {
+			case 1:
+				printf("%03ld", l->element);
+				break;
 
-		case 2:
-			printf("%02ld", l->element);
-			break;
+			case 2:
+				printf("%02ld", l->element);
+				break;
 
-		case 3:
-			printf("%01ld", l->element);
-			break;
+			case 3:
+				printf("%01ld", l->element);
+				break;
 
-		default:
-			printf("%04ld", l->element);
-			break;
+			default:
+				printf("%04ld", l->element);
+				break;
+		}
 	}
 	printf("\n");
 }
