@@ -1,6 +1,6 @@
 /************************************************
  * マクロ部
-/************************************************/
+ ************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -8,7 +8,7 @@
 
 /************************************************
  * 構造体等宣言部
-/************************************************/
+ ************************************************/
 typedef unsigned long long int elementtype;    //リストの要素の型
 
 typedef struct node {   //リストの要素
@@ -21,11 +21,11 @@ typedef node* list;  //リストの要素のポインタをリストと定義
 
 /************************************************
  * グローバル変数
-/************************************************/
+ ************************************************/
 
 /************************************************
  * プロトタイプ宣言部
-/************************************************/
+ ************************************************/
 list cons(elementtype e, list l);
 int length(list l);
 void print_int_list_back(list l);
@@ -35,32 +35,102 @@ list move(list l, int i);
 
 /************************************************
  * 関数部
-/************************************************/
+ ************************************************/
 ///
 /// メイン関数
 ///
 int main(int argc, char const *argv[]) {
-	int d;
+	int d, i;
 	int len_1, len_2, len_ans;	//リストの長さ
-	char c;	//標準入力保存用
+	char c, arr[4];	//標準入力保存用
 	list l_1 = NULL, l_2 = NULL;	//リスト宣言
 	//答え用配列のみ一つ要素をもたせておく
 	list l_ans = (node*)malloc(sizeof(node));
 	l_ans->element = 0;
 	l_ans->next = NULL;
 	//リストへの入力
+	i = 0;
 	while((c = getchar()) != '\n') {
-		d = (int)c - '0';
+		switch(i) {
+			case 0:
+				d = (int)c - '0';
+				i++;
+				break;
+		
+			case 1:
+				d += ((int)c - '0') * 10;
+				i++;
+				break;
+
+			case 2:
+				d += ((int)c - '0') * 100;
+				i++;
+				break;
+
+			case 3:
+				d += ((int)c - '0') * 1000;
+				i++;
+				break;
+
+			case 4:
+				l_1 = cons(d, l_1);
+				i = 0;
+
+			default:
+				break;
+		}
+	}
+	if(i != 0) {
 		l_1 = cons(d, l_1);
 	}
-	while((c = getchar()) != '\n') {
-		d = (int)c - '0';
+
+	i = 0;
+	while ((c = getchar()) != '\n')
+	{
+		switch (i)
+		{
+		case 0:
+			d = (int)c - '0';
+			i++;
+			break;
+
+		case 1:
+			d += ((int)c - '0') * 10;
+			i++;
+			break;
+
+		case 2:
+			d += ((int)c - '0') * 100;
+			i++;
+			break;
+
+		case 3:
+			d += ((int)c - '0') * 1000;
+			i++;
+			break;
+
+		case 4:
+			l_2 = cons(d, l_2);
+			i = 0;
+
+		default:
+			break;
+		}
+	}
+	if (i != 0) {
 		l_2 = cons(d, l_2);
 	}
 	//長さの取得
 	len_1 = length(l_1);
 	len_2 = length(l_2);
 
+	printf("length=%d\n", length(l_1));
+	print_int_list_back(l_1);
+
+	printf("length=%d\n", length(l_2));
+	print_int_list_back(l_2);
+
+	/*
 	//掛け算の実行
 	for(int i = 0; i < len_2; i++) {
 		for(int j = 0; j < len_1; j++) {
@@ -74,7 +144,7 @@ int main(int argc, char const *argv[]) {
 	}
 
 	print_int_list_back(l_ans);
-
+*/
 	return 0;
 }
 
