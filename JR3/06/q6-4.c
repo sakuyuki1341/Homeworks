@@ -143,7 +143,7 @@ void call(list l1, list l2, list l_ret, int i1, int i2, int i_ret) {
 ///
 void carry(list l, int i) {
 	// リストをi+4番目まで作成する
-	move(l, i + 4);
+	move(l, i + 5);
 	// リストをi番目まで進める
 	for(int j = 0; j < i; j++) {
 		l = l->next;
@@ -151,23 +151,19 @@ void carry(list l, int i) {
 
 	//繰り上げ処理
 	while (l->element >= 10) {
-		if (l->element >= 10000)
-		{
+		if(l->element >= 100000) {
+			l->next->next->next->next->next->element += 1;
+			l->element -= 100000;
+		} else if(l->element >= 10000) {
 			l->next->next->next->next->element += 1;
 			l->element -= 10000;
-		}
-		else if (l->element >= 1000)
-		{
+		} else if(l->element >= 1000) {
 			l->next->next->next->element += 1;
 			l->element -= 1000;
-		}
-		else if (l->element >= 100)
-		{
+		} else if(l->element >= 100) {
 			l->next->next->element += 1;
 			l->element -= 100;
-		}
-		else if (l->element >= 10)
-		{
+		} else if(l->element >= 10) {
 			l->next->element += 1;
 			l->element -= 10;
 		}
