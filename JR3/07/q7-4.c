@@ -4,14 +4,13 @@
 #include <stdio.h>
 
 /************************************************
- * グローバル変数
-/************************************************/
-int count = 0;
-
-/************************************************
  * 構造体等宣言部
 /************************************************/
-struct point { int x, y; };	//座標構造体
+struct point { int x, y; };
+
+/************************************************
+ * グローバル変数
+ ************************************************/
 
 /************************************************
  * プロトタイプ宣言部
@@ -25,7 +24,6 @@ struct point { int x, y; };	//座標構造体
 /// p1がp2より大きい場合: 1 / p1とp2が等しい場合: 0 / p1がp2より小さい場合: -1
 ///
 int compare_by(struct point p1, struct point p2, char c) {
-	++count;
 	int ret = 0;
 	if(c == 'X') {	//基準がXの時
 		if(p1.x > p2.x) {
@@ -82,38 +80,30 @@ int compare_by(struct point p1, struct point p2, char c) {
 }
 
 ///
-/// 配列aに対し、先頭からn個のうち、文字cで指定された基準で最大の要素の添字を返す
+/// 配列aの先頭n-1個が文字cの基準で昇順に整列されている時
+/// a[n-1]を適切な位置に移動して、aが昇順に整列された状態にする
 ///
-int max_index_by(struct point a[], int n, char c) {
-	int max_place = 0;	//一時最大値の位置
-	//n個まで繰り返し
-	for(int i = 1; i < n; i++) {
-		if(compare_by(a[i], a[max_place], c) >= 0) {	//一時最大値の更新
-			max_place = i;
+void insert_by(struct point a[], int n, char c) {
+	int insert_place = 0;	//a[n-1]が挿入されるべき位置
+	//挿入位置の探索
+	for(int i = n-2; i >= 0; i--) {
+		if(compare_by(a[n-1], a[i], c) >= 0) {	//一時最大値の更新
+			insert_place = i + 1;
+			break;
 		}
 	}
-	return max_place;	//最大値の位置を返す
-}
-
-///
-/// 配列aのうち、先頭n個について、文字cで指定された基準で昇順に整列する
-///
-void selection_sort(struct point a[], int n, char c) {
-	//kをnから2まで1ずつ減らしながら繰り返し
-	for(int k = n; k > 1; k--) {
-		//先頭k個までの最大値の添字を取得
-		int i = max_index_by(a, k, c);
-		//i番目とk-1番目を交換
-		struct point tmp = a[k-1];
-		a[k-1] = a[i];
-		a[i] = tmp;
+	//挿入処理
+	for(int i = insert_place; i < n - 1; i++) {
+		struct point tmp = a[i];
+		a[i] = a[n-1];
+		a[n-1] = tmp;
 	}
 }
 
 ///
 /// メイン関数
 ///
-int main() {
+int main(int argc, char const *argv[]) {
 	char c, buf[128];	//入力保存用
 	struct point p, arr[128];	//入力保存用
 	int i = 0, n;
@@ -126,10 +116,7 @@ int main() {
 		++i;
 	}
 	n = i;	//個数の保存
-	//ソート実行
-	selection_sort(arr, n, c);
-	//比較回数出力
-	printf("%d\n", count);
+	insert_by(arr, n, c);
 	//配列の要素の出力
 	for(i = 0; i < n; ++i) {
 		printf("%d %d\n", arr[i].x, arr[i].y);
