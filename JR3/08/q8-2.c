@@ -8,6 +8,7 @@
  * グローバル変数
  ************************************************/
 
+int count = 0;	//比較回数
 char kijun;	//大小比較の規準を表す
 
 /************************************************
@@ -29,6 +30,7 @@ struct point { int x, y; };	//座標
 /// p1がp2より大きい場合: 1 / p1とp2が等しい場合: 0 / p1がp2より小さい場合: -1
 ///
 int compare(struct point p1, struct point p2) {
+	++count;
 	int ret = 0;
 	if(kijun == 'X') {	//基準がXの時
 		if(p1.x > p2.x) {
@@ -120,6 +122,18 @@ int partition(struct point a[], int m, int n) {
 }
 
 ///
+/// 配列aのm番目からn番目までを、クイックソートアルゴリズムにより、指定された基準で昇順に整列する関数
+///
+void quicksort(struct point a[], int m, int n) {
+	// mがnより小さい時
+	if(m < n) {
+		int p = partition(a, m, n);
+		quicksort(a, m, p-1);
+		quicksort(a, p+1, n);
+	}	//そうでなければ何もしない
+}
+
+///
 /// メイン関数
 ///
 int main() {
@@ -134,8 +148,10 @@ int main() {
 		++i;
 	}
 	n = i;
+	// ソート実行
+	quicksort(arr, 0, n-1);
 	// 整列結果を表示
-	printf("%d\n", partition(arr, 0, n-1));
+	printf("%d\n", count);
 	for(i = 0; i < n; ++i)
 		printf("%d %d\n", arr[i].x, arr[i].y);
 	return 0;
