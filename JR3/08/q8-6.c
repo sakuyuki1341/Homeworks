@@ -96,12 +96,18 @@ int compare(struct point p1, struct point p2) {
 /// l1とl2の指す接点を頭とする連結リストに格納する.
 ///
 void split(list l1, list l2) {
-	list p1 = l1, p2 = l1;
-	while(p2->next->next != NULL && p2->next != NULL) {
-		p2 = p2->next->next;
-		p1 = p1->next;
+	list p1 = l1->next, p2 = l1->next;
+	while(1) {
+		if(p2->next == NULL) {
+			break;
+		} else if(p2->next->next ==NULL) {
+			break;
+		} else {
+			p2 = p2->next->next;
+			p1 = p1->next;
+		}
 	}
-	l2 = p1->next;
+	l2->next = p1->next;
 	p1->next = NULL;
 }
 
@@ -110,17 +116,41 @@ void split(list l1, list l2) {
 /// それらを併合した連結リストl1に格納する.
 ///
 void merge(list l1, list l2) {
-	while(l1->next != NULL) {
+	list l1_start = l1;
+	//l1にl2の要素を挿入していく.
+	while(l1 != NULL && l2 != NULL) {
+		if(compare(l1->element, l2->element) == 1) {
+			//挿入
+			list tmp_l = l1->next;
+			l1->next = l2;
+			l2 = l2->next;
+			l1->next->next = tmp_l;
+			elementtype tmp_e = l1->element;
+			l1->element = l1->next->element;
+			l1->next->element = tmp_e;
+		}
 		l1 = l1->next;
 	}
-	l1->next = l2;
+	//l1がNULLに到達していた場合
+	if(l1 == NULL) {
+		while(l1_start->next != NULL) {
+			l1_start = l1_start->next;
+		}
+		l1_start->next = l2;
+	}
 }
 
 ///
 /// 連結リストを指定された規準で昇順に整列する.
 ///
 void merge_sort(list l) {
-	
+	if(l->next->next != NULL) {
+		list l2 = (list)malloc(sizeof(struct node));
+		split(l, l2);
+		merge_sort(l);
+		merge_sort(l2);
+		merge(l->next, l2->next);
+	}
 }
 
 
