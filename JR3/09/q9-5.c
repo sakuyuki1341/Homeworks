@@ -26,15 +26,15 @@ struct point { int x, y; };	//座標
 ///
 void radix_sort(struct point a[], int n, int r, int dmax) {
 	int c_max = 1;
-	for(int j = 0; j < r; j++) {
+	for(int i = 0; i < r; i++) {
 		c_max = c_max * 2;
 	}
 	int c[c_max];
 	struct point p, b[n];
 
 	for(int d = 0; d < dmax; d++) {
-		for(int j = 0; j < c_max; j++) {
-			c[j] = 0;
+		for(int i = 0; i < c_max; i++) {
+			c[i] = 0;
 		}
 		for(int i = 0; i < n; i++) {
 			int num_x = (a[i].x >> (d * r)) & ((1 << r) -1);
