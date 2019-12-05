@@ -54,23 +54,6 @@ void radix_sort(struct point a[], int n, int r, int dmax) {
 		}
 		printf("--\n");
 	}
-	/*
-	int c[100] = {};
-	struct point p, b[n];
-	for(int i = 0; i < n; i++) {
-		int num_x = a[i].x;
-		c[num_x] += 1;
-		b[i] = a[i];
-	}
-	for(int i = 1; i < 100; i++) {
-		c[i] += c[i-1];
-	}
-	for(int i = n-1; i >= 0; i--) {
-		p = b[i];
-		c[p.x] -= 1;
-		a[c[p.x]] = p;
-	}
-	*/
 }
 
 ///
