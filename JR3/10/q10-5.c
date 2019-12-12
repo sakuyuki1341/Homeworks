@@ -72,7 +72,7 @@ int main() {
 	int i, v;
 	char buf[128], name[32];
 	struct student st;
-	struct node *table[SIZE], *p;
+	struct node *table[SIZE];
 
 	//ハッシュ表の配列の各要素をNULLで初期化
 	for(i=0; i<SIZE; ++i) table[i] = NULL;

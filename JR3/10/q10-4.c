@@ -65,7 +65,7 @@ int main() {
 		p = table[i];
 		while(p != NULL) {
 			st = p->data;
-			printf("(%d)%d, %s, %d\n", i, st.id, st.name, st.score);
+			printf("(%d)%d,%s,%d\n", i, st.id, st.name, st.score);
 			p = p->next;
 		}
 	}

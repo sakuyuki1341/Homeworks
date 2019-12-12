@@ -30,12 +30,12 @@ int binary_search(struct student st[], int id, int l, int r) {
 	if(r < l) {
 		ret = -1;
 	} else {
-		int m = (l+r) / 2;
+		int m = l + (r-l) / 2;
 		if(st[m].id == id) {
 			ret = m;
-		} else if(m < id) {
+		} else if(st[m].id < id) {
 			ret = binary_search(st, id, m+1, r);
-		} else if(m > id) {
+		} else if(st[m].id > id) {
 			ret = binary_search(st, id, l, m-1);
 		}
 	}
