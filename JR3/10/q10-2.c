@@ -6,6 +6,7 @@
 /************************************************
  * グローバル変数
  ************************************************/
+int count = 0;	//binary_searchの呼び出し回数
 
 /************************************************
  * 構造体等宣言部
@@ -19,6 +20,29 @@ struct student { int id; char name[32]; int score; };	//学生
 /************************************************
  * 関数部
  ************************************************/
+///
+/// 配列stのl番目からr番目の中から、引数のidと一致するような
+/// メンバidを持つ要素の添字を見つけ返す関数
+///
+int binary_search(struct student st[], int id, int l, int r) {
+	++count;
+	int ret = 0;	//戻り値
+	if(r < l) {
+		ret = -1;
+	} else {
+		int m = (l+r) / 2;
+		if(st[m].id == id) {
+			ret = m;
+		} else if(m < id) {
+			ret = binary_search(st, id, m+1, r);
+		} else if(m > id) {
+			ret = binary_search(st, id, l, m-1);
+		}
+	}
+	return ret;
+}
+
+
 ///
 /// メイン関数
 ///
@@ -35,17 +59,10 @@ int main() {
 		}
 	}
 	n = i;
-	st[n].score = v;	//番兵を記録
-	i = 0;
-	//目的の学生を上から探索
-	while(st[i].score != st[n].score) {
-		i++;
-	}
-	//最初に見つかったものを表示
-	if(i == n) {
-		printf("Not found.\n");
-	} else if(i < n) {
-		printf("%d,%s\n", st[i].id, st[i].name);
-	}
+	/*この時点でvに探索目標の学籍番号が入っている*/
+	i = binary_search(st, v, 0, n-1);
+	if(i < 0) printf("Not found.\n");
+	else      printf("%s,%d\n",st[i].name,st[i].score);
+	printf("%d\n", count);
 	return 0;
 }
