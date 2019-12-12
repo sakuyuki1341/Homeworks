@@ -76,7 +76,7 @@ void set_data(struct node *table[], struct student st) {
 /// メイン関数
 ///
 int main() {
-	int i, score_tmp;
+	int i;
 	char buf[128];
 	struct student st;
 	struct node *table[SIZE], *p;
@@ -90,7 +90,7 @@ int main() {
 		p = table[i];
 		while(p != NULL) {
 			st = p->data;
-			printf("%d,%s,%d\n", i, st.name, st.score);
+			printf("%s,%d\n", st.name, st.score);
 			p = p->next;
 		}
 	}
