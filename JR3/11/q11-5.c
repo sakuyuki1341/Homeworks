@@ -43,20 +43,42 @@ struct node* get_tree() {
 }
 
 ///
-/// t の指す節点を根とする二分探索木の中から、学籍番号が id と一致する
-/// 学生の名前と成績をカンマで区切った文字列を標準出力に出力する関数
+/// 二分探索木 t に student の値を追加する関数
 ///
-void find_info(struct node *t, int id) {
-	if(t == NULL) {
-		printf("Not found.");
-	} else {
-		if(t->data.id > id) {
-			find_info(t->left, id);
-		} else if(t->data.id < id) {
-			find_info(t->right, id);
+struct node* bst_insert(struct node *t, struct student d) {
+	struct node *x = t, *y = NULL;
+	struct node *node_new = (struct node*)malloc(sizeof(struct node));
+	node_new->data = d;
+	node_new->left = NULL;
+	node_new->right = NULL;
+	while(x != NULL) {
+		y = x;
+		if(d.id < x->data.id) {
+			x = x->left;
 		} else {
-			printf("%s,%d", t->data.name, t->data.score);
+			x = x->right;
 		}
+	}
+	if(y == NULL) {
+		return node_new;
+	} else if(d.id < y->data.id) {
+		y->left = node_new;
+	} else {
+		y->right = node_new;
+	}
+	return t;
+}
+
+///
+/// 二部探索木を出力する関数
+///
+void print_bst(struct node *t) {
+	if(t == NULL) {
+		printf(".\n");
+	} else {
+		printf("%d,%s,%d\n", t->data.id, t->data.name, t->data.score);
+		print_bst(t->left);
+		print_bst(t->right);
 	}
 }
 
@@ -64,9 +86,10 @@ void find_info(struct node *t, int id) {
 /// メイン関数
 ///
 int main() {
-	int id;
 	struct node *t = get_tree();
-	scanf("%d ", &id);
-	find_info(t, id);
+	struct student d;
+	scanf("%d,%[^,],%d ", &d.id, d.name, &d.score);
+	t = bst_insert(t, d);
+	print_bst(t);
 	return 0;
 }
