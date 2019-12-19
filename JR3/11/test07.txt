@@ -1,0 +1,10 @@
+10789,CristianoRonaldo,7
+10123,IchiroSuzuki,51
+.
+10456,DavidBeckham,77
+.
+.
+12017,OsamuDazai,50
+.
+.
+10456
