@@ -61,14 +61,17 @@ void print_bst(struct node *t) {
 ///
 struct node* bst_delete(struct node *t, int id) {
 	struct node *x, *y, *z;
+	char lr;
 	//該当の節点の探索し、zへ入れる
 	x = t; y = NULL;
 	while(x != NULL) {
 		y = x;
 		if(id < x->data.id) {
 			x = x->left;
+			lr = 'l';
 		} else if(id > x->data.id){
 			x = x->right;
+			lr = 'r';
 		} else {
 			z = x;
 			break;
@@ -76,8 +79,45 @@ struct node* bst_delete(struct node *t, int id) {
 	}
 	//削除実行
 	if(z->left == NULL && z->right == NULL) {
+		y->left = NULL;
+		y->right = NULL;
+	} else if(z->left == NULL) {
+		if(lr == 'r') {
+			y->right = z->right;
+		} else if(lr == 'l') {
+			y->left = z->right;
+		}
+	} else if(z->right == NULL) {
+		if(lr == 'r') {
+			y->right = z->left;
+		} else if(lr == 'l') {
+			y->left = z->left;
+		}
+	} else if(z->right != NULL && z->left != NULL) {
+		struct node* z_parents = y;
+		//idより一つ大きいidを探す
+		x = t; y = NULL;
+		while(x != NULL) {
+			y = x;
+			if(id+1 < x->data.id) {
+				x = x->left;
+				lr = 'l';
+			} else if(id+1 > x->data.id){
+				x = x->right;
+				lr = 'r';
+			} else {
+				z = x;
+				break;
+			}
+		}
+		if(x != NULL) {
+			y = x;
+		}
+		//この時、y のdataが一つ大きいid
 		
 	}
+	free((void*)z);
+	return t;
 }
 
 
