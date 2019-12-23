@@ -60,64 +60,51 @@ void print_bst(struct node *t) {
 /// 節点を削除し、得られた二分探索木の根のアドレスを返す関数
 ///
 struct node* bst_delete(struct node *t, int id) {
-	struct node *x, *y, *z;
-	char lr;
-	//該当の節点の探索し、zへ入れる
-	x = t; y = NULL;
-	while(x != NULL) {
-		y = x;
-		if(id < x->data.id) {
-			x = x->left;
-			lr = 'l';
-		} else if(id > x->data.id){
-			x = x->right;
-			lr = 'r';
-		} else {
-			z = x;
-			break;
-		}
+	struct node *root = t, *ret, *x, *y;
+	if(t == NULL) {
+		root = NULL;
 	}
-	//削除実行
-	if(z->left == NULL && z->right == NULL) {
-		y->left = NULL;
-		y->right = NULL;
-	} else if(z->left == NULL) {
-		if(lr == 'r') {
-			y->right = z->right;
-		} else if(lr == 'l') {
-			y->left = z->right;
-		}
-	} else if(z->right == NULL) {
-		if(lr == 'r') {
-			y->right = z->left;
-		} else if(lr == 'l') {
-			y->left = z->left;
-		}
-	} else if(z->right != NULL && z->left != NULL) {
-		struct node* z_parents = y;
-		//idより一つ大きいidを探す
-		x = t; y = NULL;
-		while(x != NULL) {
-			y = x;
-			if(id+1 < x->data.id) {
-				x = x->left;
-				lr = 'l';
-			} else if(id+1 > x->data.id){
-				x = x->right;
-				lr = 'r';
+
+	// 削除対象が左部分木に存在する場合、そこから削除
+	if(id < root->data.id) {
+		root->left = bst_delete(root->left, id);
+	// 削除対象が右部分木に存在する場合、そこから削除
+	} else if(id > root->data.id) {
+		root->right = bst_delete(root->right, id);
+	// 削除対象が自身の時、自身を削除
+	} else {
+		// 自身が葉の時、自身をNULLへ置き換え
+		if(root->left == NULL && root->right == NULL) {
+			free((void*)root);
+			root = NULL;
+		// 子を一つ持つ場合、自身を子へ置き換え
+		} else if(root->left == NULL || root->right == NULL) {
+			if(root->right == NULL) {
+				root = root->left;
 			} else {
-				z = x;
-				break;
+				root = root->right;
 			}
+		// 子を二つ持つ場合、自身をsuccessorに置き換え
+		} else {
+			x = root;
+			y = NULL;
+			while(x != NULL) {
+				y = x;
+				if(id+1 < x->data.id) {
+					x = x->left;
+				} else if(id+1 > x->data.id) {
+					x = x->right;
+				} else {
+					y = x;
+					break;
+				}
+			}
+			// この時、yがsuccessorとなる
+			root->data = y->data;
+			root->right = bst_delete(root->right, y->data.id);
 		}
-		if(x != NULL) {
-			y = x;
-		}
-		//この時、y のdataが一つ大きいid
-		
 	}
-	free((void*)z);
-	return t;
+	return root;
 }
 
 
@@ -126,9 +113,9 @@ struct node* bst_delete(struct node *t, int id) {
 ///
 int main() {
 	struct node *t = get_tree();
-	struct student d;
-	scanf("%d,%[^,],%d ", &d.id, d.name, &d.score);
-	t = bst_insert(t, d);
+	int id;
+	scanf("%d ", &id);
+	t = bst_delete(t, id);
 	print_bst(t);
 	return 0;
 }
