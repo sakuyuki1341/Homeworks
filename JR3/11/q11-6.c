@@ -89,8 +89,8 @@ struct node* bst_delete(struct node *t, int id) {
 			root = x;
 		}
 		free(n);
-		return root;
 	}
+	return root;
 }
 
 ///
