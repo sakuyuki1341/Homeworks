@@ -78,66 +78,20 @@ struct node* bst_delete(struct node *t, int id) {
 			root = n->right;
 		} else {
 			x = n->right;
+			y = NULL;
 			while(x->left != NULL) {
+				y = x;
 				x = x->left;
 			}
+			y->left = NULL;
 			x->left = n->left;
 			x->right = n->right;
 			root = x;
 		}
+		free(n);
 		return root;
 	}
 }
-
-struct node* bst_delete_sample(struct node *t, int id) {
-	struct node *root = t, *ret, *x, *y;
-	if(t == NULL) {
-		root = NULL;
-	}
-
-	// 削除対象が左部分木に存在する場合、そこから削除
-	if(id < root->data.id) {
-		root->left = bst_delete(root->left, id);
-	// 削除対象が右部分木に存在する場合、そこから削除
-	} else if(id > root->data.id) {
-		root->right = bst_delete(root->right, id);
-	// 削除対象が自身の時、自身を削除
-	} else {
-		// 自身が葉の時、自身をNULLへ置き換え
-		if(root->left == NULL && root->right == NULL) {
-			free((void*)root);
-			root = NULL;
-		// 子を一つ持つ場合、自身を子へ置き換え
-		} else if(root->left == NULL || root->right == NULL) {
-			free((void*)root);
-			if(root->right == NULL) {
-				root = root->left;
-			} else {
-				root = root->right;
-			}
-		// 子を二つ持つ場合、自身をsuccessorに置き換え
-		} else {
-			x = root;
-			y = NULL;
-			while(x != NULL) {
-				y = x;
-				if(id+1 < x->data.id) {
-					x = x->left;
-				} else if(id+1 > x->data.id) {
-					x = x->right;
-				} else {
-					y = x;
-					break;
-				}
-			}
-			// この時、yがsuccessorとなる
-			root->data = y->data;
-			root->right = bst_delete(root->right, y->data.id);
-		}
-	}
-	return root;
-}
-
 
 ///
 /// メイン関数
