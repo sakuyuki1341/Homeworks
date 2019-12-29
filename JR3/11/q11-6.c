@@ -60,6 +60,36 @@ void print_bst(struct node *t) {
 /// 節点を削除し、得られた二分探索木の根のアドレスを返す関数
 ///
 struct node* bst_delete(struct node *t, int id) {
+	struct node *root = t;
+	// 削除対象が左部分木に存在する場合、そこから削除
+	if(id < root->data.id) {
+		root->left = bst_delete(root->left, id);
+	// 削除対象が右部分木に存在する場合、そこから削除
+	} else if(id > root->data.id) {
+		root->right = bst_delete(root->right, id);
+	// 削除対象が自身の時、自身を削除
+	} else {
+		struct node *n = t, *x, *y;
+		//削除実行
+		if(n->right == NULL) {
+			root = n->left;
+		} else if(n->right->left == NULL) {
+			n->right->left = n->left;
+			root = n->right;
+		} else {
+			x = n->right;
+			while(x->left != NULL) {
+				x = x->left;
+			}
+			x->left = n->left;
+			x->right = n->right;
+			root = x;
+		}
+		return root;
+	}
+}
+
+struct node* bst_delete_sample(struct node *t, int id) {
 	struct node *root = t, *ret, *x, *y;
 	if(t == NULL) {
 		root = NULL;
@@ -79,6 +109,7 @@ struct node* bst_delete(struct node *t, int id) {
 			root = NULL;
 		// 子を一つ持つ場合、自身を子へ置き換え
 		} else if(root->left == NULL || root->right == NULL) {
+			free((void*)root);
 			if(root->right == NULL) {
 				root = root->left;
 			} else {
