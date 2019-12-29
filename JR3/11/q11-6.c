@@ -83,7 +83,7 @@ struct node* bst_delete(struct node *t, int id) {
 				y = x;
 				x = x->left;
 			}
-			y->left = NULL;
+			y->left = x->right;
 			x->left = n->left;
 			x->right = n->right;
 			root = x;
