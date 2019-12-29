@@ -80,7 +80,7 @@ void print_bst(struct node *t) {
 void find_info(struct node *t, int id) {
 	//ダミー節点のデータに目的の学籍番号を代入
 	t->left->data.id = id;
-	struct node *x = t->right, *y;
+	struct node *x = t->right;
 	while(1) {
 		if(x->data.id > id) {
 			x = x->left;
