@@ -88,7 +88,7 @@ int is_rbtree_rec(struct rb_node *t) {
 /// 二分探索木tに対して、赤黒木であれば1を返し、そうでなければ0を返す関数
 ///
 int is_rbtree(struct rb_node *t) {
-	int ret = is_rbtree_sub(t);
+	int ret = is_rbtree_rec(t);
 //	printf("ret = %d\n", ret);
 	if(ret > 1) {
 		ret = 1;
