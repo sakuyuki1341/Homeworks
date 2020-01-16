@@ -235,7 +235,7 @@ int main() {
 	struct rb_node *t = NULL;
 	while(fgets(buf, sizeof(buf), stdin) != NULL) {
 		sscanf(buf, "%d,%[^,],%d", &d.id, d.name, &d.score);
-		t = rb_insert(t, d);
+		t = rb_update(t, d);
 	}
 	print_rbtree(t);
 	return 0;
