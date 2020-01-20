@@ -59,8 +59,8 @@ int main() {
 	printf("#-----------------------------------------------------------\n");
 	//
 	h = 2.0;
-	for (k=1; k<=3; ++k) {
-		h *= 0.5;
+	for (k=1; k<=25; ++k) {
+		h *= 0.95;
 		s = trape_rule(func, h, &np, &nm);
 		n = np + nm + 1;
 		error = fabs(s - se) / fabs(se);
