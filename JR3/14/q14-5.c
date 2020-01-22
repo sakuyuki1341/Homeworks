@@ -23,7 +23,8 @@ struct node { int eki, rosen; float kyori; struct node *next; };
  ************************************************/
 ///
 /// 頂点数nのグラフを表す隣接行列adjmatに対して、そのグラフの
-/// 推移的閉包の隣接行列resultを作成する関数
+/// 各頂点から各頂点に行くまでに通る辺の数を記憶する配列reachを作る関数
+/// 最終的な結果はresultに格納する
 ///
 void warshall(int n, int adjmat[n][n], int result[n][n]) {
 	int reach[n+1][n][n];
@@ -35,16 +36,28 @@ void warshall(int n, int adjmat[n][n], int result[n][n]) {
 					reach[k][i][j] = 1;
 					reach[k][j][i] = 1;
 				} else if(k > 0) {
-					if(reach[k-1][i][j] == 1) {
-						reach[k][i][j] = 1;
-						reach[k][j][i] = 1;
+					if(reach[k-1][i][j] >= 1) {
+						reach[k][i][j] = reach[k-1][i][j];
+						reach[k][j][i] = reach[k-1][i][j];
 					} else if(reach[k-1][i][k-1] && reach[k-1][k-1][j]) {
-						reach[k][i][j] = 1;
-						reach[k][j][i] = 1;
+						if(reach[k][i][j] == 0 || reach[k][i][j] > reach[k-1][i][k-1] + reach[k-1][k-1][j]) {
+							reach[k][i][j] = reach[k-1][i][k-1] + reach[k-1][k-1][j];
+							reach[k][j][i] = reach[k-1][i][k-1] + reach[k-1][k-1][j];
+						}
 					}
 				}
 			}
 		}
+		/*テスト用に作成
+		printf("=========== k = %d =================\n", k);
+		for(int i = 0; i < n; ++i) {
+			for(int j = 0; j < n; ++j) {
+				printf("%3d ", reach[k][i][j]);
+			}
+			printf("\n");
+		}
+		printf("===================================\n");
+		*/
 	}
 
 
@@ -53,6 +66,25 @@ void warshall(int n, int adjmat[n][n], int result[n][n]) {
 			result[i][j] = reach[n][i][j];
 		}
 	}
+}
+
+///
+/// n個の駅を含む路線図データを表すグラフを引数に取り、
+/// そのグラフの直径を返す関数
+///
+int diameter(int n, int adjmat[n][n]) {
+	int result[n][n];
+	warshall(n, adjmat, result);
+	//result内の最大値を探す、ただし自身に帰るために必要な辺数2は除く
+	int ret = 1;
+	for(int i = 0; i < n; ++i) {
+		for(int j = 0; j < n; ++j) {
+			if(i != j && ret < result[i][j]) {
+				ret = result[i][j];
+			}
+		}
+	}
+	return ret;
 }
 
 ///
@@ -79,13 +111,7 @@ int main() {
 		adjmat[eki2][eki1] = 1;
 	}
 
-	warshall(ekisu, adjmat, result);
-	for(int i = 0; i < ekisu; ++i) {
-		for(int j = 0; j < ekisu; ++j) {
-			printf("%d", result[i][j]);
-		}
-		printf("\n");
-	}
+	printf("%d\n", diameter(ekisu, adjmat));
 
 	return 0;
 }
