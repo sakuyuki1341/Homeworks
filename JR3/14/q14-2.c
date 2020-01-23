@@ -48,7 +48,7 @@ void add_edge(struct node *adjlist[], int eki1, int eki2, int rosen, float kyori
 float one_hop_kyori(struct node *adjlist[], int eki, int nogo_eki) {
 	float max = adjlist[eki]->kyori;
 	if(adjlist[eki]->eki == nogo_eki) {
-		max = adjlist[eki]->next->kyori;
+		max = 0;
 	}
 	struct node *move = adjlist[eki]->next;
 	while(move != NULL) {
