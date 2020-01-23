@@ -31,7 +31,10 @@ void warshall(int n, int adjmat[n][n], int result[n][n]) {
 		for(int i = 0; i < n; ++i) {
 			for(int j = 0; j < n; ++j) {
 				reach[k][i][j] = 0;
-				if(k == 0 && adjmat[i][j]) {
+				if(k == 0 && i == j) {
+					reach[k][i][j] = 1;
+					reach[k][j][i] = 1;
+				} else if(k == 0 && adjmat[i][j]) {
 					reach[k][i][j] = 1;
 					reach[k][j][i] = 1;
 				} else if(k > 0) {
