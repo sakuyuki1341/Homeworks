@@ -92,7 +92,7 @@ int diameter(int n, int adjmat[n][n]) {
 int main() {
 	int ekisu;
 	scanf("%d ", &ekisu);
-	int adjmat[ekisu][ekisu], result[ekisu][ekisu];
+	int adjmat[ekisu][ekisu];
 
 //問題3で作成した部分
 	int eki1, eki2, rosen;
