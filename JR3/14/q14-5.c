@@ -33,14 +33,13 @@ void warshall(int n, int adjmat[n][n], int result[n][n]) {
 			for(int j = 0; j < n; ++j) {
 				reach[k][i][j] = 0;
 				if(k == 0 && adjmat[i][j]) {
-					reach[k][i][j] = 1;
-					reach[k][j][i] = 1;
+					reach[k][i][j] = adjmat[i][j];
+					reach[k][j][i] = adjmat[i][j];
 				} else if(k > 0) {
-					if(reach[k-1][i][j] >= 1) {
-						reach[k][i][j] = reach[k-1][i][j];
-						reach[k][j][i] = reach[k-1][i][j];
-					} else if(reach[k-1][i][k-1] && reach[k-1][k-1][j]) {
-						if(reach[k][i][j] == 0 || reach[k][i][j] > reach[k-1][i][k-1] + reach[k-1][k-1][j]) {
+					reach[k][i][j] = reach[k-1][i][j];
+					reach[k][j][i] = reach[k-1][i][j];
+					if(reach[k-1][i][k-1] && reach[k-1][k-1][j]) {
+						if(reach[k][i][j] == 0 || reach[k-1][i][j] > reach[k-1][i][k-1] + reach[k-1][k-1][j]) {
 							reach[k][i][j] = reach[k-1][i][k-1] + reach[k-1][k-1][j];
 							reach[k][j][i] = reach[k-1][i][k-1] + reach[k-1][k-1][j];
 						}
@@ -48,8 +47,8 @@ void warshall(int n, int adjmat[n][n], int result[n][n]) {
 				}
 			}
 		}
-		/*テスト用に作成
-		printf("=========== k = %d =================\n", k);
+		//テスト用に作成
+		/*printf("=========== k = %d =================\n", k);
 		for(int i = 0; i < n; ++i) {
 			for(int j = 0; j < n; ++j) {
 				printf("%3d ", reach[k][i][j]);
