@@ -65,6 +65,9 @@ float one_hop_kyori(struct node *adjlist[], int eki, int nogo_eki) {
 /// 最も遠い駅までの距離を出力する関数
 ///
 float two_hop_kyori(struct node *adjlist[], int eki) {
+	if(adjlist[eki] == NULL) {
+		return 0;
+	}
 	float max = adjlist[eki]->kyori + one_hop_kyori(adjlist, adjlist[eki]->eki, eki);
 	struct node *move = adjlist[eki]->next;
 	while(move != NULL) {
