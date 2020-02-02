@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#define ROSENZU "rosenzu-s.txt"	//路線図データファイル
+#define ROSENZU "rosenzu.txt"	//路線図データファイル
 #define SETMAX 10600	// 集合の要素数の最大値(駅の数)
 
 /************************************************
