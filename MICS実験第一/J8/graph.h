@@ -90,7 +90,7 @@ int remove_edge_sub(graph *g, int x, int y) {
 	// xが始点の辺を順に参照
 	for(int i = 0; i < g->degree[x]; i++) {
 		if(g->edges[x][i] == y) {
-			//隣接リストの最後尾で上書きし, 次数と辺数を減らす
+			//隣接リストの最後尾で上書きし, 次数と辺数を減らす?
 			g->edges[x][i] = g->edges[x][g->degree[x]-1];
 			g->degree[x] --;
 			g->nedges --;
@@ -111,7 +111,7 @@ void remove_edge(graph *g, int x, int y)
 }
 
 // 頂点xを始点、yを終点とする辺を削除
-// その後、yを始点、xを終点とする辺を追加
+// その後、yを始点、xを終点とする辺を追加?
 void reorient_edge(graph *g, int x, int y)
 {
 	if(remove_edge_sub(g, x, y) == 0) {
@@ -120,7 +120,7 @@ void reorient_edge(graph *g, int x, int y)
 		g->degree[y] ++;
 		g->nedges ++;
 	}
-	//削除対象が存在しない場合何もしない
+	//削除対象が存在しない場合、何もしない
 	return;
 }
 
