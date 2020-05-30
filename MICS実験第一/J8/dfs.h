@@ -23,10 +23,22 @@ void initialize_search(graph *g, dfs_info *d_i)
   return;
 }
 
-void dfs(graph *g, dfs_info *d_i, int start)
-{
-	/** ここを各自が実装する **/
-  return;
+// 深さ優先探索の実行
+void dfs(graph *g, dfs_info *d_i, int start) {
+	// 頂点startに訪問済の印を付ける
+	d_i->visited[start] = 1;
+	
+	// startを始点とする辺の終点で訪問済みでないものを見つけ、dfsを実行する
+	for (int i = 0; i < g->degree[start]; i++) {
+		if (d_i->visited[g->edges[start][i]] == 0) {
+			// 先行頂点の記録
+			d_i->predecessor[g->edges[start][i]] = start;
+			dfs(g, d_i, g->edges[start][i]);
+		}
+	}
+	
+	// 見つからなかった場合、関数は終了
+	return;
 }
 
 void print_predecessors(graph *g, dfs_info *d_i)

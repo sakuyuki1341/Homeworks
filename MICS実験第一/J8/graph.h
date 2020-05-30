@@ -45,8 +45,8 @@ int is_edge(graph *g, int x, int y)
   int i;
   for(i = 0; i < g->degree[x]; i++) {
     if(g->edges[x][i] == y) {
-			return 1;
-		}
+		return 1;
+	}
   }
   return 0;
 }
@@ -101,8 +101,7 @@ int remove_edge_sub(graph *g, int x, int y) {
 }
 
 // 頂点xを始点、yを終点とする辺を削除
-void remove_edge(graph *g, int x, int y)
-{
+void remove_edge(graph *g, int x, int y) {
 	if(remove_edge_sub(g, x, y) == 1) {
 	//削除対象の辺が存在しない場合以下が実行される
 		printf("存在しない\n");
@@ -111,14 +110,11 @@ void remove_edge(graph *g, int x, int y)
 }
 
 // 頂点xを始点、yを終点とする辺を削除
-// その後、yを始点、xを終点とする辺を追加?
-void reorient_edge(graph *g, int x, int y)
-{
+// その後、yを始点、xを終点とする辺を追加
+void reorient_edge(graph *g, int x, int y) {
 	if(remove_edge_sub(g, x, y) == 0) {
-	//以下でyを始点、xを終点とする辺を追加する
-		g->edges[y][g->degree[y]] = x;
-		g->degree[y] ++;
-		g->nedges ++;
+		//以下でyを始点、xを終点とする辺を追加する
+		insert_edge(g, y, x);
 	}
 	//削除対象が存在しない場合、何もしない
 	return;
