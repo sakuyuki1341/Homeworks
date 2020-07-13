@@ -6,7 +6,7 @@ char buf[BSIZE];
 
 void copyfile(int fOrigin, int fFake) {
 	int n = BSIZE;
-	while (n != BSIZE) {
+	while (n == BSIZE) {
 		n = read(fOrigin, buf, BSIZE);
 		write(fFake, buf, n);
 	}
