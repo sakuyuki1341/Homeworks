@@ -15,7 +15,7 @@ void copyfile(int fOrigin, int fFake) {
 main(int argc, char **argv) {
 	int fOrigin, fFake;
 	if (argc != 3) {
-		printf(stderr,"usage: %s size filename\n",argv[0]);
+		printf("incorrect argument\n");
 		exit(1);
 	}
 	fOrigin = open(argv[1],O_WRONLY|O_CREAT|O_TRUNC,0644);
