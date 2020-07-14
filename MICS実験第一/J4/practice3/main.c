@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 		/* child process */
 		sleep(1);
 		int n = BSIZE;
-		while (true) {
+		while (1) {
 			n = read(p_fd[0], buf, BSIZE);
 			write(outFile, buf, n);
 			printf("%s", buf);
