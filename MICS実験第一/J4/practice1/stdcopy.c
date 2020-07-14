@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#define BSIZE 4096
+#define BSIZE 256
 
 char buf[BSIZE];
 
