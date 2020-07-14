@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 	if ((pid = fork()) == 0) {
 		/* child process */
 		int n = BSIZE;
-		while (1) {
+		while (n != 0) {
 			n = read(0, buf, BSIZE);
 			write(outFile, buf, n);
 			write(p_fd[1], buf, n);
