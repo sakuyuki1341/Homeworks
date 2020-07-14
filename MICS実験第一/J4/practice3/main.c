@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <unistd.h>
 #define BSIZE 1024
 
@@ -7,7 +8,7 @@ int main(int argc, char **argv) {
 	int outFile, pid, p_fd[2];
 	char *new_program, **new_argv, buf[BSIZE];
 	if (argc < 2) {
-		fprintf("incorrect argument\n");
+		printf("incorrect argument\n");
 		exit(1);
 	}
 	outFile = open(argv[1],O_WRONLY|O_CREAT, 0666);
