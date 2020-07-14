@@ -17,10 +17,12 @@ int main(int argc, char **argv) {
 	if ((pid = fork()) == 0) {
 		/* child process */
 		int n = BSIZE;
+        int i = 0;
 		while (n > 0) {
 			n = read(0, buf, BSIZE);
 			write(outFile, buf, n);
 			write(p_fd[1], buf, n);
+            //printf("#%d\n", i++);
 		}
 		exit(1);
 	}
@@ -30,11 +32,9 @@ int main(int argc, char **argv) {
 		perror("fork");
 		exit(1);
 	}
+    
+    sleep(1);
 
-	if((w = wait(NULL)) == -1) {
-		perror("wait");
-		exit(1);
-	}
 
 	close(p_fd[1]);
 	close(0);
