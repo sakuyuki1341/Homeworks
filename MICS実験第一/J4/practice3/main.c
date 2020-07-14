@@ -17,11 +17,12 @@ int main(int argc, char **argv) {
 	if ((pid = fork()) == 0) {
 		/* child process */
 		int n = BSIZE;
-		while (n != 0) {
+		while (n > 0) {
 			n = read(0, buf, BSIZE);
 			write(outFile, buf, n);
 			write(p_fd[1], buf, n);
 		}
+		exit(1);
 	}
 
 	/* parent process */
@@ -43,4 +44,5 @@ int main(int argc, char **argv) {
 	new_program = argv[2];
 	new_argv = &argv[2];
 	execvp(new_program, new_argv);
+	exit(1);
 }
