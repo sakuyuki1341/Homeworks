@@ -10,8 +10,7 @@ int main(int argc, char **argv) {
 		switch (pid = fork()) {
 		case 0:
 			/* child process */
-			char *arg = argv[i+1];
-			execl("/usr/bin/ping", "ping", arg, NULL);
+			execl("/usr/bin/ping", "ping", argv[i+1], NULL);
 			exit(1);
 		case -1:
 			perror("fork");
