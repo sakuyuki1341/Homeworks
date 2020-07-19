@@ -1,0 +1,417 @@
+MICS実験　J6 レポート
+学籍番号：1810678
+　氏名　：山田 朔也
+
+
+・問題１
+(apple orange pear grapefruit)
+これからpearを取り出すCARとCDRの系列は
+(car (cdr (cdr ‘(apple orange pear grapefruit))))
+となる。また、これを合成すると
+ caddr
+となる。
+
+((apple orange) (pear grapefruit))
+これからpearを取り出すCARとCDRの系列は
+(car (car (cdr ‘((apple orange) (pear grapefruit)))))
+となる。また、これを合成すると
+ caadr
+となる。
+
+(((apple) (orange) (pear) (grapefruit)))
+これからpearを取り出すCARとCDRの系列は
+(car (car(cdr (cdr (car ‘(((apple) (orange) (pear) (grapefruit)))))
+となる。また、これを合成すると
+ caaddar
+となる。
+
+(apple (orange) ((pear)) (((grapefruit))))
+これからpearを取り出すCARとCDRの系列は
+(car (car (car (cdr (cdr ’(apple (orange) ((pear)) (((grapefruit)))))))
+となる。また、これを合成すると
+ caaaddr
+となる。
+
+((((apple))) ((orange)) (pear) grapefruit)
+これからpearを取り出すCARとCDRの系列は
+(car (car (cdr (cdr ‘((((apple))) ((orange)) (pear) grapefruit)))))
+となる。また、これを合成すると
+ caaddr
+となる。
+
+((((apple) orange) pear) grapefruit)
+これからpearを取り出すCARとCDRの系列は
+(car (cdr (car ‘((((apple) orange) pear) grapefruit))))
+となる。また、これを合成すると
+ cadar
+となる。
+
+
+・問題２
+評価結果は以下のようになった。
+------------------------------------------------
+[3]> (set 'tools (list 'hammer 'screwdriver))
+(HAMMER SCREWDRIVER)
+[4]> (cons 'pliers tools)
+(PLIERS HAMMER SCREWDRIVER)
+[5]> tools
+(HAMMER SCREWDRIVER)
+[6]> (set 'tools(cons 'pliers tools))
+(PLIERS HAMMER SCREWDRIVER)
+[7]> tools
+(PLIERS HAMMER SCREWDRIVER)
+[8]> (append '(saw wrench) tools)
+(SAW WRENCH PLIERS HAMMER SCREWDRIVER)
+[9]> tools
+(PLIERS HAMMER SCREWDRIVER)
+[10]> (set 'tools (append '(saw wrench) tools))
+(SAW WRENCH PLIERS HAMMER SCREWDRIVER)
+[11]> tools
+(SAW WRENCH PLIERS HAMMER SCREWDRIVER)
+------------------------------------------------
+
+
+・問題３
+各S式の評価は以下のようになった。
+------------------------------------------------
+[1]> (length '(plato socrates aristotle))
+3
+------------------------------------------------
+[2]> (length '((plato) (socrates) (aristotle)))
+3
+------------------------------------------------
+[3]> (length '((plato socrates aristotle)))
+1
+------------------------------------------------
+
+
+・問題４
+各S式の評価は以下のようになった。
+------------------------------------------------
+[4]> (reverse '(plato socrates aristotle))
+(ARISTOTLE SOCRATES PLATO)
+------------------------------------------------
+[5]> (reverse '((plato) (socrates) (aristotle)))
+((ARISTOTLE) (SOCRATES) (PLATO))
+------------------------------------------------
+[6]> (reverse '((plato socrates aristotle)))
+((PLATO SOCRATES ARISTOTLE))
+------------------------------------------------
+
+
+・問題５
+各S式の評価は以下のようになった。
+------------------------------------------------
+[8]> (reverse '((car chevrolet) (drink coke) (cereal wheaties)))
+((CEREAL WHEATIES) (DRINK COKE) (CAR CHEVROLET)
+------------------------------------------------
+[9]> (append '((car chevrolet) (drink coke)) (reverse '((car chevrolet) (drink coke))))
+((CAR CHEVROLET) (DRINK COKE) (DRINK COKE) (CAR CHEVROLET))
+------------------------------------------------
+[10]> (subst 'out 'in '(the ball is in))
+(THE BALL IS OUT)
+------------------------------------------------
+[11]> (subst 'in 'out '(the ball is in))
+(THE BALL IS IN)
+------------------------------------------------
+[12]> (last '(the ball is in))
+(IN)
+------------------------------------------------
+
+
+・問題６
+問題で指定された、first1, rest1, insert, second1, third1を以下のように定義した。
+------------------------------------------------
+(defun first1 (tmp)
+(car tmp))
+------------------------------------------------
+(defun rest1 (tmp)
+(cdr tmp))
+------------------------------------------------
+(defun insert (tmp1 tmp2)
+(cons tmp1 tmp2))
+------------------------------------------------
+(defun second1 (tmp)
+(cadr tmp))
+------------------------------------------------
+(defun thrd1 (tmp)
+(caddr tmp))
+------------------------------------------------
+
+
+・問題７
+rotate-lを以下のように定義した。
+------------------------------------------------
+(defun rotate-l (target)
+	(setq end (last target))
+	(setq target (subst (car target) (car end) target))
+	(cons (car end) (cdr target)))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[8]> (rotate-l '(a b c))
+(C B A)
+------------------------------------------------
+
+
+・問題８
+palindromeを以下のように定義した。
+------------------------------------------------
+(defun palindrome (target)
+	(append target (reverse target)))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[12]> (palindrome '(d o g))
+(D O G G O D)
+------------------------------------------------
+
+
+・問題９
+palindromepを以下のように定義した。
+------------------------------------------------
+(defun palindromep (target)
+(equal target (reverse target)))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[16]> (palindromep '(d o g g o d))
+T
+------------------------------------------------
+
+
+・問題１０
+check-temperatureを以下のように定義した。
+------------------------------------------------
+(defun check-temperature (target)
+	(cond ((> target 100) 'ridiculously-hot)
+		((< target 0) 'ridiculously-cold)
+		(t 'ok)))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[26]> (check-temperature 20)
+OK
+[27]> (check-temperature 150)
+RIDICULOUSLY-HOT
+[28]> (check-temperature -50)
+RIDICULOUSLY-COLD
+------------------------------------------------
+
+
+・問題１１
+al-memberを以下のように定義した。
+------------------------------------------------
+(defun al-member (t_atom t_list)
+	(cond ((null t_list) nil)
+		((atom t_list) (equal t_atom t_list))
+		((not (atom t_list)) (or (al-member t_atom (car t_list)) (al-member t_atom (cdr t_list))))
+		(t 'this will not be shown)))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[15]> (al-member 'd '(a (b c (d))))
+T
+[16]> (al-member 'f '(a (b c (d))))
+NIL
+------------------------------------------------
+
+
+・問題１２
+al-reverseを以下のように定義した。
+------------------------------------------------
+(defun al-reverse (t_list)
+	(cond ((null t_list) nil)
+		((not (atom (car t_list))) (list (append (al-reverse (cdr t_list)) (al-reverse (car t_list)))))
+		((atom (car t_list)) (append (al-reverse (cdr t_list)) (list (car t_list))))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[23]> (al-reverse '(a (b c) (d (e f))))
+((((F E) D) C B) A)
+------------------------------------------------
+また、my-reverseは
+------------------------------------------------
+(defun my-reverse (t_list)
+(reverse t_list))
+------------------------------------------------
+で正常に動作している事が確認できた。
+
+
+・問題１３
+max1を以下のように定義した。
+------------------------------------------------
+(defun max1 (t_list)
+	(cond ((null (cdr t_list)) (car t_list))
+		((>=(car t_list) (max1 (cdr t_list))) (car t_list))
+		(t (max1 (cdr t_list)))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[34]> (max1 '(1 3 9 4))
+9
+------------------------------------------------
+また、関数al-maxを以下のように定義した。
+------------------------------------------------
+(defun al-max (t_list)
+	(cond ((and (null (cdr t_list)) (atom (car t_list))) (car t_list))
+		((null (cdr t_list)) (al-max (car t_list)))
+		((not (atom (car t_list))) (if (>=(al-max (car t_list)) (al-max (cdr t_list))) (al-max (car t_list)) (al-max (cdr t_list))))
+		(t (if (>=(car t_list) (al-max (cdr t_list))) (car t_list) (al-max (cdr t_list))))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[17]> (max1 '((1 3) ((9) 4)))
+9
+------------------------------------------------
+
+
+・問題１４
+my-unionを以下のように定義した。
+------------------------------------------------
+(defun my-union (t_a t_b)
+	(cond ((atom t_a) t_b)
+		((member (car t_a) t_b) (my-union (cdr t_a) t_b))
+		(t (cons (car t_a) (my-union (cdr t_a) t_b)))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[5]> (my-union '(a b c) '(b c d))
+(A B C D)
+------------------------------------------------
+
+
+・問題１５
+my-intersectionを以下のように定義した。
+------------------------------------------------
+(defun my-intersection (t_a t_b)
+	(cond ((atom t_a) nil)
+		((member (car t_a) t_b) (cons (car t_a) (my-intersection (cdr t_a) t_b)))
+		(t (my-intersection (cdr t_a) t_b))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[5]> (my-union '(a b c) '(b c d))
+(A B C D)
+------------------------------------------------
+
+
+・問題１６
+述語intersectpを以下のように定義した。なお、プログラム中のmy-intersectionは問題15で作成したものと同一である。
+------------------------------------------------
+(defun intersectp (t_a t_b)
+	(not (null (my-intersection t_a t_b))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[17]> (intersectp '(a b c) '(b c d))
+T
+[18]> (intersectp '(a b c) '(d e f))
+NIL
+------------------------------------------------
+
+
+・問題１７
+述語samesetpを以下のように定義した。なお、プログラム中のmy-intersectionは問題15で作成したものと同一である。
+------------------------------------------------
+(defun samesetp(t_a t_b)
+	(equal (my-intersection t_a t_b) t_a))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[20]> (samesetp '(a b c) '(b c a))
+T
+[21]> (samesetp '(a b c) '(a b d))
+NIL
+------------------------------------------------
+
+
+・問題１８
+dynamic-rangeを以下のように定義した。なお、関数min1は問題13で定義したmax1と同様の仕組みで最小値を返す関数となっている。また、ここのmax1は問題13と同様である。
+------------------------------------------------
+(defun max1 (t_list)
+(cond ((null (cdr t_list)) (car t_list))
+((>=(car t_list) (max1 (cdr t_list))) (car t_list))
+(t (max1 (cdr t_list)))))
+------------------------------------------------
+(defun min1 (t_list)
+(cond ((null (cdr t_list)) (car t_list))
+((<=(car t_list) (min1 (cdr t_list))) (car t_list))
+(t (min1 (cdr t_list)))))
+------------------------------------------------
+(defun dynamic-range(target)
+(set ‘t_max (max1 target))
+(set ‘t_min (min1 target))
+(set ‘t_gcd (gcd t_max t_min))
+(set ‘left (/ t_min t_gcd))
+(set ‘right (/ t_max t_gcd))
+(list left right))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[25]> (dynamic-range '(156 65 74 93))
+(5 12)
+------------------------------------------------
+
+
+・問題１９
+factorialを以下のように定義した。
+------------------------------------------------
+(defun factorial (n)
+	(cond ((equal n 0) ‘0)
+		(t (prog (result exponent)
+			(setq result 1)
+			(setq exponent n)
+			Loop
+			(cond ((zerop exponent) (return result)))
+			(setq result(* exponent result))
+			(setq exponent (- exponent 1))
+			(go loop)))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[5]> (factorial 0)
+0
+[6]> (factorial 5)
+120
+------------------------------------------------
+
+
+・問題２０
+関数tower-of-hanoi, move-disk, transferを以下のように書き換えた。
+------------------------------------------------
+(defun tower-of-hanoi () (transfer ‘a ‘b ‘c (length a)))
+------------------------------------------------
+(defun move-disk (from to number)
+(list (list ‘MOVE number ‘FROM from ‘TO to)))
+------------------------------------------------
+(defun transfer (from to spare number)
+	(cond ((equal number 1) (move-disk from to number))
+		(t (append (transfer from spare to (- number 1))
+			(move-disk from to number)
+			(transfer spare to from (- number 1))))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[4]> (setq a '(1 2 3) b nil c nil)
+NIL
+[9]> (tower-of-hanoi)
+((MOVE 1 FROM A TO B) (MOVE 2 FROM A TO C) (MOVE 1 FROM B TO C) (MOVE 3 FROM A TO B)
+ (MOVE 1 FROM C TO A) (MOVE 2 FROM C TO B) (MOVE 1 FROM A TO B))
+------------------------------------------------
+
+・問題２２
+関数fetchを以下のように定義した。
+------------------------------------------------
+(defun fetch (t_atom t_list)
+	(cond ((null t_list) '?)
+		((equal (caar t_list) t_atom) (cadar t_list))
+		(t (fetch t_atom (cdr t_list)))))
+------------------------------------------------
+コレを実行したとき以下のようになり、正常に動作している事が確認できた。
+------------------------------------------------
+[3]> (fetch 'temperature chart)
+100
+[5]> (fetch 'complains chart)
+?
+------------------------------------------------
