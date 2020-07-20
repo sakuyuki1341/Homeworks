@@ -7,6 +7,6 @@ int main() {
 	while((code=yylex()))
 		switch (code) {
 		case NUM: printf("num: %s\n", yytext); break;
-		case IDENT] printf("id: %s\n", yytext); break; }
+		case IDENT: printf("id: %s\n", yytext); break; }
 	return 0;
 }
