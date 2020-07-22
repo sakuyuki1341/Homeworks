@@ -1,0 +1,56 @@
+MICS実験 J5課題 出席レポート
+学籍番号：1810678
+　氏名　：山田朔也
+
+今回の実験時間では、練習２まで解けたため、
+レポートで練習２のソースコードを記述し、その説明を行う。
+
+まずは作成したソースコードを以下に記述する。
+|t33.c|
+-----------------------------------------------
+#include <stdio.h>
+
+int value;
+extern char *yytext;
+
+#include "y.tab.c"
+#include "lex.yy.c"
+
+int main() {
+	yyparse();
+	return 0;
+}
+-----------------------------------------------
+|t33.yacc|
+-----------------------------------------------
+%token NUM;
+%%
+explist : 
+		| explist expr '\n' { printf("%d\n", value); }
+		;
+expr	: NUM			{ value = atoi(yytext); }
+		| expr '+' NUM	{ value = value + atoi(yytext); }
+		| expr '-' NUM	{ value = value - atoi(yytext); }
+		| expr '*' NUM	{ value = value * atoi(yytext); }
+		| expr '/' NUM	{ value = value / atoi(yytext); }
+		;
+
+-----------------------------------------------
+|t33.lex|
+-----------------------------------------------
+digit	[0-9]
+white	[\t ]
+%%
+{digit}+	{ return NUM; }
+"+"			{ return '+'; }
+"-"			{ return '-'; }
+"*"			{ return '*'; }
+"/"			{ return '/'; }
+"\n"		{ return '\n'; }
+{white}		{ ; }
+
+-----------------------------------------------
+次に説明を行う。
+このプログラムでは、一行毎に計算をするプログラムに引き算、掛け算、割り算を
+追加してある。
+その３種の演算を追加するため、その時の処理を.lexと.yaccへ追加してある。(本レポート33~35,46~48行が該当)
