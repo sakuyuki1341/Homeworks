@@ -1,0 +1,5 @@
+main {
+	print 8;
+	read x;
+	print x;
+}
