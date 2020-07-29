@@ -1,0 +1,29 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "LED1_z",
+					"strict" : false
+				},
+				{
+					"name" : "SW1_x1",
+					"strict" : false
+				},
+				{
+					"name" : "SW2_x0",
+					"strict" : false
+				},
+				{
+					"name" : "SW4_y0",
+					"strict" : false
+				},
+				{
+					"name" : "SW3_y1",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

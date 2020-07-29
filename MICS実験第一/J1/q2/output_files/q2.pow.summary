@@ -1,0 +1,12 @@
+Power Analyzer Status : Successful - Wed Jul 29 16:22:24 2020
+Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+Revision Name : q2
+Top-level Entity Name : q2
+Family : MAX 10
+Device : 10M08SAE144C8GES
+Power Models : Final
+Total Thermal Power Dissipation : 116.29 mW
+Core Dynamic Thermal Power Dissipation : 0.00 mW
+Core Static Thermal Power Dissipation : 110.61 mW
+I/O Thermal Power Dissipation : 5.68 mW
+Power Estimation Confidence : Low: user provided insufficient toggle rate data
