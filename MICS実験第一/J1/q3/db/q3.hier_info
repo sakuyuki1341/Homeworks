@@ -1,0 +1,10 @@
+|q3
+LED2 <= inst15.DB_MAX_OUTPUT_PORT_TYPE
+CLOCK => inst15.CLK
+CLOCK => inst.CLK
+CLOCK => inst1.CLK
+CLOCK => inst14.CLK
+PSW1 => inst.DATAIN
+LED1 <= inst14.DB_MAX_OUTPUT_PORT_TYPE
+
+
