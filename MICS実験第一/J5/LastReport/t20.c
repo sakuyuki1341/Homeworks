@@ -130,6 +130,14 @@ void emittree(int i)
 		printf(" idivq %%rdi\n");
 		printf(" pushq %%rax\n");
 		break;
+	case T_REM: emittree(ntab[i].left);
+		emittree(ntab[i].right);
+		printf(" popq %%rdi\n"); //rdxレジスタは計算に使えないためrdiを使用
+		printf(" popq %%rax\n");
+		printf(" movq $0,%%rdx\n"); //rdxを事前に初期化
+		printf(" idivq %%rdi\n");
+		printf(" pushq %%rdx\n");
+		break;
 	default: printf("NotImplemented: %d\n", ntab[i].type);
 		break;
 	}
