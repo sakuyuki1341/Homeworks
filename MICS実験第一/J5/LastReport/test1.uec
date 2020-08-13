@@ -4,4 +4,5 @@ main {
 	x = x - 1;
 	print x - y;
 	print x / y;
+	print x * y + x * y;
 }

@@ -124,9 +124,9 @@ void emittree(int i)
 		break;
 	case T_DIV: emittree(ntab[i].left);
 		emittree(ntab[i].right);
-		printf(" popq %%rdi\n");
+		printf(" popq %%rdi\n"); //rdxレジスタは計算に使えないためrdiを使用
 		printf(" popq %%rax\n");
-		printf(" movq $0,%%rdx\n");
+		printf(" movq $0,%%rdx\n"); //rdxを事前に初期化
 		printf(" idivq %%rdi\n");
 		printf(" pushq %%rax\n");
 		break;
