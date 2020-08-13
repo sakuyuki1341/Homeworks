@@ -122,13 +122,13 @@ void emittree(int i)
 		printf(" imulq %%rdx\n");
 		printf(" pushq %%rax\n");
 		break;
-/*	case T_DIV: emittree(ntab[i].left);
+	case T_DIV: emittree(ntab[i].left);
 		emittree(ntab[i].right);
 		printf(" popq %%rdx\n");
 		printf(" popq %%rax\n");
 		printf(" idivq %%rdx\n");
 		printf(" pushq %%rax\n");
-		break;*/
+		break;
 	default: printf("NotImplemented: %d\n", ntab[i].type);
 		break;
 	}

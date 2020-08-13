@@ -3,4 +3,5 @@ main {
 	read y;
 	x = x - 1;
 	print x - y;
+	print x / y;
 }
