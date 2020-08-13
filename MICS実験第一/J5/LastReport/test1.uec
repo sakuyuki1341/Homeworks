@@ -1,6 +1,6 @@
 main {
 	read x;
-	read y;
+	read year;
 	x = x - 1;
-	print x - y;
+	print x - year;
 }
