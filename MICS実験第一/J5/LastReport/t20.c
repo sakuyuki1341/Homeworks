@@ -81,7 +81,7 @@ void emittree(int i)
 		emittree(ntab[i].right);
 		break;
 	case T_READ: printf(" movq $.Lprompt,%%rdi\n");
-		printf(" movq %d, %%rsi", stab[ntab[i].left].name);
+		printf(" movq $%d, %%rsi\n", stab[ntab[i].left].name);
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
 		printf(" call printf\n");
 		printf(" leaq %d(%%rbp),%%rsi\n", -(ntab[i].left+1)*8);
