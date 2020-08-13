@@ -61,7 +61,7 @@ int j;
 for(j = 0; j < stabuse; j++) {
 	printf(".Lvar%d: .string\"%s\"\n", j, stab[j].name);
 }
-printf(".Lprompt: .string\"%%ld > \"\n"); /* プロンプト */
+printf(".Lprompt: .string\"> \"\n"); /* プロンプト */
 printf(".Lread: .string\"%%ld\"\n"); /* 読み取り用書式 */
 printf(".Lprint: .string\"%%ld\\n\"\n"); /* 書き出し用書式 */
 printf(" .text\n");
@@ -84,8 +84,11 @@ void emittree(int i)
 		if(ntab[i].left) emittree(ntab[i].left);
 		emittree(ntab[i].right);
 		break;
-	case T_READ: printf(" movq $.Lprompt,%%rdi\n");
-		printf(" movq $.Lvar%d, %%rsi\n", ntab[i].left);
+	case T_READ: 
+		printf(" movq $.Lvar%d,%%rdi\n", ntab[i].left);
+		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
+		printf(" call printf\n");	
+		printf(" movq $.Lprompt,%%rdi\n");
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
 		printf(" call printf\n");
 		printf(" leaq %d(%%rbp),%%rsi\n", -(ntab[i].left+1)*8);
