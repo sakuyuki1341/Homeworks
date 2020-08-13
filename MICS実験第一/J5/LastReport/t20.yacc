@@ -25,7 +25,6 @@ expr	: term { $$ = $1; }
 		| expr '+' term { $$ = node(T_ADD, $1, $3); }
 		| expr '-' term { $$ = node(T_SUB, $1, $3); }
 		;
-/*termは乗除算、剰余演算の優先度を上げるために追加*/
 term	: prim { $$ = $1; }
 		| term '*' prim { $$ = node(T_MUL, $1, $3); }
 		| term '/' prim { $$ = node(T_DIV, $1, $3); }

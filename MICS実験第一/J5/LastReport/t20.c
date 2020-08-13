@@ -27,7 +27,6 @@ int ntabuse = 1;
 int lookup(char*);
 int node(int, int, int);
 void dotree(int);
-void emittree(int);
 
 extern char *yytext;
 #include "y.tab.c"
