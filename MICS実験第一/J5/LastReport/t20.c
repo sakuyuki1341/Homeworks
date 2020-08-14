@@ -101,7 +101,7 @@ void emittree(int i)
 		printf(" movq %%rax,%d(%%rbp)\n", -(lookup("readStat")+1)*8);
 		break;
 	case T_PRINT: 
-		if(ntab[ntab[i].left].type = 11) {
+		if(ntab[ntab[i].left].type == 11) {
 			printf(" movq $.Lvar%d,%%rdi\n", ntab[ntab[i].left].left);
 			printf(" movq $0,%%rax\n");
 			printf(" call printf\n");
