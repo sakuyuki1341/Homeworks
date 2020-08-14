@@ -97,7 +97,7 @@ void emittree(int i)
 		printf(" movq $.Lread,%%rdi\n");
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
 		printf(" call scanf\n");
-		printf(" movq %%rax,%d(%%rbp)", -(lookup("readStat")+1)*8);
+		printf(" movq %%rax,%d(%%rbp)\n", -(lookup("readStat")+1)*8);
 		break;
 	case T_PRINT: emittree(ntab[i].left);
 		printf(" popq %%rsi\n");
