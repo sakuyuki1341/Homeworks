@@ -3,4 +3,5 @@ main {
 	read year;
 	x = x - 1;
 	print x - year;
+	printx x - year;
 }

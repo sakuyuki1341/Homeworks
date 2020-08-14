@@ -64,6 +64,7 @@ for(j = 0; j < stabuse; j++) {
 printf(".Lprompt: .string\"> \"\n"); /* プロンプト */
 printf(".Lread: .string\"%%ld\"\n"); /* 読み取り用書式 */
 printf(".Lprint: .string\"%%ld\\n\"\n"); /* 書き出し用書式 */
+printf(".Lprintx: .string\"%%lx\\n\"\n"); /* 書き出し用書式(16進数) */
 printf(" .text\n");
 printf(".global main\n");
 printf("main:\n");
@@ -99,6 +100,12 @@ void emittree(int i)
 	case T_PRINT: emittree(ntab[i].left);
 		printf(" popq %%rsi\n");
 		printf(" movq $.Lprint,%%rdi\n");
+		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
+		printf(" call printf\n");
+		break;
+	case T_PRINTX: emittree(ntab[i].left);
+		printf(" popq %%rsi\n");
+		printf(" movq $.Lprintx,%%rdi\n");
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
 		printf(" call printf\n");
 		break;
