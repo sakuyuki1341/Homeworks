@@ -3,6 +3,5 @@ main {
 	print readStat;
 	print x;
 	read year;
-	print readStat;
-	print year;
+	print x + year;
 }

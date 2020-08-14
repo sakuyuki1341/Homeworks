@@ -24,6 +24,8 @@ int ntabuse = 1;
 #define T_LT 14
 #define T_GT 15
 #define T_PRINTX 16
+#define T_PRINTV 17
+#define T_PRINTXV 18
 
 int lookup(char*);
 int node(int, int, int);
@@ -62,7 +64,6 @@ int j;
 for(j = 0; j < stabuse; j++) {
 	printf(".Lvar%d: .string\"%s=\"\n", j, stab[j].name);
 }
-printf("readStat: .double -1\n");
 printf(".Lprompt: .string\"> \"\n"); /* プロンプト */
 printf(".Lread: .string\"%%ld\"\n"); /* 読み取り用書式 */
 printf(".Lprint: .string\"%%ld\\n\"\n"); /* 書き出し用書式 */
@@ -106,6 +107,20 @@ void emittree(int i)
 		printf(" call printf\n");
 		break;
 	case T_PRINTX: emittree(ntab[i].left);
+		printf(" popq %%rsi\n");
+		printf(" movq $.Lprintx,%%rdi\n");
+		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
+		printf(" call printf\n");
+		break;
+	case T_PRINTV: printf(" movq $.Lvar%d,%%rdi\n", ntab[i].left);
+		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
+		printf(" call printf\n");
+		printf(" movq %d(%%rdp),%%rsi\n", -(ntab[i].left+1)*8);
+		printf(" movq $.Lprint,%%rdi\n");
+		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
+		printf(" call printf\n");
+		break;
+	case T_PRINTXV: emittree(ntab[i].left);
 		printf(" popq %%rsi\n");
 		printf(" movq $.Lprintx,%%rdi\n");
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */

@@ -14,6 +14,8 @@ stlist	: { $$ = 0; }
 		;
 stat	: var '=' expr ';' { $$ = node(T_ASSIGN, $1, $3); }
 		| READ var ';' { $$ = node(T_READ, $2, 0); }
+		| PRINT var ';' { $$ = node(T_PRINTV, $2, 0); }
+		| PRINTX var ';' { $$ = node(T_PRINTXV, $2, 0); }
 		| PRINT expr ';' { $$ = node(T_PRINT, $2, 0); }
 		| PRINTX expr ';' { $$ = node(T_PRINTX, $2, 0); }
 		| WHILE '(' cond ')' stat { $$ = node(T_WHILE, $3, $5); }
