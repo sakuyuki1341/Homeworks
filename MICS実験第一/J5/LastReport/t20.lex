@@ -7,6 +7,7 @@ while						{ return WHILE; }
 if							{ return IF; }
 read						{ return READ; }
 print						{ return PRINT; }
+printx						{ return PRINTX; }
 {alpha}({alpha}|{digit})*	{ return IDENT; }
 {digit}+					{ return NUM; }
 [-+()=;{}<>*/%]				{ return yytext[0]; }
