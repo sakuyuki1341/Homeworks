@@ -1,7 +1,8 @@
 main {
 	read x;
+	print readStat;
 	read year;
+	print readStat;
 	x = x - 1;
 	print x - year;
-	print readStat;
 }
