@@ -103,7 +103,7 @@ void emittree(int i)
 	case T_PRINT: 
 		if(ntab[ntab[i].left].type = 11) {
 			printf(" movq $.Lvar%d,%%rdi\n", ntab[ntab[i].left].left);
-			printf(" mobq $0,%%rax\n");
+			printf(" movq $0,%%rax\n");
 			printf(" call printf\n");
 		}
 		emittree(ntab[i].left);
