@@ -23,6 +23,7 @@ int ntabuse = 1;
 #define T_IF 13
 #define T_LT 14
 #define T_GT 15
+#define T_PRINTX 16
 
 int lookup(char*);
 int node(int, int, int);

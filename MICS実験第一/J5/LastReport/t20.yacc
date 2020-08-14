@@ -3,6 +3,7 @@
 %token IDENT;
 %token READ;
 %token PRINT;
+%token PRINTX;
 %token WHILE;
 %token IF;
 %%
