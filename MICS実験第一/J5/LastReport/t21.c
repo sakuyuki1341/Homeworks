@@ -24,8 +24,6 @@ int ntabuse = 1;
 #define T_LT 14
 #define T_GT 15
 #define T_PRINTX 16
-#define T_PRINTV 17
-#define T_PRINTXV 18
 
 int lookup(char*);
 int node(int, int, int);
@@ -112,7 +110,13 @@ void emittree(int i)
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
 		printf(" call printf\n");
 		break;
-	case T_PRINTX: emittree(ntab[i].left);
+	case T_PRINTX:
+		if(ntab[ntab[i].left].type == 11) {
+			printf(" movq $.Lvar%d,%%rdi\n", ntab[ntab[i].left].left);
+			printf(" movq $0,%%rax\n");
+			printf(" call printf\n");
+		}
+		emittree(ntab[i].left);
 		printf(" popq %%rsi\n");
 		printf(" movq $.Lprintx,%%rdi\n");
 		printf(" movq $0,%%rax\n"); /* 浮動小数点レジスタを使わない */
