@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Wed Aug 19 03:45:29 2020
+Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+Revision Name : q6_a
+Top-level Entity Name : q6_a
+Family : MAX 10
+Total logic elements : 17
+    Total combinational functions : 17
+    Dedicated logic registers : 10
+Total registers : 10
+Total pins : 8
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

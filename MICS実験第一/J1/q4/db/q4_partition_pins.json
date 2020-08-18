@@ -1,0 +1,29 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "LED1_s",
+					"strict" : false
+				},
+				{
+					"name" : "LED2_t",
+					"strict" : false
+				},
+				{
+					"name" : "Clock",
+					"strict" : false
+				},
+				{
+					"name" : "PSW1_g",
+					"strict" : false
+				},
+				{
+					"name" : "PSW2_h",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

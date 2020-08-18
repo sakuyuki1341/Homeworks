@@ -1,0 +1,41 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "LED1_w",
+					"strict" : false
+				},
+				{
+					"name" : "LED2_RCO",
+					"strict" : false
+				},
+				{
+					"name" : "Clock",
+					"strict" : false
+				},
+				{
+					"name" : "PSW1_clear",
+					"strict" : false
+				},
+				{
+					"name" : "SW1_x0",
+					"strict" : false
+				},
+				{
+					"name" : "SW2_x1",
+					"strict" : false
+				},
+				{
+					"name" : "SW3_x2",
+					"strict" : false
+				},
+				{
+					"name" : "SW4_x3",
+					"strict" : false
+				}
+			]
+		}
+	]
+}
