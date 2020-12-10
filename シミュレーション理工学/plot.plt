@@ -1,0 +1,5 @@
+plot 'result1.plt' using 3:5 with lines title 'dt=0.001'
+replot 'result2.plt' using 3:5 with lines title 'dt=0.003'
+replot 'result3.plt' using 3:5 with lines title 'dt=0.010'
+replot 'result4.plt' using 3:5 with lines title 'dt=0.030'
+replot 'result5.plt' using 3:5 with lines title 'dt=0.100'
